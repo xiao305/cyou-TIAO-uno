@@ -3,252 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>域名已迁移 - 正在跳转中</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>域名迁移通知</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            overflow: hidden;
-        }
-        
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            padding: 20px;
         }
         
         .container {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 20px;
-            padding: 40px;
-            width: 90%;
-            max-width: 600px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
+            max-width: 580px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             overflow: hidden;
+            position: relative;
+            z-index: 1;
         }
         
-        .container::before {
+        .header {
+            background: #4f46e5;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::after {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            transform: rotate(30deg);
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #4f46e5;
+            border-radius: 50%;
             z-index: -1;
         }
         
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: #ff6b6b;
-            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 45px 40px 40px;
+            text-align: center;
+        }
+        
+        .icon-container {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #f0f7ff;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .icon {
+            width: 50px;
+            height: 50px;
+            background: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .icon svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
         }
         
         .message {
-            font-size: 1.4rem;
-            margin-bottom: 30px;
+            font-size: 20px;
+            color: #1e293b;
             line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .countdown-container {
+            margin: 30px auto 35px;
+            max-width: 360px;
+        }
+        
+        .countdown-text {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 10px;
         }
         
         .countdown {
-            font-size: 5rem;
-            font-weight: bold;
-            margin: 30px 0;
-            color: #4ecdc4;
-            text-shadow: 0 0 15px rgba(78, 205, 196, 0.7);
+            font-size: 42px;
+            font-weight: 700;
+            color: #4f46e5;
+            margin-bottom: 20px;
             position: relative;
             display: inline-block;
         }
         
         .countdown::after {
             content: '秒';
-            font-size: 1.5rem;
+            font-size: 18px;
+            font-weight: 500;
+            color: #94a3b8;
             position: absolute;
-            bottom: 10px;
-            right: -45px;
+            bottom: 8px;
+            right: -35px;
         }
         
-        .progress-bar {
-            width: 100%;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.1);
+        .progress-container {
+            height: 8px;
+            background: #f1f5f9;
             border-radius: 10px;
-            margin: 30px 0;
             overflow: hidden;
         }
         
-        .progress {
+        .progress-bar {
             height: 100%;
             width: 100%;
-            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            background: linear-gradient(90deg, #4f46e5, #818cf8);
             border-radius: 10px;
-            transition: width 1s linear;
+            transform-origin: left;
+            animation: progress 5s linear forwards;
         }
         
-        .new-domain {
-            font-size: 1.6rem;
-            margin: 25px 0;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            display: inline-block;
+        @keyframes progress {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
         }
         
-        .new-domain a {
-            color: #4ecdc4;
+        .domain-info {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 20px;
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #cbd5e1;
+        }
+        
+        .domain-info span {
+            color: #64748b;
+            margin-right: 8px;
+        }
+        
+        .domain-info a {
+            color: #4f46e5;
+            font-weight: 600;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
         
-        .new-domain a:hover {
-            color: #ff6b6b;
-            text-shadow: 0 0 10px rgba(78, 205, 196, 0.7);
+        .domain-info a:hover {
+            color: #312e81;
+            text-decoration: underline;
+        }
+        
+        .btn-container {
+            margin-top: 30px;
         }
         
         .btn {
             display: inline-block;
-            margin-top: 20px;
-            padding: 12px 35px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            padding: 14px 36px;
+            background: #4f46e5;
             color: white;
             text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border: none;
-            cursor: pointer;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-            background: linear-gradient(45deg, #ff5252, #3bc5bd);
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
         }
         
-        .info {
-            margin-top: 30px;
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.6;
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .domain-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: #ff6b6b;
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        .footer {
+            text-align: center;
+            padding: 20px 40px;
+            color: #94a3b8;
+            font-size: 14px;
+            border-top: 1px solid #f1f5f9;
         }
         
         @media (max-width: 600px) {
-            .container {
-                padding: 30px 20px;
-                width: 95%;
+            .header {
+                padding: 25px 20px;
             }
             
-            h1 {
-                font-size: 2rem;
+            .content {
+                padding: 35px 20px 30px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
             }
             
             .message {
-                font-size: 1.2rem;
+                font-size: 18px;
             }
             
             .countdown {
-                font-size: 4rem;
-            }
-            
-            .new-domain {
-                font-size: 1.3rem;
+                font-size: 36px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container pulse">
-        <div class="domain-icon">
-            <i class="fas fa-globe-americas"></i>
-        </div>
-        <h1>域名变更通知</h1>
-        <p class="message">当前域名已弃用，正在跳转到新域名，请稍等...</p>
-        
-        <div class="countdown" id="countdown">5</div>
-        
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
+    <div class="container">
+        <div class="header">
+            <h1>域名迁移通知</h1>
+            <p>我们已启用新域名，正在为您跳转</p>
         </div>
         
-        <div class="new-domain">
-            新域名：<a href="https://hjsf.uno" id="new-domain-link">https://hjsf.uno</a>
+        <div class="content">
+            <div class="icon-container">
+                <div class="icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <p class="message">当前域名已弃用，正在跳转到新域名，请稍等...</p>
+            
+            <div class="countdown-container">
+                <div class="countdown-text">倒计时结束后自动跳转</div>
+                <div class="countdown" id="countdown">5</div>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            
+            <div class="domain-info">
+                <span>新域名：</span>
+                <a href="https://hjsf.uno" id="domain-link">https://hjsf.uno</a>
+            </div>
+            
+            <div class="btn-container">
+                <a href="https://hjsf.uno" class="btn" id="redirect-btn">立即访问新网站</a>
+            </div>
         </div>
         
-        <a href="https://hjsf.uno" class="btn" id="redirect-btn">
-            <i class="fas fa-external-link-alt"></i> 立即访问新网站
-        </a>
-        
-        <p class="info">
-            您将在 <span id="remaining-seconds">5</span> 秒后自动跳转到新域名<br>
-            如果跳转未发生，请点击上面的按钮手动访问
-        </p>
+        <div class="footer">
+            <p>如果页面没有自动跳转，请点击上方按钮手动访问</p>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const countdownElement = document.getElementById('countdown');
-            const progressElement = document.getElementById('progress');
-            const remainingSeconds = document.getElementById('remaining-seconds');
             const redirectBtn = document.getElementById('redirect-btn');
-            const newDomainLink = document.getElementById('new-domain-link');
+            const domainLink = document.getElementById('domain-link');
             
             let seconds = 5;
             
-            // 更新倒计时显示
             function updateCountdown() {
                 countdownElement.textContent = seconds;
-                remainingSeconds.textContent = seconds;
-                
-                // 更新进度条
-                const progressPercent = (5 - seconds) * 20;
-                progressElement.style.width = progressPercent + '%';
                 
                 if (seconds <= 0) {
-                    // 倒计时结束，执行跳转
                     window.location.href = 'https://hjsf.uno/';
                 } else {
                     seconds--;
@@ -257,16 +298,16 @@
             }
             
             // 启动倒计时
-            setTimeout(updateCountdown, 1000);
+            updateCountdown();
             
-            // 为按钮添加点击事件
+            // 添加按钮事件
             redirectBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 window.location.href = 'https://hjsf.uno/';
             });
             
-            // 为新域名链接添加点击事件
-            newDomainLink.addEventListener('click', function(e) {
+            // 添加域名链接事件
+            domainLink.addEventListener('click', function(e) {
                 e.preventDefault();
                 window.location.href = 'https://hjsf.uno/';
             });
