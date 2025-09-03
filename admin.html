@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二维码信息查看 - 红姐私房</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #3498db;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f8f9fa;
+            display: none;
+        }
+        
+        .item {
+            margin-bottom: 15px;
+            display: flex;
+        }
+        
+        .label {
+            font-weight: bold;
+            width: 100px;
+            color: #2c3e50;
+        }
+        
+        .value {
+            flex: 1;
+            color: #34495e;
+        }
+        
+        .error {
+            color: red;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>二维码信息查看</h1>
+            <p class="subtitle">扫描二维码获取订单详情</p>
+        </header>
+        
+        <div class="content">
+            <div class="form-group">
+                <label for="qrcode">请输入二维码内容：</label>
+                <input type="text" id="qrcode" placeholder="粘贴二维码内容..." style="height: 120px;">
+            </div>
+            
+            <button id="decode-btn">解析二维码</button>
+            
+            <div id="result" class="result">
+                <div class="item"><span class="label">产品:</span> <span class="value" id="product"></span></div>
+                <div class="item"><span class="label">规格:</span> <span class="value" id="specification"></span></div>
+                <div class="item"><span class="label">下单时间:</span> <span class="value" id="order-time"></span></div>
+                <div class="item"><span class="label">打印时间:</span> <span class="value" id="print-time"></span></div>
+                <div class="item"><span class="label">备注:</span> <span class="value" id="remark"></span></div>
+            </div>
+            
+            <div id="error" class="error"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 解析按钮事件
+            document.getElementById('decode-btn').addEventListener('click', decodeQRCode);
+            
+            // 回车键触发解析
+            document.getElementById('qrcode').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    decodeQRCode();
+                }
+            });
+            
+            function decodeQRCode() {
+                const qrcodeInput = document.getElementById('qrcode').value.trim();
+                const resultDiv = document.getElementById('result');
+                const errorDiv = document.getElementById('error');
+                
+                if (!qrcodeInput) {
+                    errorDiv.textContent = '请输入二维码内容';
+                    resultDiv.style.display = 'none';
+                    return;
+                }
+                
+                try {
+                    // 解码JSON数据
+                    const data = JSON.parse(qrcodeInput);
+                    
+                    // 显示结果
+                    document.getElementById('product').textContent = data.productName || '未知';
+                    document.getElementById('specification').textContent = data.specification || '未知';
+                    document.getElementById('order-time').textContent = data.orderTime || '未知';
+                    document.getElementById('print-time').textContent = data.printTime || '未知';
+                    document.getElementById('remark').textContent = data.remark || '无';
+                    
+                    resultDiv.style.display = 'block';
+                    errorDiv.textContent = '';
+                } catch (e) {
+                    errorDiv.textContent = '二维码内容格式错误，请检查输入';
+                    resultDiv.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
