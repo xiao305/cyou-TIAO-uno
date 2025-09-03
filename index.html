@@ -228,6 +228,7 @@
             margin-bottom: 10px;
             font-size: 12px;
             flex: 1;
+            overflow: hidden;
         }
         
         .label-item {
@@ -245,11 +246,16 @@
         .label-item-value {
             flex: 1;
             color: #34495e;
+            word-break: break-all;
         }
         
         .qr-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
             text-align: center;
-            margin-top: 5px;
+            width: 80px;
+            height: 80px;
         }
         
         .qr-code {
@@ -269,6 +275,7 @@
             margin-top: 5px;
             font-size: 9px;
             color: #95a5a6;
+            display: none; /* 隐藏标签ID */
         }
         
         .instructions {
@@ -336,6 +343,14 @@
         
         .label-template .label-item > div {
             word-break: break-all;
+        }
+        
+        /* 限制文本长度 */
+        .label-item-value {
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -419,11 +434,6 @@
                                 <div class="qr-code" id="qr-code">
                                     <div class="loading">等待生成二维码...</div>
                                 </div>
-                                <p style="font-size: 9px; margin-top: 3px;">扫描查看详细信息</p>
-                            </div>
-                            
-                            <div class="label-footer">
-                                标签ID: TAG-20230615-001
                             </div>
                         </div>
                     </div>
@@ -470,11 +480,6 @@
                 <div class="qr-code" id="print-qr-code">
                     <div class="loading">等待生成二维码...</div>
                 </div>
-                <p style="font-size: 9px; margin-top: 3px;">扫描查看详细信息</p>
-            </div>
-            
-            <div class="label-footer">
-                标签ID: TAG-20230615-001
             </div>
         </div>
     </div>
