@@ -170,17 +170,6 @@
             box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
         }
         
-        .btn-custom-print {
-            background: #27ae60;
-            color: white;
-        }
-        
-        .btn-custom-print:hover {
-            background: #219653;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
-        }
-        
         .label-preview {
             background: white;
             border-radius: 15px;
@@ -308,7 +297,83 @@
             line-height: 1.6;
         }
         
+        @media print {
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+            }
+            
+            body * {
+                visibility: hidden;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .container, .main-content, .preview-section, 
+            .label-preview, .label-container, .label-template {
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                height: auto !important;
+                display: block !important;
+                position: relative !important;
+            }
+            
+            .print-area, .print-area * {
+                visibility: visible;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            
+            .print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                page-break-inside: avoid;
+            }
+            
+            .print-label {
+                margin: 0 !important;
+                padding: 5mm !important;
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+                page-break-inside: avoid;
+                break-inside: avoid;
+                width: 50mm !important;
+                height: 40mm !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            @page {
+                size: 50mm 40mm;
+                margin: 0;
+            }
+        }
+        
         .hidden {
+            display: none;
+        }
+        
+        .print-area {
             display: none;
         }
         
@@ -388,96 +453,6 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
-        }
-        
-        /* 添加打印计数器 */
-        .print-count-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .print-count-container label {
-            margin-bottom: 0;
-        }
-        
-        .print-count-container input {
-            width: 60px;
-            padding: 8px;
-        }
-        
-        /* 打印相关样式 */
-        @media print {
-            body, html {
-                width: 100%;
-                height: 100%;
-                margin: 0 !important;
-                padding: 0 !important;
-                background: white !important;
-            }
-            
-            body * {
-                visibility: hidden;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            
-            .container, .main-content, .preview-section, 
-            .label-preview, .label-container, .label-template {
-                margin: 0 !important;
-                padding: 0 !important;
-                box-shadow: none !important;
-                border: none !important;
-                width: 100% !important;
-                height: auto !important;
-                display: block !important;
-                position: relative !important;
-            }
-            
-            .print-area, .print-area * {
-                visibility: visible;
-                margin: 0 !important;
-                padding: 0 !important;
-                box-shadow: none !important;
-                border: none !important;
-            }
-            
-            .print-area {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                page-break-inside: avoid;
-            }
-            
-            .print-label {
-                margin: 0 !important;
-                padding: 5mm !important;
-                box-shadow: none !important;
-                border: 1px solid #000 !important;
-                page-break-inside: avoid;
-                break-inside: avoid;
-                width: 50mm !important;
-                height: 40mm !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-            }
-            
-            .no-print {
-                display: none !important;
-            }
-            
-            @page {
-                size: 50mm 40mm;
-                margin: 0;
-            }
         }
     </style>
 </head>
@@ -561,18 +536,9 @@
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="print-count">打印数量</label>
-                    <div class="print-count-container">
-                        <input type="number" id="print-count" value="1" min="1" max="50">
-                        <span>个标签</span>
-                    </div>
-                </div>
-                
                 <div class="btn-group">
                     <button id="generate-btn" class="btn-primary">生成标签</button>
-                    <button id="print-btn" class="btn-print">浏览器打印</button>
-                    <button id="custom-print-btn" class="btn-custom-print">PDF打印</button>
+                    <button id="print-btn" class="btn-print">打印标签</button>
                 </div>
             </div>
             
@@ -616,7 +582,7 @@
                         <li>填写产品信息并选择标签模板</li>
                         <li>点击"生成标签"创建二维码标签</li>
                         <li>二维码包含所有标签信息，可被扫描读取</li>
-                        <li>点击"PDF打印"进行打印（推荐使用）</li>
+                        <li>点击"打印标签"进行打印（建议使用50×40mm或50×20mm标签纸）</li>
                         <li>所有数据保存在浏览器本地，无需服务器支持</li>
                     </ul>
                 </div>
@@ -625,7 +591,7 @@
     </div>
     
     <!-- 用于打印的隐藏区域 -->
-    <div class="print-area" id="print-area" style="display:none;">
+    <div class="print-area">
         <div class="print-label" id="print-label">
             <div class="label-header">
                 <div class="order-time" id="print-order-time">09-03 07:51</div>
@@ -655,11 +621,6 @@
         </div>
     </div>
 
-    <!-- 添加必要的库 -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode.js@1.0.0/lib/qrcode.min.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // 初始化当前时间
@@ -684,11 +645,8 @@
             // 生成按钮事件
             document.getElementById('generate-btn').addEventListener('click', generateLabel);
             
-            // 浏览器打印按钮事件
+            // 打印按钮事件
             document.getElementById('print-btn').addEventListener('click', printLabel);
-            
-            // PDF打印按钮事件
-            document.getElementById('custom-print-btn').addEventListener('click', customPrintLabel);
             
             // 初始化生成一次标签
             generateLabel();
@@ -702,7 +660,6 @@
                     customInput.style.display = 'block';
                 } else {
                     customInput.style.display = 'none';
-                    document.getElementById('product-custom').value = '';
                 }
             });
             
@@ -715,7 +672,6 @@
                     customInput.style.display = 'block';
                 } else {
                     customInput.style.display = 'none';
-                    document.getElementById('specification-custom').value = '';
                 }
             });
             
@@ -740,9 +696,6 @@
                     document.getElementById('remark-item').style.display = 'flex';
                     document.getElementById('print-remark-item').style.display = 'flex';
                 }
-                
-                // 重新生成标签
-                generateLabel();
             }
             
             function generateLabel() {
@@ -808,34 +761,34 @@
                 document.getElementById('qr-code').innerHTML = '<div class="loading">生成二维码中...</div>';
                 document.getElementById('print-qr-code').innerHTML = '<div class="loading">生成二维码中...</div>';
                 
-                // 使用 qrcode.js 本地生成
-                const qrCodeElement = document.getElementById('qr-code');
-                const printQrCodeElement = document.getElementById('print-qr-code');
+                // 使用免费的二维码API
+                const encodedText = encodeURIComponent(text);
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodedText}`;
                 
-                // 清空
-                qrCodeElement.innerHTML = '';
-                printQrCodeElement.innerHTML = '';
+                // 创建图片元素
+                const qrImage = document.createElement('img');
+                qrImage.src = qrUrl;
+                qrImage.style.width = '70px';
+                qrImage.style.height = '70px';
+                qrImage.alt = '二维码';
+                qrImage.onload = function() {
+                    // 清空并添加图片到预览区域
+                    const qrCodeElement = document.getElementById('qr-code');
+                    qrCodeElement.innerHTML = '';
+                    qrCodeElement.appendChild(qrImage.cloneNode());
+                    
+                    // 同样处理打印区域的二维码
+                    const printQrCodeElement = document.getElementById('print-qr-code');
+                    printQrCodeElement.innerHTML = '';
+                    const printQrImage = qrImage.cloneNode();
+                    printQrCodeElement.appendChild(printQrImage);
+                };
                 
-                // 生成二维码
-                try {
-                    const qrCanvas = document.createElement('canvas');
-                    qrCanvas.width = 70;
-                    qrCanvas.height = 70;
-                    
-                    new QRCode(qrCanvas, {
-                        text: text,
-                        width: 70,
-                        height: 70,
-                        correctLevel: QRCode.CorrectLevel.H
-                    });
-                    
-                    qrCodeElement.appendChild(qrCanvas);
-                    printQrCodeElement.appendChild(qrCanvas.cloneNode());
-                } catch (error) {
-                    console.error('二维码生成错误:', error);
-                    qrCodeElement.innerHTML = '<div style="color:red;font-size:12px;">二维码生成失败</div>';
-                    printQrCodeElement.innerHTML = '<div style="color:red;font-size:12px;">二维码生成失败</div>';
-                }
+                qrImage.onerror = function() {
+                    // 处理错误
+                    document.getElementById('qr-code').innerHTML = '<div style="color:red;font-size:12px;">二维码生成失败</div>';
+                    document.getElementById('print-qr-code').innerHTML = '<div style="color:red;font-size:12px;">二维码生成失败</div>';
+                };
             }
             
             function printLabel() {
@@ -844,145 +797,8 @@
                 const printTimeString = formatDateTime(printTime);
                 document.getElementById('print-print-time').textContent = `打印时间: ${printTimeString}`;
                 
-                // 确保打印区域显示
-                const printArea = document.getElementById('print-area');
-                printArea.style.display = 'block';
-                
-                // 等待一小段时间确保DOM更新
-                setTimeout(() => {
-                    window.print();
-                }, 100);
-            }
-            
-            function customPrintLabel() {
-                const printCount = parseInt(document.getElementById('print-count').value) || 1;
-                
-                // 验证打印数量
-                if (printCount <= 0 || printCount > 50) {
-                    alert('打印数量必须在1-50之间');
-                    return;
-                }
-                
-                // 获取当前标签数据
-                const productName = document.getElementById('product-name').value || '未命名产品';
-                const specification = document.getElementById('specification').value || '无规格';
-                const orderTime = document.getElementById('order-time').value;
-                const remark = document.getElementById('remark').value || '无备注';
-                
-                // 处理自定义产品名称
-                let finalProductName = productName;
-                if (productName === '自定义') {
-                    const customProduct = document.getElementById('product-custom').value;
-                    if (customProduct) {
-                        finalProductName = customProduct;
-                    }
-                }
-                
-                // 处理自定义规格
-                let finalSpecification = specification;
-                if (specification === '其他') {
-                    const customSpec = document.getElementById('specification-custom').value;
-                    if (customSpec) {
-                        finalSpecification = customSpec;
-                    }
-                }
-                
-                // 格式化时间显示
-                const orderDate = new Date(orderTime);
-                const orderTimeString = formatOrderTime(orderDate);
-                const printTime = new Date();
-                const printTimeString = formatDateTime(printTime);
-                
-                // 生成PDF
-                generatePDF(finalProductName, finalSpecification, orderTimeString, printTimeString, remark, printCount);
-            }
-            
-            function generatePDF(productName, specification, orderTime, printTime, remark, count) {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: [50, 40]
-                });
-                
-                // 创建多个标签
-                const promises = [];
-                for (let i = 0; i < count; i++) {
-                    // 创建临时标签容器
-                    const tempLabel = document.getElementById('print-label').cloneNode(true);
-                    tempLabel.id = `temp-label-${i}`;
-                    
-                    // 更新内容
-                    tempLabel.querySelector('#print-product').textContent = productName;
-                    tempLabel.querySelector('#print-spec').textContent = specification;
-                    tempLabel.querySelector('#print-remark').textContent = remark;
-                    tempLabel.querySelector('#print-order-time').textContent = orderTime;
-                    tempLabel.querySelector('#print-print-time').textContent = `打印时间: ${printTime}`;
-                    
-                    // 生成二维码
-                    const qrData = {
-                        productName: productName,
-                        specification: specification,
-                        orderTime: orderTime,
-                        printTime: printTime,
-                        remark: remark
-                    };
-                    
-                    // 生成二维码图片
-                    const qrCanvas = document.createElement('canvas');
-                    qrCanvas.width = 70;
-                    qrCanvas.height = 70;
-                    
-                    try {
-                        new QRCode(qrCanvas, {
-                            text: JSON.stringify(qrData),
-                            width: 70,
-                            height: 70,
-                            correctLevel: QRCode.CorrectLevel.H
-                        });
-                        
-                        // 清空并添加二维码
-                        const qrContainer = tempLabel.querySelector('.qr-code');
-                        qrContainer.innerHTML = '';
-                        qrContainer.appendChild(qrCanvas);
-                    } catch (err) {
-                        console.error('二维码生成失败:', err);
-                    }
-                    
-                    // 使用 html2canvas 生成图片
-                    const promise = html2canvas(tempLabel, {
-                        scale: 2,
-                        useCORS: true,
-                        allowTaint: true,
-                        backgroundColor: null
-                    }).then(canvas => {
-                        const imgData = canvas.toDataURL('image/png');
-                        const imgWidth = 50;
-                        const pageHeight = 40;
-                        const imgHeight = canvas.height * imgWidth / canvas.width;
-                        
-                        // 添加到PDF
-                        doc.addImage(imgData, 'PNG', 0, 0, imgWidth, pageHeight);
-                        
-                        // 如果不是最后一个，则添加新页
-                        if (i < count - 1) {
-                            doc.addPage();
-                        }
-                    }).catch(err => {
-                        console.error('生成PDF失败:', err);
-                        // 添加错误处理，避免程序崩溃
-                    });
-                    
-                    promises.push(promise);
-                }
-                
-                // 等待所有Promise完成
-                Promise.all(promises).then(() => {
-                    doc.save('标签.pdf');
-                }).catch(err => {
-                    console.error('批量生成PDF失败:', err);
-                    alert('PDF生成失败，请重试');
-                });
+                // 触发打印
+                window.print();
             }
             
             function syncCurrentTime() {
@@ -1020,4 +836,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
