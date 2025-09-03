@@ -239,6 +239,13 @@
             display: none;
         }
         
+        .status-message {
+            text-align: center;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -300,6 +307,8 @@
                     <button id="start-camera">开始扫描</button>
                     <button id="stop-camera" class="btn-secondary">停止扫描</button>
                 </div>
+                
+                <div id="scanner-status" class="status-message"></div>
             </div>
             
             <div id="result" class="result">
@@ -332,7 +341,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Tab切换功能
@@ -373,8 +381,10 @@
             const video = document.getElementById('scanner-video');
             const startButton = document.getElementById('start-camera');
             const stopButton = document.getElementById('stop-camera');
+            const statusDiv = document.getElementById('scanner-status');
             let stream = null;
             let scanning = false;
+            let scanInterval = null;
             
             // 开始扫描按钮事件
             startButton.addEventListener('click', startScanner);
@@ -383,7 +393,8 @@
             stopButton.addEventListener('click', stopScanner);
             
             function startScanner() {
-                if (scanning) return;
+                // 显示扫描容器
+                document.querySelector('.scanner-container').style.display = 'block';
                 
                 const constraints = {
                     video: {
@@ -401,52 +412,98 @@
                         video.setAttribute("playsinline", true); // iOS Safari兼容
                         video.play();
                         scanning = true;
+                        showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
+                        
+                        // 开始扫描
                         scanQRCode();
-                        showMessage('摄像头已启动，将二维码对准扫描框', 'success');
                     })
                     .catch(function(err) {
                         console.error("无法访问摄像头:", err);
-                        showMessage('无法访问摄像头，请检查权限设置', 'error');
+                        showScannerStatus('无法访问摄像头，请检查权限设置：' + err.message, 'error');
+                        document.querySelector('.scanner-container').style.display = 'none';
                     });
             }
             
             function stopScanner() {
+                scanning = false;
+                
+                if (scanInterval) {
+                    clearInterval(scanInterval);
+                    scanInterval = null;
+                }
+                
                 if (stream) {
                     const tracks = stream.getTracks();
                     tracks.forEach(track => track.stop());
                     stream = null;
                 }
-                scanning = false;
-                showMessage('扫描已停止', 'success');
+                
+                // 隐藏扫描容器
+                document.querySelector('.scanner-container').style.display = 'none';
+                showScannerStatus('扫描已停止', 'success');
             }
             
             function scanQRCode() {
                 if (!scanning) return;
                 
-                if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    
-                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                        inversionAttempts: "dontInvert",
-                    });
-                    
-                    if (code) {
-                        // 成功识别二维码
-                        document.getElementById('qrcode').value = code.data;
-                        decodeQRCode();
-                        stopScanner();
-                        showMessage('二维码识别成功！', 'success');
+                // 使用setInterval确保持续扫描
+                scanInterval = setInterval(() => {
+                    if (!scanning) {
+                        clearInterval(scanInterval);
                         return;
                     }
+                    
+                    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        
+                        try {
+                            // 动态加载jsQR库
+                            if (typeof jsQR === 'undefined') {
+                                loadJSQR(() => {
+                                    processImageData(imageData, canvas);
+                                });
+                            } else {
+                                processImageData(imageData, canvas);
+                            }
+                        } catch (e) {
+                            console.error("扫描过程中出现错误:", e);
+                        }
+                    }
+                }, 200); // 每200ms扫描一次
+            }
+            
+            function processImageData(imageData, canvas) {
+                const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "dontInvert",
+                });
+                
+                if (code) {
+                    // 成功识别二维码
+                    document.getElementById('qrcode').value = code.data;
+                    decodeQRCode();
+                    stopScanner();
+                    showScannerStatus('二维码识别成功！', 'success');
+                }
+            }
+            
+            function loadJSQR(callback) {
+                if (typeof jsQR !== 'undefined') {
+                    callback();
+                    return;
                 }
                 
-                // 继续扫描
-                setTimeout(scanQRCode, 100);
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
+                script.onload = callback;
+                script.onerror = function() {
+                    showScannerStatus('二维码识别库加载失败', 'error');
+                };
+                document.head.appendChild(script);
             }
             
             function decodeQRCode() {
@@ -483,6 +540,11 @@
                 const messageDiv = document.getElementById('message');
                 messageDiv.textContent = text;
                 messageDiv.className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            }
+            
+            function showScannerStatus(text, type) {
+                statusDiv.textContent = text;
+                statusDiv.className = 'status-message ' + (type === 'error' ? 'error' : 'success');
             }
             
             // 页面卸载时停止摄像头
