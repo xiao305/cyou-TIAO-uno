@@ -333,17 +333,42 @@
     </div>
 
     <script>
-        // 预加载jsQR库
+        // 预加载jsQR库 - 使用多个CDN作为备选
         (function() {
-            var script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
-            script.onload = function() {
-                console.log('jsQR库加载成功');
-            };
-            script.onerror = function() {
-                console.error('jsQR库加载失败');
-            };
-            document.head.appendChild(script);
+            const cdns = [
+                'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js',
+                'https://unpkg.com/jsqr@1.4.0/dist/jsQR.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js'
+            ];
+            
+            let loaded = false;
+            let index = 0;
+            
+            function loadNext() {
+                if (index >= cdns.length) {
+                    console.error('所有CDN都加载失败');
+                    showScannerStatus('二维码识别库加载失败，请刷新页面重试', 'error');
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.src = cdns[index];
+                script.onload = function() {
+                    if (!loaded) {
+                        loaded = true;
+                        console.log('jsQR库加载成功');
+                        showScannerStatus('二维码识别库加载成功', 'success');
+                    }
+                };
+                script.onerror = function() {
+                    console.error('CDN加载失败:', cdns[index]);
+                    index++;
+                    loadNext();
+                };
+                document.head.appendChild(script);
+            }
+            
+            loadNext();
         })();
         
         document.addEventListener('DOMContentLoaded', function() {
@@ -483,7 +508,10 @@
             function processImageData(imageData, canvas) {
                 // 确保jsQR库已加载
                 if (typeof jsQR === 'undefined') {
-                    console.log('jsQR库尚未加载完成');
+                    // 显示加载状态
+                    if (!document.getElementById('scanner-status').textContent.includes('加载')) {
+                        showScannerStatus('正在加载二维码识别库...', 'success');
+                    }
                     return;
                 }
                 
