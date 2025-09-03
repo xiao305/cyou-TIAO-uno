@@ -175,6 +175,35 @@
             display: none;
         }
         
+        .debug-container {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .debug-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        
+        .debug-content {
+            font-family: monospace;
+            font-size: 13px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
         .result {
             margin-top: 30px;
             padding: 20px;
@@ -253,6 +282,16 @@
             border-radius: 0 4px 4px 0;
         }
         
+        .debug-toggle {
+            background: #e0e0e0;
+            border: none;
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -285,7 +324,7 @@
         
         <div class="content">
             <div class="fix-highlight">
-                <strong>问题已修复：</strong>已解决摄像头约束错误和Canvas性能问题
+                <strong>扫码增强版：</strong>添加详细调试信息，帮助定位扫码问题
             </div>
             
             <div class="tabs">
@@ -321,6 +360,14 @@
                 
                 <div id="scanner-status" class="status-message">点击"开始扫描"按钮启动摄像头</div>
                 <div id="library-status" class="library-status">QR码识别功能已就绪</div>
+                
+                <div class="debug-container" id="debug-container">
+                    <div class="debug-title" id="debug-toggle">
+                        调试信息
+                        <button class="debug-toggle">显示/隐藏</button>
+                    </div>
+                    <div class="debug-content" id="debug-content"></div>
+                </div>
             </div>
             
             <div id="result" class="result">
@@ -359,14 +406,21 @@
             const startButton = document.getElementById('start-camera');
             const stopButton = document.getElementById('stop-camera');
             const statusDiv = document.getElementById('scanner-status');
+            const debugContainer = document.getElementById('debug-container');
+            const debugContent = document.getElementById('debug-content');
+            const debugToggle = document.getElementById('debug-toggle');
             let isScanning = false;
             let stream = null;
             let scanInterval = null;
+            let debugEnabled = false;
+            let lastScanTime = 0;
+            let scanCount = 0;
+            let successCount = 0;
             
             // 创建一个隐藏的canvas，专门用于QR码识别
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d', { 
-                willReadFrequently: true  // 关键修复：优化getImageData性能
+                willReadFrequently: true
             });
             
             // Tab切换功能
@@ -387,8 +441,20 @@
                     // 切换到扫描标签时显示状态
                     if (tabId === 'scanner') {
                         showScannerStatus('点击"开始扫描"启动摄像头', 'success');
+                        debugContainer.style.display = 'block';
+                    } else {
+                        debugContainer.style.display = 'none';
                     }
                 });
+            });
+            
+            // 调试信息开关
+            debugToggle.addEventListener('click', function(e) {
+                if (e.target.classList.contains('debug-toggle')) {
+                    debugEnabled = !debugEnabled;
+                    document.querySelector('.debug-content').style.display = debugEnabled ? 'block' : 'none';
+                    e.target.textContent = debugEnabled ? '隐藏' : '显示';
+                }
             });
             
             // 手动解析按钮事件
@@ -414,23 +480,44 @@
             
             // 页面卸载时停止摄像头
             window.addEventListener('beforeunload', stopScanner);
-
+            
+            // 添加调试信息
+            function logDebug(message) {
+                if (!debugEnabled) return;
+                
+                const now = new Date().toLocaleTimeString();
+                const entry = `[${now}] ${message}`;
+                debugContent.innerHTML = entry + '<br>' + debugContent.innerHTML;
+                
+                // 限制调试信息数量
+                const entries = debugContent.innerHTML.split('<br>');
+                if (entries.length > 50) {
+                    debugContent.innerHTML = entries.slice(0, 50).join('<br>');
+                }
+                
+                console.log(message);
+            }
+            
             // 修复后的摄像头访问和QR码扫描
             function startScanner() {
                 if (isScanning) {
                     return;
                 }
                 
+                // 重置计数器
+                scanCount = 0;
+                successCount = 0;
+                lastScanTime = Date.now();
+                
                 // 显示扫描容器
                 document.querySelector('.scanner-container').style.display = 'block';
                 showScannerStatus('请求摄像头权限...', 'success');
+                logDebug('开始请求摄像头权限');
                 
-                // 修复1: 使用更灵活的约束条件
+                // 使用更灵活的约束条件
                 const constraints = {
                     video: {
-                        // 不强制要求后置摄像头，使用"environment"作为首选
                         facingMode: "environment",
-                        // 使用范围而不是精确值
                         width: { min: 640, ideal: 1280 },
                         height: { min: 480, ideal: 720 }
                     }
@@ -442,22 +529,38 @@
                         stream = mediaStream;
                         video.srcObject = stream;
                         
+                        logDebug('成功获取摄像头流');
+                        
                         // 确保视频加载完成后再开始扫描
                         video.onloadedmetadata = function() {
                             video.play();
+                            logDebug('视频元数据已加载，准备播放');
                             
                             // 设置canvas尺寸与视频相同
                             canvas.width = video.videoWidth || 640;
                             canvas.height = video.videoHeight || 480;
+                            logDebug(`设置canvas尺寸: ${canvas.width}x${canvas.height}`);
                             
-                            // 修复2: 等待视频完全开始播放再启动扫描
+                            // 等待视频完全开始播放再启动扫描
                             video.onplaying = function() {
+                                logDebug('视频已开始播放，准备启动扫描');
                                 isScanning = true;
                                 showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
+                                
+                                // 添加扫描统计
+                                const statsInterval = setInterval(() => {
+                                    const now = Date.now();
+                                    const fps = scanCount / ((now - lastScanTime) / 1000);
+                                    lastScanTime = now;
+                                    logDebug(`扫描统计: ${scanCount}次扫描, ${fps.toFixed(1)} FPS, ${successCount}次成功`);
+                                    scanCount = 0;
+                                }, 5000);
                                 
                                 // 开始扫描循环
                                 scanInterval = setInterval(() => {
                                     if (!isScanning) return;
+                                    
+                                    scanCount++;
                                     
                                     try {
                                         // 绘制视频帧到canvas
@@ -465,32 +568,50 @@
                                         
                                         // 尝试解码QR码
                                         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                                        const code = jsQR(imageData.data, imageData.width, imageData.height);
+                                        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                                            inversionAttempts: "dontInvert"
+                                        });
                                         
                                         if (code) {
-                                            console.log('识别成功:', code.data);
+                                            successCount++;
+                                            logDebug(`✅ 识别成功: ${code.data}`);
                                             document.getElementById('qrcode').value = code.data;
                                             decodeQRCode();
                                             stopScanner();
                                             showScannerStatus('二维码识别成功！', 'success');
+                                            
+                                            // 添加声音反馈
+                                            try {
+                                                new Audio('data:audio/wav;base64,UklGRiQDAABXQVZFZm10IBAAAAABAAEAiBUAAIgVAAABAAgAZGF0YQADAAD//w==').play();
+                                            } catch (e) {
+                                                // 忽略音频错误
+                                            }
+                                        } else {
+                                            // 添加视觉反馈 - 检测定位点
+                                            const finderPattern = getFinderPatternForDebug(imageData);
+                                            if (finderPattern && finderPattern.count >= 2) {
+                                                logDebug(`🔍 检测到${finderPattern.count}个定位点，正在尝试识别...`);
+                                                drawDetectedPoints(finderPattern);
+                                            }
                                         }
                                     } catch (e) {
-                                        // 忽略解码错误
+                                        logDebug(`❌ 扫描错误: ${e.message}`);
                                     }
-                                }, 200); // 每200ms扫描一次
+                                }, 100); // 每100ms扫描一次（更频繁）
                             };
                         };
                     })
                     .catch(function(err) {
-                        console.error('无法访问摄像头:', err);
+                        logDebug(`❌ 无法访问摄像头: ${err.name} - ${err.message}`);
                         
-                        // 修复3: 处理OverconstrainedError - 尝试简化约束
+                        // 处理OverconstrainedError - 尝试简化约束
                         if (err.name === 'OverconstrainedError' || err.name === 'NotSupportedError') {
-                            showScannerStatus('尝试简化摄像头设置...', 'success');
+                            logDebug('尝试简化摄像头设置...');
                             
                             // 使用最基本的约束
                             navigator.mediaDevices.getUserMedia({ video: true })
                                 .then(function(mediaStream) {
+                                    // 与上面相同的处理逻辑
                                     stream = mediaStream;
                                     video.srcObject = stream;
                                     
@@ -503,9 +624,12 @@
                                         video.onplaying = function() {
                                             isScanning = true;
                                             showScannerStatus('摄像头已启动（简化设置）', 'success');
+                                            logDebug('使用简化设置成功启动摄像头');
                                             
                                             scanInterval = setInterval(() => {
                                                 if (!isScanning) return;
+                                                
+                                                scanCount++;
                                                 
                                                 try {
                                                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -513,20 +637,22 @@
                                                     const code = jsQR(imageData.data, imageData.width, imageData.height);
                                                     
                                                     if (code) {
+                                                        successCount++;
+                                                        logDebug(`✅ 识别成功: ${code.data}`);
                                                         document.getElementById('qrcode').value = code.data;
                                                         decodeQRCode();
                                                         stopScanner();
                                                         showScannerStatus('二维码识别成功！', 'success');
                                                     }
                                                 } catch (e) {
-                                                    // 忽略
+                                                    logDebug(`❌ 扫描错误: ${e.message}`);
                                                 }
-                                            }, 200);
+                                            }, 100);
                                         };
                                     };
                                 })
                                 .catch(function(err) {
-                                    console.error('简化设置访问失败:', err);
+                                    logDebug(`❌ 简化设置访问失败: ${err.message}`);
                                     showScannerStatus(`摄像头错误: ${err.message}`, 'error');
                                     document.querySelector('.scanner-container').style.display = 'none';
                                 });
@@ -535,6 +661,105 @@
                             document.querySelector('.scanner-container').style.display = 'none';
                         }
                     });
+            }
+            
+            function drawDetectedPoints(finderPattern) {
+                const detectedBox = document.getElementById('detected-qr-box');
+                
+                if (finderPattern.topLeft && finderPattern.topRight && finderPattern.bottomLeft) {
+                    // 计算QR码区域
+                    const topRightX = finderPattern.topRight.x;
+                    const topRightY = finderPattern.topRight.y;
+                    const bottomRightX = topRightX - finderPattern.topLeft.x + finderPattern.bottomLeft.x;
+                    const bottomRightY = finderPattern.bottomLeft.y - finderPattern.topLeft.y + topRightY;
+                    
+                    // 在overlay上绘制检测到的区域
+                    detectedBox.style.display = 'block';
+                    detectedBox.style.left = `${finderPattern.topLeft.x}px`;
+                    detectedBox.style.top = `${finderPattern.topLeft.y}px`;
+                    detectedBox.style.width = `${Math.abs(bottomRightX - finderPattern.topLeft.x)}px`;
+                    detectedBox.style.height = `${Math.abs(bottomRightY - finderPattern.topLeft.y)}px`;
+                } else {
+                    detectedBox.style.display = 'none';
+                }
+            }
+            
+            // 用于调试的finder pattern检测
+            function getFinderPatternForDebug(imageData) {
+                const width = imageData.width;
+                const height = imageData.height;
+                const data = imageData.data;
+                
+                function getPixel(x, y) {
+                    if (x < 0 || y < 0 || x >= width || y >= height) {
+                        return false;
+                    }
+                    // 灰度转换
+                    const offset = (y * width + x) * 4;
+                    const r = data[offset];
+                    const g = data[offset + 1];
+                    const b = data[offset + 2];
+                    const grayscale = (r * 0.299 + g * 0.587 + b * 0.114) > 127;
+                    return grayscale;
+                }
+                
+                let bestMatch = {
+                    count: 0,
+                    topLeft: null,
+                    topRight: null,
+                    bottomLeft: null
+                };
+                
+                // 简化版finder pattern检测
+                const step = 10;
+                for (let y = step; y < height - step; y += step) {
+                    for (let x = step; x < width - step; x += step) {
+                        if (getPixel(x, y)) {
+                            // 检查是否可能是定位点
+                            let size = 0;
+                            let blackRun = 0;
+                            
+                            // 检查水平方向
+                            for (let i = 1; i < 10; i++) {
+                                if (getPixel(x + i, y)) {
+                                    blackRun++;
+                                } else if (blackRun > 0) {
+                                    if (i === 3 && blackRun >= 2 && blackRun <= 5) {
+                                        size = blackRun;
+                                    }
+                                    blackRun = 0;
+                                }
+                            }
+                            
+                            if (size > 0) {
+                                // 检查垂直方向
+                                blackRun = 0;
+                                for (let i = 1; i < 10; i++) {
+                                    if (getPixel(x, y + i)) {
+                                        blackRun++;
+                                    } else if (blackRun > 0) {
+                                        if (i === 3 && blackRun >= 2 && blackRun <= 5) {
+                                            // 找到可能的定位点
+                                            bestMatch.count++;
+                                            
+                                            // 确定定位点类型（简化）
+                                            if (x < width/2 && y < height/2) {
+                                                bestMatch.topLeft = {x, y};
+                                            } else if (x > width/2 && y < height/2) {
+                                                bestMatch.topRight = {x, y};
+                                            } else if (x < width/2 && y > height/2) {
+                                                bestMatch.bottomLeft = {x, y};
+                                            }
+                                        }
+                                        blackRun = 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                return bestMatch;
             }
             
             function stopScanner() {
@@ -561,7 +786,9 @@
                 video.srcObject = null;
                 
                 document.querySelector('.scanner-container').style.display = 'none';
+                document.getElementById('detected-qr-box').style.display = 'none';
                 showScannerStatus('扫描已停止', 'success');
+                logDebug('扫描已停止');
             }
             
             function decodeQRCode() {
@@ -621,22 +848,38 @@
                 }
             }
             
-            // 修复4: 优化的jsQR实现（已添加willReadFrequently优化）
+            // 优化的jsQR实现（添加了更多调试信息）
             function jsQR(data, width, height, options) {
                 "use strict";
+                
+                // 调试信息
+                const startTime = Date.now();
+                let steps = [];
+                
+                function logStep(name, details) {
+                    steps.push({
+                        name,
+                        details,
+                        time: Date.now() - startTime
+                    });
+                }
+                
                 function Point(x, y) {
                     this.x = x;
                     this.y = y;
                 }
+                
                 function xor(a, b) {
                     return (a || b) && !(a && b);
                 }
+                
                 function getPixel(x, y) {
                     if (x < 0 || y < 0 || x >= width || y >= height) {
                         return false;
                     }
                     return !!data[y * width + x];
                 }
+                
                 function getLine(x1, y1, x2, y2) {
                     var path = [];
                     var x = x1;
@@ -663,12 +906,14 @@
                     }
                     return path;
                 }
+                
                 function getModule(x, y, dimension) {
                     if (x < 0 || y < 0 || x >= dimension || y >= dimension) {
                         return false;
                     }
                     return !!data[y * dimension + x];
                 }
+                
                 function getMatrix(dimension) {
                     var matrix = [];
                     for (var y = 0; y < dimension; y++) {
@@ -680,6 +925,7 @@
                     }
                     return matrix;
                 }
+                
                 function getFinderPattern() {
                     var bestMatch = {
                         count: 0,
@@ -688,6 +934,8 @@
                         bottomLeft: null
                     };
                     var margin = 10;
+                    var foundPatterns = [];
+                    
                     for (var scanY = margin; scanY < height - margin; scanY++) {
                         var blackRun = 0;
                         for (var scanX = margin; scanX < width - margin; scanX++) {
@@ -759,16 +1007,32 @@
                                             bottomLeft: location.bottomLeft
                                         };
                                     }
+                                    
+                                    // 记录找到的pattern
+                                    foundPatterns.push({
+                                        topLeft: location.topLeft,
+                                        topRight: location.topRight,
+                                        bottomLeft: location.bottomLeft,
+                                        size: blackRun
+                                    });
                                 }
                                 blackRun = 0;
                             }
                         }
                     }
+                    
+                    logStep('finderPattern', {
+                        count: foundPatterns.length,
+                        bestMatch: bestMatch.count
+                    });
+                    
                     return bestMatch.count >= 2 ? bestMatch : null;
                 }
+                
                 function distance(a, b) {
                     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
                 }
+                
                 function findAlignmentPattern(topLeft, topRight, bottomLeft, dimension) {
                     var bottomRightX = topRight.x - topLeft.x + bottomLeft.x;
                     var bottomRightY = bottomLeft.y - topLeft.y + topRight.y;
@@ -782,6 +1046,7 @@
                     var startY = Math.max(0, Math.floor(bottomRight.y - alignmentRegionSize));
                     var endX = Math.min(width, Math.ceil(bottomRight.x + alignmentRegionSize));
                     var endY = Math.min(height, Math.ceil(bottomRight.y + alignmentRegionSize));
+                    
                     for (var y = startY; y < endY; y++) {
                         for (var x = startX; x < endX; x++) {
                             if (Math.abs(x - bottomRight.x) > alignmentRegionSize / 2 ||
@@ -806,12 +1071,18 @@
                                 }
                             }
                             if (size > 0 && size * 7 <= alignmentRegionSize) {
+                                logStep('alignmentPattern', {
+                                    x: x,
+                                    y: y,
+                                    size: size
+                                });
                                 return new Point(x, y);
                             }
                         }
                     }
                     return null;
                 }
+                
                 function getTransformation(topLeft, topRight, bottomLeft, alignmentPattern, dimension) {
                     var size = dimension - 7;
                     var bottomRight;
@@ -827,6 +1098,14 @@
                     var yScale = (topRight.y - topLeft.y) / size;
                     var xShear = (bottomLeft.x - topLeft.x) / size;
                     var yShear = (bottomLeft.y - topLeft.y) / size;
+                    
+                    logStep('transformation', {
+                        xScale: xScale,
+                        yScale: yScale,
+                        xShear: xShear,
+                        yShear: yShear
+                    });
+                    
                     return {
                         x: function(i, j) {
                             return topLeft.x + (i * xScale) + (j * xShear);
@@ -836,6 +1115,7 @@
                         }
                     };
                 }
+                
                 function getBitMatrix(transformation, dimension) {
                     var points = [];
                     for (var j = 0; j < dimension; j++) {
@@ -851,8 +1131,15 @@
                         var p = points[k];
                         matrix.push(getPixel(Math.floor(p.x), Math.floor(p.y)));
                     }
+                    
+                    logStep('bitMatrix', {
+                        dimension: dimension,
+                        points: points.length
+                    });
+                    
                     return matrix;
                 }
+                
                 function getFormatInformation(matrix, dimension) {
                     var size = dimension - 7;
                     var topLeft = {
@@ -885,11 +1172,25 @@
                             format |= (1 << (14 - j));
                         }
                     }
+                    
+                    logStep('formatInfo', {
+                        format: format.toString(2),
+                        bits: formatBits
+                    });
+                    
                     return format;
                 }
+                
                 function getMask(dimension, format) {
-                    return (format >> 3) & 0x7;
+                    var mask = (format >> 3) & 0x7;
+                    
+                    logStep('mask', {
+                        mask: mask
+                    });
+                    
+                    return mask;
                 }
+                
                 function applyMask(matrix, dimension, mask) {
                     var masked = [];
                     for (var i = 0; i < dimension; i++) {
@@ -924,8 +1225,14 @@
                             masked.push(matrix[i * dimension + j] ^ invert);
                         }
                     }
+                    
+                    logStep('applyMask', {
+                        maskedCount: masked.filter(b => b).length
+                    });
+                    
                     return masked;
                 }
+                
                 function getBits(matrix, dimension) {
                     var size = dimension - 7;
                     var offset = 0;
@@ -953,8 +1260,14 @@
                         }
                         up = !up;
                     }
+                    
+                    logStep('getBits', {
+                        bitCount: bits.length
+                    });
+                    
                     return bits;
                 }
+                
                 function getBytes(bits) {
                     var bytes = [];
                     for (var i = 0; i < bits.length; i += 8) {
@@ -966,10 +1279,32 @@
                         }
                         bytes.push(byte);
                     }
+                    
+                    logStep('getBytes', {
+                        byteCount: bytes.length,
+                        bytes: bytes.slice(0, 10).map(b => b.toString(16).padStart(2, '0'))
+                    });
+                    
                     return bytes;
                 }
+                
                 function decodeData(bytes) {
+                    if (bytes.length === 0) {
+                        logStep('decodeData', {
+                            status: 'no bytes'
+                        });
+                        return null;
+                    }
+                    
                     var mode = bytes[0];
+                    logStep('decodeData', {
+                        mode: mode,
+                        modeStr: mode === 4 ? 'Numeric' : 
+                                 mode === 8 ? 'Alphanumeric' :
+                                 mode === 12 ? 'Byte' :
+                                 mode === 16 ? 'Kanji' : 'Unknown'
+                    });
+                    
                     if (mode === 4) {
                         return decodeNumeric(bytes);
                     } else if (mode === 8) {
@@ -981,6 +1316,7 @@
                     }
                     return null;
                 }
+                
                 function decodeNumeric(bytes) {
                     var data = '';
                     for (var i = 1; i < bytes.length;) {
@@ -993,8 +1329,14 @@
                         data += num.toString();
                         i += length;
                     }
+                    
+                    logStep('decodeNumeric', {
+                        result: data
+                    });
+                    
                     return data;
                 }
+                
                 function decodeAlphanumeric(bytes) {
                     var alphanumeric = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
                     var data = '';
@@ -1010,8 +1352,14 @@
                         }
                         i += length;
                     }
+                    
+                    logStep('decodeAlphanumeric', {
+                        result: data
+                    });
+                    
                     return data;
                 }
+                
                 function decodeByte(bytes) {
                     var data = '';
                     for (var i = 1; i < bytes.length;) {
@@ -1022,8 +1370,14 @@
                         }
                         i += length;
                     }
+                    
+                    logStep('decodeByte', {
+                        result: data.substring(0, 50) + (data.length > 50 ? '...' : '')
+                    });
+                    
                     return data;
                 }
+                
                 function decodeKanji(bytes) {
                     var data = '';
                     for (var i = 1; i < bytes.length;) {
@@ -1040,12 +1394,30 @@
                         }
                         i += length;
                     }
+                    
+                    logStep('decodeKanji', {
+                        result: data
+                    });
+                    
                     return data;
                 }
                 
                 // 主识别流程
                 var finderPattern = getFinderPattern();
                 if (!finderPattern) {
+                    logStep('result', {
+                        status: 'not found',
+                        time: Date.now() - startTime
+                    });
+                    
+                    // 记录调试信息
+                    const debugInfo = {
+                        steps: steps,
+                        time: Date.now() - startTime,
+                        status: 'not found'
+                    };
+                    logDebug(`🔍 未找到QR码 (耗时: ${debugInfo.time}ms)`);
+                    
                     return null;
                 }
                 
@@ -1082,14 +1454,36 @@
                 var data = decodeData(bytes);
                 
                 if (!data) {
+                    logStep('result', {
+                        status: 'decode failed',
+                        time: Date.now() - startTime
+                    });
+                    
+                    const debugInfo = {
+                        steps: steps,
+                        time: Date.now() - startTime,
+                        status: 'decode failed'
+                    };
+                    logDebug(`⚠️ QR码找到但解码失败 (耗时: ${debugInfo.time}ms)`);
+                    
                     return null;
                 }
+                
+                logStep('result', {
+                    status: 'success',
+                    data: data,
+                    time: Date.now() - startTime
+                });
+                
+                logDebug(`✅ 识别成功! 内容: ${data.substring(0, 50)}${data.length > 50 ? '...' : ''} (耗时: ${Date.now() - startTime}ms)`);
                 
                 return {
                     data: data,
                     version: Math.floor((dimension - 17) / 4) + 1,
                     errorCorrectionLevel: ['L', 'M', 'Q', 'H'][format & 0x3],
-                    matrix: getMatrix(dimension)
+                    matrix: getMatrix(dimension),
+                    steps: steps,
+                    time: Date.now() - startTime
                 };
             }
         });
