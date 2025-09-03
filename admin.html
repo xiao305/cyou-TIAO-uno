@@ -132,56 +132,44 @@
         }
         
         .scanner-container {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .scanner-instruction {
             margin-bottom: 20px;
-            display: none;
+            color: #2c3e50;
+            font-size: 18px;
         }
         
-        #scanner-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .scanner-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        
-        .scanner-frame {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .qr-placeholder {
             width: 200px;
             height: 200px;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            margin: 0 auto 20px;
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
         }
         
-        .scanner-line {
-            position: absolute;
-            top: 50%;
-            left: 10%;
-            width: 80%;
-            height: 2px;
-            background: #00ff00;
-            box-shadow: 0 0 5px #00ff00;
-            animation: scan 2s infinite linear;
+        .qr-placeholder img {
+            max-width: 100%;
+            max-height: 100%;
         }
         
-        @keyframes scan {
-            0% { transform: translateY(-50%); }
-            100% { transform: translateY(50%); }
+        .wechat-tip {
+            background: #e1f0fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        .wechat-tip strong {
+            color: #3498db;
         }
         
         .result {
@@ -263,8 +251,8 @@
                 flex-direction: column;
             }
             
-            .scanner-container {
-                height: 250px;
+            .scanner-instruction {
+                font-size: 16px;
             }
         }
     </style>
@@ -279,7 +267,7 @@
         <div class="content">
             <div class="tabs">
                 <div class="tab active" data-tab="manual">手动输入</div>
-                <div class="tab" data-tab="scanner">扫码识别</div>
+                <div class="tab" data-tab="scanner">微信扫码</div>
             </div>
             
             <div id="manual-tab" class="tab-content">
@@ -296,19 +284,25 @@
             
             <div id="scanner-tab" class="tab-content hidden">
                 <div class="scanner-container">
-                    <video id="scanner-video"></video>
-                    <div class="scanner-overlay">
-                        <div class="scanner-frame"></div>
-                        <div class="scanner-line"></div>
+                    <div class="scanner-instruction">
+                        请使用微信扫描下方二维码进行扫码识别
+                    </div>
+                    
+                    <div class="qr-placeholder" id="qr-placeholder">
+                        <div>二维码加载中...</div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button id="refresh-qr">刷新二维码</button>
+                    </div>
+                    
+                    <div class="wechat-tip">
+                        <p><strong>操作提示：</strong></p>
+                        <p>1. 点击右上角菜单</p>
+                        <p>2. 选择"扫一扫"</p>
+                        <p>3. 对准上方二维码进行扫描</p>
                     </div>
                 </div>
-                
-                <div class="btn-group">
-                    <button id="start-camera">开始扫描</button>
-                    <button id="stop-camera" class="btn-secondary">停止扫描</button>
-                </div>
-                
-                <div id="scanner-status" class="status-message"></div>
             </div>
             
             <div id="result" class="result">
@@ -341,7 +335,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Tab切换功能
@@ -358,6 +351,11 @@
                     tab.classList.add('active');
                     const tabId = tab.getAttribute('data-tab');
                     document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+                    
+                    // 如果切换到微信扫码标签，生成二维码
+                    if (tabId === 'scanner') {
+                        generateCurrentPageQR();
+                    }
                 });
             });
             
@@ -371,6 +369,9 @@
                 document.getElementById('message').innerHTML = '';
             });
             
+            // 刷新二维码按钮事件
+            document.getElementById('refresh-qr').addEventListener('click', generateCurrentPageQR);
+            
             // 回车键触发解析
             document.getElementById('qrcode').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
@@ -378,133 +379,25 @@
                 }
             });
             
-            // 摄像头相关元素
-            const video = document.getElementById('scanner-video');
-            const startButton = document.getElementById('start-camera');
-            const stopButton = document.getElementById('stop-camera');
-            const statusDiv = document.getElementById('scanner-status');
-            let stream = null;
-            let scanning = false;
-            let scanInterval = null;
+            // 页面加载时生成当前页面二维码
+            generateCurrentPageQR();
             
-            // 开始扫描按钮事件
-            startButton.addEventListener('click', startScanner);
-            
-            // 停止扫描按钮事件
-            stopButton.addEventListener('click', stopScanner);
-            
-            function startScanner() {
-                // 显示扫描容器
-                document.querySelector('.scanner-container').style.display = 'block';
+            function generateCurrentPageQR() {
+                const qrPlaceholder = document.getElementById('qr-placeholder');
+                const currentUrl = window.location.href;
                 
-                const constraints = {
-                    video: {
-                        facingMode: "environment", // 优先使用后置摄像头
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
+                // 清空占位符
+                qrPlaceholder.innerHTML = '';
+                
+                // 创建二维码图片
+                const qrImg = document.createElement('img');
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentUrl)}`;
+                qrImg.alt = '当前页面二维码';
+                qrImg.onerror = function() {
+                    qrPlaceholder.innerHTML = '<div>二维码生成失败，请点击刷新按钮重试</div>';
                 };
                 
-                navigator.mediaDevices.getUserMedia(constraints)
-                    .then(function(mediaStream) {
-                        stream = mediaStream;
-                        video.srcObject = stream;
-                        video.setAttribute("playsinline", true); // iOS Safari兼容
-                        video.play();
-                        scanning = true;
-                        showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
-                        
-                        // 开始扫描
-                        scanQRCode();
-                    })
-                    .catch(function(err) {
-                        console.error("无法访问摄像头:", err);
-                        showScannerStatus('无法访问摄像头，请检查权限设置：' + err.message, 'error');
-                        document.querySelector('.scanner-container').style.display = 'none';
-                    });
-            }
-            
-            function stopScanner() {
-                scanning = false;
-                
-                if (scanInterval) {
-                    clearInterval(scanInterval);
-                    scanInterval = null;
-                }
-                
-                if (stream) {
-                    const tracks = stream.getTracks();
-                    tracks.forEach(track => track.stop());
-                    stream = null;
-                }
-                
-                // 隐藏扫描容器
-                document.querySelector('.scanner-container').style.display = 'none';
-                showScannerStatus('扫描已停止', 'success');
-            }
-            
-            function scanQRCode() {
-                if (!scanning) return;
-                
-                // 使用setInterval确保持续扫描
-                scanInterval = setInterval(() => {
-                    if (!scanning) {
-                        clearInterval(scanInterval);
-                        return;
-                    }
-                    
-                    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                        
-                        try {
-                            // 动态加载jsQR库
-                            if (typeof jsQR === 'undefined') {
-                                loadJSQR(() => {
-                                    processImageData(imageData, canvas);
-                                });
-                            } else {
-                                processImageData(imageData, canvas);
-                            }
-                        } catch (e) {
-                            console.error("扫描过程中出现错误:", e);
-                        }
-                    }
-                }, 200); // 每200ms扫描一次
-            }
-            
-            function processImageData(imageData, canvas) {
-                const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                    inversionAttempts: "dontInvert",
-                });
-                
-                if (code) {
-                    // 成功识别二维码
-                    document.getElementById('qrcode').value = code.data;
-                    decodeQRCode();
-                    stopScanner();
-                    showScannerStatus('二维码识别成功！', 'success');
-                }
-            }
-            
-            function loadJSQR(callback) {
-                if (typeof jsQR !== 'undefined') {
-                    callback();
-                    return;
-                }
-                
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
-                script.onload = callback;
-                script.onerror = function() {
-                    showScannerStatus('二维码识别库加载失败', 'error');
-                };
-                document.head.appendChild(script);
+                qrPlaceholder.appendChild(qrImg);
             }
             
             function decodeQRCode() {
@@ -543,13 +436,25 @@
                 messageDiv.className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
             }
             
-            function showScannerStatus(text, type) {
-                statusDiv.textContent = text;
-                statusDiv.className = 'status-message ' + (type === 'error' ? 'error' : 'success');
+            // 检查URL参数中是否有二维码数据
+            const urlParams = new URLSearchParams(window.location.search);
+            const qrData = urlParams.get('data');
+            if (qrData) {
+                try {
+                    // 解码并填充数据
+                    const decodedData = decodeURIComponent(qrData);
+                    document.getElementById('qrcode').value = decodedData;
+                    decodeQRCode();
+                    
+                    // 切换到手动输入标签
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.add('hidden'));
+                    document.querySelector('.tab[data-tab="manual"]').classList.add('active');
+                    document.getElementById('manual-tab').classList.remove('hidden');
+                } catch (e) {
+                    console.error('解析URL参数失败:', e);
+                }
             }
-            
-            // 页面卸载时停止摄像头
-            window.addEventListener('beforeunload', stopScanner);
         });
     </script>
 </body>
