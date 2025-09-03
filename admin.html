@@ -295,7 +295,7 @@
             
             <div id="scanner-tab" class="tab-content hidden">
                 <div class="scanner-container">
-                    <video id="scanner-video"></video>
+                    <video id="scanner-video" playsinline></video>
                     <div class="scanner-overlay">
                         <div class="scanner-frame"></div>
                         <div class="detected-qr-box" id="detected-qr-box"></div>
@@ -307,8 +307,8 @@
                     <button id="stop-camera" class="btn-secondary">停止扫描</button>
                 </div>
                 
-                <div id="scanner-status" class="status-message">正在初始化扫描功能...</div>
-                <div id="library-status" class="library-status">ZXing 库加载中...</div>
+                <div id="scanner-status" class="status-message">点击"开始扫描"按钮启动摄像头</div>
+                <div id="library-status" class="library-status">ZXing 库将按需加载</div>
             </div>
             
             <div id="result" class="result">
@@ -342,43 +342,15 @@
     </div>
 
     <script>
-        // 全局变量用于存储ZXing库
-        let ZXingBrowser = null;
-        let barcodeReader = null;
-        
-        // 页面加载时就开始加载ZXing库
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("页面加载完成，开始预加载ZXing库...");
-            document.getElementById('library-status').textContent = 'ZXing 库加载中...';
-            
-            // 动态加载ZXing库
-            loadZXingLibrary()
-                .then(() => {
-                    console.log("ZXing库加载成功");
-                    document.getElementById('library-status').textContent = 'ZXing 库加载完成';
-                    document.getElementById('library-status').style.color = 'green';
-                    
-                    // 库加载成功后初始化BarcodeReader
-                    if (ZXingBrowser) {
-                        try {
-                            barcodeReader = new ZXingBrowser.BrowserQRCodeReader();
-                            console.log("ZXing BarcodeReader 初始化成功");
-                            document.getElementById('scanner-status').textContent = '扫描功能已就绪';
-                            document.getElementById('scanner-status').className = 'status-message success';
-                        } catch (e) {
-                            console.error("ZXing BarcodeReader 初始化失败:", e);
-                            document.getElementById('scanner-status').textContent = '扫描功能初始化失败: ' + e.message;
-                            document.getElementById('scanner-status').className = 'status-message error';
-                        }
-                    }
-                })
-                .catch((error) => {
-                    console.error("ZXing库加载失败:", error);
-                    document.getElementById('library-status').textContent = 'ZXing 库加载失败: ' + error.message;
-                    document.getElementById('library-status').style.color = 'red';
-                    document.getElementById('scanner-status').textContent = '无法加载扫描库，请刷新页面重试';
-                    document.getElementById('scanner-status').className = 'status-message error';
-                });
+            const video = document.getElementById('scanner-video');
+            const startButton = document.getElementById('start-camera');
+            const stopButton = document.getElementById('stop-camera');
+            const statusDiv = document.getElementById('scanner-status');
+            const libraryStatusDiv = document.getElementById('library-status');
+            const detectedQRBox = document.getElementById('detected-qr-box');
+            let codeReader = null;
+            let isScanning = false;
             
             // Tab切换功能
             const tabs = document.querySelectorAll('.tab');
@@ -394,6 +366,11 @@
                     tab.classList.add('active');
                     const tabId = tab.getAttribute('data-tab');
                     document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+                    
+                    // 切换到扫描标签时自动加载库
+                    if (tabId === 'scanner' && !codeReader) {
+                        loadZXingLibrary();
+                    }
                 });
             });
             
@@ -414,149 +391,163 @@
                 }
             });
             
-            // 摄像头相关元素
-            const video = document.getElementById('scanner-video');
-            const startButton = document.getElementById('start-camera');
-            const stopButton = document.getElementById('stop-camera');
-            const statusDiv = document.getElementById('scanner-status');
-            const detectedQRBox = document.getElementById('detected-qr-box');
-            let stream = null;
-            let scanning = false;
-            let decodeInterval = null;
-            
-            // 开始扫描按钮事件
+            // 摄像头相关事件监听
             startButton.addEventListener('click', startScanner);
-            
-            // 停止扫描按钮事件
             stopButton.addEventListener('click', stopScanner);
             
+            // 页面卸载时停止摄像头
+            window.addEventListener('beforeunload', stopScanner);
+
+            // 动态加载ZXing库
             function loadZXingLibrary() {
-                return new Promise((resolve, reject) => {
-                    // 检查是否已经加载
-                    if (typeof ZXing !== 'undefined') {
-                        ZXingBrowser = ZXing;
-                        resolve();
-                        return;
-                    }
-                    
-                    const script = document.createElement('script');
-                    script.src = 'https://unpkg.com/@zxing/browser@0.1.5/dist/main.js';
-                    script.onload = function() {
-                        console.log('@zxing/browser 库加载完成');
-                        // 检查全局变量
-                        if (typeof ZXing !== 'undefined') {
-                            ZXingBrowser = ZXing;
-                            resolve();
-                        } else {
-                            reject(new Error('ZXing库加载完成但未找到全局对象'));
-                        }
-                    };
-                    script.onerror = function() {
-                        console.error('@zxing/browser 库加载失败');
-                        reject(new Error('无法加载 @zxing/browser 库'));
-                    };
-                    
-                    document.head.appendChild(script);
-                });
-            }
-            
-            function startScanner() {
-                // 显示扫描容器
-                document.querySelector('.scanner-container').style.display = 'block';
+                if (codeReader) {
+                    return; // 已经初始化
+                }
                 
-                // 检查库是否已加载
-                if (!ZXingBrowser) {
-                    showScannerStatus('ZXing库尚未加载完成，请稍后重试', 'error');
+                libraryStatusDiv.textContent = '正在加载ZXing库...';
+                libraryStatusDiv.style.color = '#7f8c8d';
+                
+                // 检查是否已经加载
+                if (typeof ZXing !== 'undefined') {
+                    initScanner();
                     return;
                 }
                 
-                const constraints = {
-                    video: {
-                        facingMode: "environment", // 优先使用后置摄像头
-                        width: { min: 320, ideal: 640, max: 1280 },
-                        height: { min: 240, ideal: 480, max: 720 }
-                    },
-                    audio: false
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/@zxing/library@0.23.0/dist/index.min.js';
+                script.onload = function() {
+                    console.log('ZXing库加载完成');
+                    libraryStatusDiv.textContent = 'ZXing库加载成功';
+                    libraryStatusDiv.style.color = 'green';
+                    initScanner();
+                };
+                script.onerror = function() {
+                    console.error('ZXing库加载失败');
+                    libraryStatusDiv.textContent = 'ZXing库加载失败，请检查网络';
+                    libraryStatusDiv.style.color = 'red';
+                    showScannerStatus('无法加载扫描功能', 'error');
                 };
                 
-                navigator.mediaDevices.getUserMedia(constraints)
-                    .then(function(mediaStream) {
-                        stream = mediaStream;
-                        video.srcObject = stream;
-                        video.setAttribute("playsinline", true); // iOS Safari兼容
-                        video.play();
-                        scanning = true;
-                        showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
-                        
-                        // 开始扫描
-                        scanQRCode();
-                    })
-                    .catch(function(err) {
-                        console.error("无法访问摄像头:", err);
-                        showScannerStatus('无法访问摄像头，请检查权限设置：' + err.message, 'error');
-                        document.querySelector('.scanner-container').style.display = 'none';
-                    });
+                document.head.appendChild(script);
+            }
+            
+            function initScanner() {
+                try {
+                    codeReader = new ZXing.BrowserQRCodeReader();
+                    showScannerStatus('扫描功能已就绪，点击"开始扫描"启动', 'success');
+                    console.log('ZXing BarcodeReader 初始化成功');
+                } catch (e) {
+                    console.error('ZXing初始化失败:', e);
+                    showScannerStatus('扫描功能初始化失败: ' + e.message, 'error');
+                }
+            }
+            
+            function startScanner() {
+                if (isScanning) {
+                    return;
+                }
+                
+                // 显示扫描容器
+                document.querySelector('.scanner-container').style.display = 'block';
+                
+                // 确保库已加载
+                if (!codeReader) {
+                    loadZXingLibrary();
+                    setTimeout(() => {
+                        if (!codeReader) {
+                            showScannerStatus('ZXing库加载失败，请刷新页面', 'error');
+                            document.querySelector('.scanner-container').style.display = 'none';
+                        } else {
+                            startScanner();
+                        }
+                    }, 1000);
+                    return;
+                }
+                
+                isScanning = true;
+                showScannerStatus('请求摄像头权限...', 'success');
+                
+                // 配置摄像头（优先使用后置摄像头）
+                const constraints = {
+                    video: {
+                        facingMode: "environment",
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                };
+                
+                // 开始扫描
+                showScannerStatus('正在启动摄像头...', 'success');
+                
+                codeReader.decodeFromConstraints(constraints, video, (result, error, controls) => {
+                    if (result) {
+                        console.log('识别成功:', result.getText());
+                        document.getElementById('qrcode').value = result.getText();
+                        decodeQRCode();
+                        stopScanner();
+                        showScannerStatus('二维码识别成功！', 'success');
+                    }
+                    
+                    if (error && !(error instanceof ZXing.NotFoundException)) {
+                        console.error('扫描错误:', error);
+                        if (error.name === 'NotAllowedError') {
+                            showScannerStatus('请允许摄像头权限', 'error');
+                        } else if (error.name === 'NotFoundError') {
+                            showScannerStatus('未找到可用摄像头', 'error');
+                        } else {
+                            showScannerStatus('扫描错误: ' + error.message, 'error');
+                        }
+                    }
+                }).then(() => {
+                    console.log('摄像头已启动');
+                    showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
+                }).catch(err => {
+                    console.error('无法启动摄像头:', err);
+                    isScanning = false;
+                    
+                    if (err.name === 'NotAllowedError') {
+                        showScannerStatus('请允许摄像头权限', 'error');
+                    } else if (err.name === 'NotFoundError') {
+                        showScannerStatus('未找到可用摄像头', 'error');
+                    } else {
+                        showScannerStatus('摄像头错误: ' + err.message, 'error');
+                    }
+                    
+                    document.querySelector('.scanner-container').style.display = 'none';
+                });
             }
             
             function stopScanner() {
-                scanning = false;
-                
-                if (decodeInterval) {
-                    clearInterval(decodeInterval);
-                    decodeInterval = null;
+                if (!isScanning) {
+                    return;
                 }
                 
-                if (stream) {
+                isScanning = false;
+                
+                // 重置ZXing扫描器
+                if (codeReader) {
+                    try {
+                        codeReader.reset();
+                    } catch (e) {
+                        console.error('停止扫描时出错:', e);
+                    }
+                }
+                
+                // 清理视频流
+                if (video.srcObject) {
+                    const stream = video.srcObject;
                     const tracks = stream.getTracks();
-                    tracks.forEach(track => track.stop());
-                    stream = null;
+                    
+                    tracks.forEach(track => {
+                        track.stop();
+                    });
+                    
+                    video.srcObject = null;
                 }
                 
-                // 隐藏扫描容器
                 document.querySelector('.scanner-container').style.display = 'none';
                 showScannerStatus('扫描已停止', 'success');
-                
-                // 隐藏检测框
                 detectedQRBox.style.display = 'none';
-            }
-            
-            function scanQRCode() {
-                if (!scanning || !barcodeReader) return;
-                
-                console.log("开始ZXing扫描循环...");
-                
-                // 使用setInterval进行连续扫描
-                decodeInterval = setInterval(() => {
-                    if (!scanning) {
-                        clearInterval(decodeInterval);
-                        return;
-                    }
-                    
-                    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                        try {
-                            // ZXing直接从video元素解码
-                            barcodeReader.decodeFromVideoDevice(null, video)
-                                .then(result => {
-                                    if (result) {
-                                        console.log("ZXing识别成功:", result);
-                                        // 成功识别二维码
-                                        document.getElementById('qrcode').value = result.getText();
-                                        decodeQRCode();
-                                        stopScanner();
-                                        showScannerStatus('二维码识别成功！', 'success');
-                                    }
-                                })
-                                .catch(err => {
-                                    // 没有识别到二维码是正常的，不记录错误
-                                    if (err && !err.message.includes("NotFoundException")) {
-                                        console.error("ZXing解码错误:", err);
-                                    }
-                                });
-                        } catch (e) {
-                            console.error("ZXing扫描过程中出现错误:", e);
-                        }
-                    }
-                }, 200); // 每200ms扫描一次
             }
             
             function decodeQRCode() {
@@ -571,11 +562,23 @@
                 }
                 
                 try {
-                    // 解码JSON数据
-                    const data = JSON.parse(qrcodeInput);
+                    // 尝试解析JSON数据
+                    let data;
+                    try {
+                        data = JSON.parse(qrcodeInput);
+                    } catch (e) {
+                        // 如果不是JSON，尝试作为普通文本处理
+                        data = {
+                            productName: qrcodeInput,
+                            specification: 'N/A',
+                            orderTime: new Date().toLocaleString(),
+                            printTime: new Date().toLocaleString(),
+                            remark: '非JSON格式内容'
+                        };
+                    }
                     
                     // 显示结果
-                    document.getElementById('product').textContent = data.productName || '-';
+                    document.getElementById('product').textContent = data.productName || qrcodeInput;
                     document.getElementById('specification').textContent = data.specification || '-';
                     document.getElementById('order-time').textContent = data.orderTime || '-';
                     document.getElementById('print-time').textContent = data.printTime || '-';
@@ -598,12 +601,11 @@
             function showScannerStatus(text, type) {
                 if (statusDiv) {
                     statusDiv.textContent = text;
-                    statusDiv.className = 'status-message ' + (type === 'error' ? 'error' : 'success');
+                    statusDiv.className = 'status-message ' + 
+                        (type === 'error' ? 'error' : 
+                         type === 'success' ? 'success' : '');
                 }
             }
-            
-            // 页面卸载时停止摄像头
-            window.addEventListener('beforeunload', stopScanner);
         });
     </script>
 </body>
