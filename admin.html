@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>二维码信息查看 - 红姐私房</title>
     <style>
+        /* 保持原有样式不变 */
         * {
             margin: 0;
             padding: 0;
@@ -245,6 +246,28 @@
             color: #7f8c8d;
         }
         
+        .troubleshooting {
+            margin-top: 15px;
+            padding: 10px;
+            background: #fff8e6;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .troubleshooting h3 {
+            color: #e65100;
+            margin-bottom: 5px;
+        }
+        
+        .troubleshooting ul {
+            padding-left: 20px;
+        }
+        
+        .troubleshooting li {
+            margin-bottom: 3px;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -309,6 +332,15 @@
                 
                 <div id="scanner-status" class="status-message">点击"开始扫描"按钮启动摄像头</div>
                 <div id="library-status" class="library-status">ZXing 库将按需加载</div>
+                <div id="troubleshooting" class="troubleshooting">
+                    <h3>加载问题排查:</h3>
+                    <ul>
+                        <li>检查您的网络连接是否正常</li>
+                        <li>尝试刷新页面重试</li>
+                        <li>某些网络环境可能屏蔽了CDN资源</li>
+                        <li>如问题持续，可联系管理员获取本地库文件</li>
+                    </ul>
+                </div>
             </div>
             
             <div id="result" class="result">
@@ -348,9 +380,12 @@
             const stopButton = document.getElementById('stop-camera');
             const statusDiv = document.getElementById('scanner-status');
             const libraryStatusDiv = document.getElementById('library-status');
+            const troubleshootingDiv = document.getElementById('troubleshooting');
             const detectedQRBox = document.getElementById('detected-qr-box');
             let codeReader = null;
             let isScanning = false;
+            let loadAttempt = 0;
+            const maxLoadAttempts = 3;
             
             // Tab切换功能
             const tabs = document.querySelectorAll('.tab');
@@ -368,8 +403,12 @@
                     document.getElementById(`${tabId}-tab`).classList.remove('hidden');
                     
                     // 切换到扫描标签时自动加载库
-                    if (tabId === 'scanner' && !codeReader) {
-                        loadZXingLibrary();
+                    if (tabId === 'scanner') {
+                        if (!codeReader) {
+                            loadZXingLibrary();
+                        } else {
+                            showScannerStatus('扫描功能已就绪', 'success');
+                        }
                     }
                 });
             });
@@ -398,14 +437,16 @@
             // 页面卸载时停止摄像头
             window.addEventListener('beforeunload', stopScanner);
 
-            // 动态加载ZXing库
+            // 动态加载ZXing库 - 增强版
             function loadZXingLibrary() {
                 if (codeReader) {
                     return; // 已经初始化
                 }
                 
-                libraryStatusDiv.textContent = '正在加载ZXing库...';
+                loadAttempt++;
+                libraryStatusDiv.textContent = `正在尝试加载ZXing库 (尝试 ${loadAttempt}/${maxLoadAttempts})...`;
                 libraryStatusDiv.style.color = '#7f8c8d';
+                troubleshootingDiv.style.display = 'none';
                 
                 // 检查是否已经加载
                 if (typeof ZXing !== 'undefined') {
@@ -414,19 +455,73 @@
                 }
                 
                 const script = document.createElement('script');
-                script.src = 'https://unpkg.com/@zxing/library@0.23.0/dist/index.min.js';
+                
+                // 使用多个CDN源作为备份
+                const cdnSources = [
+                    'https://unpkg.com/@zxing/library@0.23.0/dist/index.min.js',
+                    'https://cdn.jsdelivr.net/npm/@zxing/library@0.23.0/dist/index.min.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/@zxing/library/0.23.0/index.min.js'
+                ];
+                
+                let currentSourceIndex = 0;
+                
+                function tryNextSource() {
+                    if (currentSourceIndex >= cdnSources.length) {
+                        if (loadAttempt < maxLoadAttempts) {
+                            // 等待2秒后重试所有源
+                            setTimeout(() => {
+                                loadAttempt++;
+                                currentSourceIndex = 0;
+                                tryNextSource();
+                            }, 2000);
+                        } else {
+                            libraryStatusDiv.textContent = '所有资源加载失败，请检查网络或联系管理员';
+                            libraryStatusDiv.style.color = 'red';
+                            showScannerStatus('无法加载扫描功能', 'error');
+                            troubleshootingDiv.style.display = 'block';
+                        }
+                        return;
+                    }
+                    
+                    script.src = cdnSources[currentSourceIndex];
+                    libraryStatusDiv.textContent = `正在加载ZXing库 (源 ${currentSourceIndex + 1}/${cdnSources.length})...`;
+                    console.log(`尝试加载ZXing库: ${script.src}`);
+                    
+                    currentSourceIndex++;
+                }
+                
                 script.onload = function() {
                     console.log('ZXing库加载完成');
                     libraryStatusDiv.textContent = 'ZXing库加载成功';
                     libraryStatusDiv.style.color = 'green';
                     initScanner();
                 };
-                script.onerror = function() {
-                    console.error('ZXing库加载失败');
-                    libraryStatusDiv.textContent = 'ZXing库加载失败，请检查网络';
-                    libraryStatusDiv.style.color = 'red';
-                    showScannerStatus('无法加载扫描功能', 'error');
+                
+                script.onerror = function(e) {
+                    console.error('ZXing库加载失败:', e);
+                    libraryStatusDiv.textContent = `ZXing库加载失败，尝试下一个源...`;
+                    
+                    if (currentSourceIndex < cdnSources.length) {
+                        tryNextSource();
+                    } else {
+                        // 所有CDN源都失败了
+                        if (loadAttempt < maxLoadAttempts) {
+                            setTimeout(() => {
+                                loadAttempt++;
+                                currentSourceIndex = 0;
+                                tryNextSource();
+                            }, 2000);
+                        } else {
+                            libraryStatusDiv.textContent = '所有资源加载失败，请检查网络或联系管理员';
+                            libraryStatusDiv.style.color = 'red';
+                            showScannerStatus('无法加载扫描功能', 'error');
+                            troubleshootingDiv.style.display = 'block';
+                        }
+                    }
                 };
+                
+                // 开始尝试第一个源
+                tryNextSource();
                 
                 document.head.appendChild(script);
             }
@@ -460,7 +555,7 @@
                         } else {
                             startScanner();
                         }
-                    }, 1000);
+                    }, 1500);
                     return;
                 }
                 
