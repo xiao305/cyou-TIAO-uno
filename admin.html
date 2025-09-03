@@ -412,13 +412,20 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            console.log("页面加载完成，初始化开始...");
+            
             const video = document.getElementById('scanner-video');
             const startButton = document.getElementById('start-camera');
             const stopButton = document.getElementById('stop-camera');
+            const decodeButton = document.getElementById('decode-btn');
+            const clearButton = document.getElementById('clear-btn');
+            const qrcodeTextarea = document.getElementById('qrcode');
+            
             const statusDiv = document.getElementById('scanner-status');
             const debugContainer = document.getElementById('debug-container');
             const debugContent = document.getElementById('debug-content');
             const debugToggle = document.getElementById('debug-toggle');
+            
             let isScanning = false;
             let stream = null;
             let scanInterval = null;
@@ -445,12 +452,26 @@
                 willReadFrequently: true
             });
             
+            console.log("DOM元素获取完成", {
+                video, startButton, stopButton, decodeButton, 
+                clearButton, qrcodeTextarea, statusDiv
+            });
+            
+            // 确保所有必要元素都存在
+            if (!video || !startButton || !stopButton || !decodeButton || !clearButton || !qrcodeTextarea || !statusDiv) {
+                console.error("关键DOM元素缺失，无法初始化");
+                document.getElementById('message').innerHTML = '<div class="error">页面初始化失败：关键元素缺失</div>';
+                return;
+            }
+            
             // Tab切换功能
             const tabs = document.querySelectorAll('.tab');
             const tabContents = document.querySelectorAll('.tab-content');
             
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
+                    console.log(`切换到标签: ${tab.getAttribute('data-tab')}`);
+                    
                     // 移除所有活动状态
                     tabs.forEach(t => t.classList.remove('active'));
                     tabContents.forEach(tc => tc.classList.add('hidden'));
@@ -479,29 +500,49 @@
                 }
             });
             
-            // 手动解析按钮事件
-            document.getElementById('decode-btn').addEventListener('click', decodeQRCode);
+            // 手动解析按钮事件 - 关键修复：确保正确绑定
+            console.log("绑定手动解析按钮事件");
+            decodeButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log("手动解析按钮被点击");
+                decodeQRCode();
+            });
             
             // 清空按钮事件
-            document.getElementById('clear-btn').addEventListener('click', () => {
-                document.getElementById('qrcode').value = '';
+            clearButton.addEventListener('click', function() {
+                console.log("清空按钮被点击");
+                qrcodeTextarea.value = '';
                 document.getElementById('result').style.display = 'none';
                 document.getElementById('message').innerHTML = '';
             });
             
             // 回车键触发解析
-            document.getElementById('qrcode').addEventListener('keypress', function(e) {
+            qrcodeTextarea.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
+                    e.preventDefault();
+                    console.log("在文本区域按下回车键");
                     decodeQRCode();
                 }
             });
             
             // 摄像头相关事件监听
-            startButton.addEventListener('click', startScanner);
-            stopButton.addEventListener('click', stopScanner);
+            startButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log("开始扫描按钮被点击");
+                startScanner();
+            });
+            
+            stopButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log("停止扫描按钮被点击");
+                stopScanner();
+            });
             
             // 页面卸载时停止摄像头
-            window.addEventListener('beforeunload', stopScanner);
+            window.addEventListener('beforeunload', function() {
+                console.log("页面即将卸载，停止扫描");
+                stopScanner();
+            });
             
             // 添加调试信息
             function logDebug(message) {
@@ -636,8 +677,11 @@
             // 修复后的摄像头访问和QR码扫描
             function startScanner() {
                 if (isScanning) {
+                    console.log("已经在扫描中，无需重复启动");
                     return;
                 }
+                
+                console.log("开始启动扫描...");
                 
                 // 重置计数器
                 scanCount = 0;
@@ -662,6 +706,7 @@
                 // 请求摄像头权限
                 navigator.mediaDevices.getUserMedia(constraints)
                     .then(function(mediaStream) {
+                        console.log("成功获取摄像头流");
                         stream = mediaStream;
                         video.srcObject = stream;
                         
@@ -669,6 +714,7 @@
                         
                         // 确保视频加载完成后再开始扫描
                         video.onloadedmetadata = function() {
+                            console.log("视频元数据已加载");
                             video.play();
                             logDebug('视频元数据已加载，准备播放');
                             
@@ -683,6 +729,7 @@
                             
                             // 等待视频完全开始播放再启动扫描
                             video.onplaying = function() {
+                                console.log("视频已开始播放，准备启动扫描");
                                 logDebug('视频已开始播放，准备启动扫描');
                                 isScanning = true;
                                 showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
@@ -740,9 +787,13 @@
                                         
                                         if (code) {
                                             successCount++;
+                                            console.log("识别成功:", code.data);
                                             logDebug(`✅ 识别成功: ${code.data}`);
                                             document.getElementById('qrcode').value = code.data;
-                                            decodeQRCode();
+                                            
+                                            // 关键修复：直接显示结果而不是调用decodeQRCode
+                                            displayResult(code.data);
+                                            
                                             stopScanner();
                                             showScannerStatus('二维码识别成功！', 'success');
                                             
@@ -752,11 +803,29 @@
                                             } catch (e) {
                                                 // 忽略音频错误
                                             }
+                                            
+                                            // 关键修复：添加页面跳转功能（如果需要）
+                                            try {
+                                                const data = JSON.parse(code.data);
+                                                if (data.redirectUrl) {
+                                                    setTimeout(() => {
+                                                        window.location.href = data.redirectUrl;
+                                                    }, 1500);
+                                                }
+                                            } catch (e) {
+                                                // 如果不是JSON，检查是否是URL
+                                                if (code.data.startsWith('http://') || code.data.startsWith('https://')) {
+                                                    setTimeout(() => {
+                                                        window.location.href = code.data;
+                                                    }, 1500);
+                                                }
+                                            }
                                         } else if (finderPattern && finderPattern.count >= 2) {
                                             logDebug(`🔍 检测到${finderPattern.count}个定位点，但无法识别内容 (QR码尺寸: ${qrSize.toFixed(1)}px)`);
                                             drawDetectedPoints(finderPattern);
                                         }
                                     } catch (e) {
+                                        console.error("扫描过程中出错:", e);
                                         logDebug(`❌ 扫描错误: ${e.message}`);
                                     }
                                 }, 100); // 每100ms扫描一次
@@ -764,6 +833,7 @@
                         };
                     })
                     .catch(function(err) {
+                        console.error("无法访问摄像头:", err);
                         logDebug(`❌ 无法访问摄像头: ${err.name} - ${err.message}`);
                         
                         // 处理OverconstrainedError - 尝试简化约束
@@ -807,15 +877,36 @@
                                                     
                                                     if (code) {
                                                         successCount++;
+                                                        console.log("识别成功:", code.data);
                                                         logDebug(`✅ 识别成功: ${code.data}`);
                                                         document.getElementById('qrcode').value = code.data;
-                                                        decodeQRCode();
+                                                        
+                                                        // 关键修复：直接显示结果
+                                                        displayResult(code.data);
+                                                        
                                                         stopScanner();
                                                         showScannerStatus('二维码识别成功！', 'success');
+                                                        
+                                                        // 页面跳转
+                                                        try {
+                                                            const data = JSON.parse(code.data);
+                                                            if (data.redirectUrl) {
+                                                                setTimeout(() => {
+                                                                    window.location.href = data.redirectUrl;
+                                                                }, 1500);
+                                                            }
+                                                        } catch (e) {
+                                                            if (code.data.startsWith('http://') || code.data.startsWith('https://')) {
+                                                                setTimeout(() => {
+                                                                    window.location.href = code.data;
+                                                                }, 1500);
+                                                            }
+                                                        }
                                                     } else if (finderPattern && finderPattern.count >= 2) {
                                                         logDebug(`🔍 检测到${finderPattern.count}个定位点，但无法识别内容`);
                                                     }
                                                 } catch (e) {
+                                                    console.error("简化设置扫描出错:", e);
                                                     logDebug(`❌ 扫描错误: ${e.message}`);
                                                 }
                                             }, 100);
@@ -823,6 +914,7 @@
                                     };
                                 })
                                 .catch(function(err) {
+                                    console.error("简化设置访问失败:", err);
                                     logDebug(`❌ 简化设置访问失败: ${err.message}`);
                                     showScannerStatus(`摄像头错误: ${err.message}`, 'error');
                                     document.querySelector('.scanner-container').style.display = 'none';
@@ -935,9 +1027,11 @@
             
             function stopScanner() {
                 if (!isScanning) {
+                    console.log("未在扫描中，无需停止");
                     return;
                 }
                 
+                console.log("停止扫描...");
                 isScanning = false;
                 
                 // 清理扫描循环
@@ -962,8 +1056,8 @@
                 logDebug('扫描已停止');
             }
             
-            function decodeQRCode() {
-                const qrcodeInput = document.getElementById('qrcode').value.trim();
+            // 关键修复：分离显示结果的逻辑
+            function displayResult(qrcodeInput) {
                 const resultDiv = document.getElementById('result');
                 const messageDiv = document.getElementById('message');
                 
@@ -999,6 +1093,57 @@
                     resultDiv.style.display = 'block';
                     showMessage('', ''); // 清空消息
                 } catch (e) {
+                    console.error("显示结果时出错:", e);
+                    showMessage('二维码内容格式错误，请检查输入: ' + e.message, 'error');
+                    resultDiv.style.display = 'none';
+                }
+            }
+            
+            // 关键修复：确保手动解析功能可靠
+            function decodeQRCode() {
+                console.log("手动解析函数被调用");
+                const qrcodeInput = qrcodeTextarea.value.trim();
+                const resultDiv = document.getElementById('result');
+                const messageDiv = document.getElementById('message');
+                
+                if (!qrcodeInput) {
+                    console.log("没有输入内容");
+                    showMessage('请输入二维码内容', 'error');
+                    resultDiv.style.display = 'none';
+                    return;
+                }
+                
+                console.log("解析输入内容:", qrcodeInput);
+                
+                try {
+                    // 尝试解析JSON数据
+                    let data;
+                    try {
+                        data = JSON.parse(qrcodeInput);
+                        console.log("JSON解析成功", data);
+                    } catch (e) {
+                        console.log("JSON解析失败，使用默认对象");
+                        // 如果不是JSON，尝试作为普通文本处理
+                        data = {
+                            productName: qrcodeInput,
+                            specification: 'N/A',
+                            orderTime: new Date().toLocaleString(),
+                            printTime: new Date().toLocaleString(),
+                            remark: '非JSON格式内容'
+                        };
+                    }
+                    
+                    // 显示结果
+                    document.getElementById('product').textContent = data.productName || qrcodeInput;
+                    document.getElementById('specification').textContent = data.specification || '-';
+                    document.getElementById('order-time').textContent = data.orderTime || '-';
+                    document.getElementById('print-time').textContent = data.printTime || '-';
+                    document.getElementById('remark').textContent = data.remark || '-';
+                    
+                    resultDiv.style.display = 'block';
+                    showMessage('', ''); // 清空消息
+                } catch (e) {
+                    console.error("解析过程中出错:", e);
                     showMessage('二维码内容格式错误，请检查输入: ' + e.message, 'error');
                     resultDiv.style.display = 'none';
                 }
@@ -1006,6 +1151,8 @@
             
             function showMessage(text, type) {
                 const messageDiv = document.getElementById('message');
+                if (!messageDiv) return;
+                
                 messageDiv.textContent = text;
                 messageDiv.className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
             }
@@ -1346,4 +1493,360 @@
                         x: [size, size + 1, size + 2, size + 3, size + 4, size + 5, size + 6, -1, 0, 1, 2, 3, 4, 5],
                         y: [0, 0, 0, 0, 0, 0, 0, 0, size, size, size, size, size, size]
                     };
-                    var t
+                    var topRight = {
+                        x: [dimension - 8, dimension - 8, dimension - 8, dimension - 8, dimension - 8, dimension - 8, dimension - 8, dimension - 8, dimension - 7, dimension - 6, dimension - 5, dimension - 4, dimension - 3, dimension - 2],
+                        y: [7, 8, 9, 10, 11, 12, 13, -1, 8, 8, 8, 8, 8, 8]
+                    };
+                    var bottomLeft = {
+                        x: [7, 7, 7, 7, 7, 7, 7, 7, 8, 9, 10, 11, 12, 13],
+                        y: [dimension - 8, dimension - 7, dimension - 6, dimension - 5, dimension - 4, dimension - 3, dimension - 2, dimension - 1, dimension - 8, dimension - 8, dimension - 8, dimension - 8, dimension - 8, dimension - 8]
+                    };
+                    var formatBits = [];
+                    for (var i = 0; i < 15; i++) {
+                        if (topLeft.x[i] !== -1 && getModule(topLeft.x[i], topLeft.y[i], dimension)) {
+                            formatBits.push(true);
+                        } else if (topRight.x[i] !== -1 && getModule(topRight.x[i], topRight.y[i], dimension)) {
+                            formatBits.push(true);
+                        } else if (bottomLeft.x[i] !== -1 && getModule(bottomLeft.x[i], bottomLeft.y[i], dimension)) {
+                            formatBits.push(true);
+                        } else {
+                            formatBits.push(false);
+                        }
+                    }
+                    var format = 0;
+                    for (var j = 0; j < 15; j++) {
+                        if (formatBits[j]) {
+                            format |= (1 << (14 - j));
+                        }
+                    }
+                    
+                    logStep('formatInfo', {
+                        format: format.toString(2),
+                        bits: formatBits
+                    });
+                    
+                    return format;
+                }
+                
+                function getMask(dimension, format) {
+                    var mask = (format >> 3) & 0x7;
+                    
+                    logStep('mask', {
+                        mask: mask
+                    });
+                    
+                    return mask;
+                }
+                
+                function applyMask(matrix, dimension, mask) {
+                    var masked = [];
+                    for (var i = 0; i < dimension; i++) {
+                        for (var j = 0; j < dimension; j++) {
+                            var invert = false;
+                            switch (mask) {
+                                case 0:
+                                    invert = (i + j) % 2 === 0;
+                                    break;
+                                case 1:
+                                    invert = i % 2 === 0;
+                                    break;
+                                case 2:
+                                    invert = j % 3 === 0;
+                                    break;
+                                case 3:
+                                    invert = (i + j) % 3 === 0;
+                                    break;
+                                case 4:
+                                    invert = (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0;
+                                    break;
+                                case 5:
+                                    invert = (i * j) % 2 + (i * j) % 3 === 0;
+                                    break;
+                                case 6:
+                                    invert = ((i * j) % 2 + (i * j) % 3) % 2 === 0;
+                                    break;
+                                case 7:
+                                    invert = ((i * j) % 3 + (i + j) % 2) % 2 === 0;
+                                    break;
+                            }
+                            masked.push(matrix[i * dimension + j] ^ invert);
+                        }
+                    }
+                    
+                    logStep('applyMask', {
+                        maskedCount: masked.filter(b => b).length
+                    });
+                    
+                    return masked;
+                }
+                
+                function getBits(matrix, dimension) {
+                    var size = dimension - 7;
+                    var offset = 0;
+                    var bits = [];
+                    var read = function(i, j) {
+                        if (i < 0 || j < 0 || i >= dimension || j >= dimension) {
+                            return false;
+                        }
+                        return matrix[j * dimension + i];
+                    };
+                    var up = true;
+                    for (var x = size; x > 0; x -= 2) {
+                        if (x === 6) {
+                            x--;
+                        }
+                        for (var y = 0; y < size; y++) {
+                            var yy = up ? size - 1 - y : y;
+                            for (var col = 0; col < 2; col++) {
+                                var xx = x - col;
+                                for (var row = 0; row < 2; row++) {
+                                    var bit = read(xx, yy - row);
+                                    bits.push(bit);
+                                }
+                            }
+                        }
+                        up = !up;
+                    }
+                    
+                    logStep('getBits', {
+                        bitCount: bits.length
+                    });
+                    
+                    return bits;
+                }
+                
+                function getBytes(bits) {
+                    var bytes = [];
+                    for (var i = 0; i < bits.length; i += 8) {
+                        var byte = 0;
+                        for (var j = 0; j < 8; j++) {
+                            if (i + j < bits.length && bits[i + j]) {
+                                byte |= (1 << (7 - j));
+                            }
+                        }
+                        bytes.push(byte);
+                    }
+                    
+                    logStep('getBytes', {
+                        byteCount: bytes.length,
+                        bytes: bytes.slice(0, 10).map(b => b.toString(16).padStart(2, '0'))
+                    });
+                    
+                    return bytes;
+                }
+                
+                function decodeData(bytes) {
+                    if (bytes.length === 0) {
+                        logStep('decodeData', {
+                            status: 'no bytes'
+                        });
+                        return null;
+                    }
+                    
+                    var mode = bytes[0];
+                    logStep('decodeData', {
+                        mode: mode,
+                        modeStr: mode === 4 ? 'Numeric' : 
+                                 mode === 8 ? 'Alphanumeric' :
+                                 mode === 12 ? 'Byte' :
+                                 mode === 16 ? 'Kanji' : 'Unknown'
+                    });
+                    
+                    if (mode === 4) {
+                        return decodeNumeric(bytes);
+                    } else if (mode === 8) {
+                        return decodeAlphanumeric(bytes);
+                    } else if (mode === 12) {
+                        return decodeByte(bytes);
+                    } else if (mode === 16) {
+                        return decodeKanji(bytes);
+                    }
+                    return null;
+                }
+                
+                function decodeNumeric(bytes) {
+                    var data = '';
+                    for (var i = 1; i < bytes.length;) {
+                        var length = bytes[i++];
+                        if (length === 0) break;
+                        var num = 0;
+                        for (var j = 0; j < length; j++) {
+                            num = num * 10 + (bytes[i + j] - 48);
+                        }
+                        data += num.toString();
+                        i += length;
+                    }
+                    
+                    logStep('decodeNumeric', {
+                        result: data
+                    });
+                    
+                    return data;
+                }
+                
+                function decodeAlphanumeric(bytes) {
+                    var alphanumeric = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
+                    var data = '';
+                    for (var i = 1; i < bytes.length;) {
+                        var length = bytes[i++];
+                        if (length === 0) break;
+                        for (var j = 0; j < length; j += 2) {
+                            var value = bytes[i + j] * 45;
+                            if (j + 1 < length) {
+                                value += bytes[i + j + 1];
+                            }
+                            data += alphanumeric[value];
+                        }
+                        i += length;
+                    }
+                    
+                    logStep('decodeAlphanumeric', {
+                        result: data
+                    });
+                    
+                    return data;
+                }
+                
+                function decodeByte(bytes) {
+                    var data = '';
+                    for (var i = 1; i < bytes.length;) {
+                        var length = bytes[i++];
+                        if (length === 0) break;
+                        for (var j = 0; j < length; j++) {
+                            data += String.fromCharCode(bytes[i + j]);
+                        }
+                        i += length;
+                    }
+                    
+                    logStep('decodeByte', {
+                        result: data.substring(0, 50) + (data.length > 50 ? '...' : '')
+                    });
+                    
+                    return data;
+                }
+                
+                function decodeKanji(bytes) {
+                    var data = '';
+                    for (var i = 1; i < bytes.length;) {
+                        var length = bytes[i++];
+                        if (length === 0) break;
+                        for (var j = 0; j < length; j += 2) {
+                            var value = bytes[i + j] * 256 + bytes[i + j + 1];
+                            if (value < 0x1F00) {
+                                value = ((value >> 8) * 0xC0) + (value & 0xFF) + 0x8140;
+                            } else {
+                                value = (((value >> 8) - 0x40) * 0xC0) + (value & 0xFF) + 0xC140;
+                            }
+                            data += String.fromCharCode(value);
+                        }
+                        i += length;
+                    }
+                    
+                    logStep('decodeKanji', {
+                        result: data
+                    });
+                    
+                    return data;
+                }
+                
+                // 主识别流程
+                var finderPattern = getFinderPattern();
+                if (!finderPattern) {
+                    logStep('result', {
+                        status: 'not found',
+                        time: Date.now() - startTime
+                    });
+                    
+                    // 记录调试信息
+                    const debugInfo = {
+                        steps: steps,
+                        time: Date.now() - startTime,
+                        status: 'not found'
+                    };
+                    logDebug(`🔍 未找到QR码 (耗时: ${debugInfo.time}ms)`);
+                    
+                    return null;
+                }
+                
+                var dimension = 21;
+                var minSize = Math.min(
+                    distance(finderPattern.topLeft, finderPattern.topRight),
+                    distance(finderPattern.topLeft, finderPattern.bottomLeft)
+                );
+                if (minSize > 0) {
+                    // 优化5：更准确地计算维度
+                    dimension = Math.round(minSize / 7 * 17 + 7);
+                    
+                    // 确保维度在有效范围内
+                    dimension = Math.max(21, Math.min(177, dimension));
+                    
+                    // 确保维度是4n+17的形式
+                    const version = Math.round((dimension - 17) / 4);
+                    dimension = version * 4 + 17;
+                }
+                
+                var alignmentPattern = findAlignmentPattern(
+                    finderPattern.topLeft,
+                    finderPattern.topRight,
+                    finderPattern.bottomLeft,
+                    dimension
+                );
+                
+                var transformation = getTransformation(
+                    finderPattern.topLeft,
+                    finderPattern.topRight,
+                    finderPattern.bottomLeft,
+                    alignmentPattern,
+                    dimension
+                );
+                
+                var matrix = getBitMatrix(transformation, dimension);
+                var format = getFormatInformation(matrix, dimension);
+                var mask = getMask(dimension, format);
+                var unmasked = applyMask(matrix, dimension, mask);
+                var bits = getBits(unmasked, dimension);
+                var bytes = getBytes(bits);
+                var data = decodeData(bytes);
+                
+                if (!data) {
+                    logStep('result', {
+                        status: 'decode failed',
+                        time: Date.now() - startTime
+                    });
+                    
+                    const debugInfo = {
+                        steps: steps,
+                        time: Date.now() - startTime,
+                        status: 'decode failed'
+                    };
+                    logDebug(`⚠️ QR码找到但解码失败 (耗时: ${debugInfo.time}ms)`);
+                    
+                    return null;
+                }
+                
+                logStep('result', {
+                    status: 'success',
+                    data,
+                    time: Date.now() - startTime
+                });
+                
+                logDebug(`✅ 识别成功! 内容: ${data.substring(0, 50)}${data.length > 50 ? '...' : ''} (耗时: ${Date.now() - startTime}ms)`);
+                
+                return {
+                    data,
+                    version: Math.floor((dimension - 17) / 4) + 1,
+                    errorCorrectionLevel: ['L', 'M', 'Q', 'H'][format & 0x3],
+                    matrix: getMatrix(dimension),
+                    steps: steps,
+                    time: Date.now() - startTime
+                };
+            }
+            
+            // 确保所有功能都已正确初始化
+            console.log("页面初始化完成，所有功能已准备就绪");
+            libraryStatusDiv.textContent = 'QR码识别功能已就绪';
+            libraryStatusDiv.style.color = 'green';
+        });
+    </script>
+</body>
+</html>
