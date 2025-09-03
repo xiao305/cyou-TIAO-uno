@@ -30,13 +30,13 @@
         }
         
         h1 {
-            color: #2c3e50;
+            color: #000;
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
         
         .subtitle {
-            color: #7f8c8d;
+            color: #000;
             font-size: 1.1rem;
         }
         
@@ -64,7 +64,7 @@
         }
         
         .section-title {
-            color: #3498db;
+            color: #000;
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid #eee;
@@ -78,7 +78,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #2c3e50;
+            color: #000;
         }
         
         input, select, textarea {
@@ -91,9 +91,9 @@
         }
         
         input:focus, select:focus, textarea:focus {
-            border-color: #3498db;
+            border-color: #000;
             outline: none;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
         }
         
         .template-selector {
@@ -113,22 +113,22 @@
         }
         
         .template-option:hover {
-            border-color: #3498db;
+            border-color: #000;
         }
         
         .template-option.active {
-            border-color: #3498db;
-            background-color: #e1f0fa;
+            border-color: #000;
+            background-color: #f5f5f5;
         }
         
         .template-option h3 {
             margin-bottom: 5px;
-            color: #2c3e50;
+            color: #000;
         }
         
         .template-option p {
             font-size: 0.9rem;
-            color: #7f8c8d;
+            color: #000;
         }
         
         .btn-group {
@@ -149,25 +149,25 @@
         }
         
         .btn-primary {
-            background: #3498db;
+            background: #000;
             color: white;
         }
         
         .btn-primary:hover {
-            background: #2980b9;
+            background: #333;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         .btn-print {
-            background: #9b59b6;
+            background: #000;
             color: white;
         }
         
         .btn-print:hover {
-            background: #8e44ad;
+            background: #333;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         .label-preview {
@@ -184,7 +184,7 @@
         }
         
         .label-template {
-            border: 1px dashed #ccc;
+            border: 1px dashed #000;
             padding: 10px;
             position: relative;
             background: white;
@@ -213,14 +213,15 @@
         }
         
         .order-time {
-            font-size: 18px;
-            color: #e74c3c;
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
             margin-bottom: 3px;
         }
         
         .print-time {
             font-size: 10px;
-            color: #95a5a6;
+            color: #000;
             margin-top: 3px;
         }
         
@@ -240,12 +241,12 @@
         .label-item-label {
             font-weight: bold;
             width: 50px;
-            color: #2c3e50;
+            color: #000;
         }
         
         .label-item-value {
             flex: 1;
-            color: #34495e;
+            color: #000;
             word-break: break-all;
         }
         
@@ -262,7 +263,7 @@
             width: 70px;
             height: 70px;
             margin: 0 auto;
-            border: 1px solid #eee;
+            border: 1px solid #000;
             padding: 3px;
             background: white;
             display: flex;
@@ -274,7 +275,7 @@
             text-align: center;
             margin-top: 5px;
             font-size: 9px;
-            color: #95a5a6;
+            color: #000;
             display: none; /* 隐藏标签ID */
         }
         
@@ -333,7 +334,7 @@
         
         .loading {
             font-size: 12px;
-            color: #3498db;
+            color: #000;
         }
         
         /* 隐藏不必要的元素 */
@@ -352,6 +353,32 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+        
+        /* 下拉列表和常用备注样式 */
+        .dropdown-container {
+            margin-bottom: 15px;
+        }
+        
+        .common-remarks {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .remark-btn {
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .remark-btn:hover {
+            background: #e0e0e0;
+        }
     </style>
 </head>
 <body>
@@ -367,12 +394,30 @@
                 
                 <div class="form-group">
                     <label for="product-name">产品名称</label>
-                    <input type="text" id="product-name" placeholder="输入产品名称" value="珍珠奶茶">
+                    <div class="dropdown-container">
+                        <select id="product-name" style="width: 100%;">
+                            <option value="">请选择产品</option>
+                            <option value="秘制手工辣条">秘制手工辣条</option>
+                            <option value="饺子">饺子</option>
+                            <option value="馄饨">馄饨</option>
+                            <option value="包子">包子</option>
+                            <option value="中式馒头">中式馒头</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="specification">规格</label>
-                    <input type="text" id="specification" placeholder="输入规格" value="大杯/去冰/少糖">
+                    <div class="dropdown-container">
+                        <select id="specification" style="width: 100%;">
+                            <option value="">请选择规格</option>
+                            <option value="大杯/去冰/少糖">大杯/去冰/少糖</option>
+                            <option value="中杯/正常冰/正常糖">中杯/正常冰/正常糖</option>
+                            <option value="小杯/加冰/多糖">小杯/加冰/多糖</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -382,7 +427,18 @@
                 
                 <div class="form-group">
                     <label for="remark">备注</label>
-                    <textarea id="remark" rows="3" placeholder="输入备注信息">加珍珠，少冰</textarea>
+                    <textarea id="remark" rows="3" placeholder="输入备注信息"></textarea>
+                    
+                    <div class="common-remarks">
+                        <button class="remark-btn" onclick="insertRemark('加珍珠')">加珍珠</button>
+                        <button class="remark-btn" onclick="insertRemark('少冰')">少冰</button>
+                        <button class="remark-btn" onclick="insertRemark('去冰')">去冰</button>
+                        <button class="remark-btn" onclick="insertRemark('加糖')">加糖</button>
+                        <button class="remark-btn" onclick="insertRemark('不加糖')">不加糖</button>
+                        <button class="remark-btn" onclick="insertRemark('加料')">加料</button>
+                        <button class="remark-btn" onclick="insertRemark('不要盖子')">不要盖子</button>
+                        <button class="remark-btn" onclick="insertRemark('打包')">打包</button>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -620,6 +676,13 @@
                 
                 // 触发打印
                 window.print();
+            }
+            
+            function insertRemark(remark) {
+                const remarkInput = document.getElementById('remark');
+                const currentText = remarkInput.value;
+                remarkInput.value = currentText + remark + '，';
+                remarkInput.focus();
             }
             
             function formatOrderTime(date) {
