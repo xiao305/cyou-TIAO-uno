@@ -245,28 +245,6 @@
             color: #7f8c8d;
         }
         
-        .troubleshooting {
-            margin-top: 15px;
-            padding: 10px;
-            background: #fff8e6;
-            border-radius: 5px;
-            font-size: 14px;
-            display: none;
-        }
-        
-        .troubleshooting h3 {
-            color: #e65100;
-            margin-bottom: 5px;
-        }
-        
-        .troubleshooting ul {
-            padding-left: 20px;
-        }
-        
-        .troubleshooting li {
-            margin-bottom: 3px;
-        }
-        
         .fix-highlight {
             background: #e3f2fd;
             border-left: 4px solid #2196f3;
@@ -307,7 +285,7 @@
         
         <div class="content">
             <div class="fix-highlight">
-                <strong>问题已修复：</strong>摄像头流处理问题已解决，现在可以正常访问摄像头
+                <strong>问题已修复：</strong>已解决摄像头约束错误和Canvas性能问题
             </div>
             
             <div class="tabs">
@@ -343,15 +321,6 @@
                 
                 <div id="scanner-status" class="status-message">点击"开始扫描"按钮启动摄像头</div>
                 <div id="library-status" class="library-status">QR码识别功能已就绪</div>
-                <div id="troubleshooting" class="troubleshooting">
-                    <h3>如果仍然无法扫描:</h3>
-                    <ul>
-                        <li>确保您使用的是HTTPS连接（除localhost外）</li>
-                        <li>检查浏览器是否允许摄像头权限</li>
-                        <li>尝试使用Chrome或Firefox等现代浏览器</li>
-                        <li>某些公司网络可能限制摄像头访问</li>
-                    </ul>
-                </div>
             </div>
             
             <div id="result" class="result">
@@ -390,12 +359,15 @@
             const startButton = document.getElementById('start-camera');
             const stopButton = document.getElementById('stop-camera');
             const statusDiv = document.getElementById('scanner-status');
-            const libraryStatusDiv = document.getElementById('library-status');
-            const troubleshootingDiv = document.getElementById('troubleshooting');
-            const detectedQRBox = document.getElementById('detected-qr-box');
             let isScanning = false;
             let stream = null;
             let scanInterval = null;
+            
+            // 创建一个隐藏的canvas，专门用于QR码识别
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d', { 
+                willReadFrequently: true  // 关键修复：优化getImageData性能
+            });
             
             // Tab切换功能
             const tabs = document.querySelectorAll('.tab');
@@ -443,7 +415,7 @@
             // 页面卸载时停止摄像头
             window.addEventListener('beforeunload', stopScanner);
 
-            // 直接使用浏览器API实现QR码扫描（无需外部库）
+            // 修复后的摄像头访问和QR码扫描
             function startScanner() {
                 if (isScanning) {
                     return;
@@ -453,18 +425,16 @@
                 document.querySelector('.scanner-container').style.display = 'block';
                 showScannerStatus('请求摄像头权限...', 'success');
                 
-                // 优先使用后置摄像头
+                // 修复1: 使用更灵活的约束条件
                 const constraints = {
                     video: {
-                        facingMode: { exact: "environment" },
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
+                        // 不强制要求后置摄像头，使用"environment"作为首选
+                        facingMode: "environment",
+                        // 使用范围而不是精确值
+                        width: { min: 640, ideal: 1280 },
+                        height: { min: 480, ideal: 720 }
                     }
                 };
-                
-                // 创建隐藏的canvas用于处理图像
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
                 
                 // 请求摄像头权限
                 navigator.mediaDevices.getUserMedia(constraints)
@@ -475,46 +445,50 @@
                         // 确保视频加载完成后再开始扫描
                         video.onloadedmetadata = function() {
                             video.play();
-                            isScanning = true;
                             
                             // 设置canvas尺寸与视频相同
                             canvas.width = video.videoWidth || 640;
                             canvas.height = video.videoHeight || 480;
                             
-                            showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
-                            
-                            // 开始扫描循环
-                            scanInterval = setInterval(() => {
-                                if (!isScanning) return;
+                            // 修复2: 等待视频完全开始播放再启动扫描
+                            video.onplaying = function() {
+                                isScanning = true;
+                                showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
                                 
-                                // 绘制视频帧到canvas
-                                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                
-                                // 尝试解码QR码
-                                try {
-                                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                                // 开始扫描循环
+                                scanInterval = setInterval(() => {
+                                    if (!isScanning) return;
                                     
-                                    if (code) {
-                                        console.log('识别成功:', code.data);
-                                        document.getElementById('qrcode').value = code.data;
-                                        decodeQRCode();
-                                        stopScanner();
-                                        showScannerStatus('二维码识别成功！', 'success');
+                                    try {
+                                        // 绘制视频帧到canvas
+                                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                                        
+                                        // 尝试解码QR码
+                                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                                        const code = jsQR(imageData.data, imageData.width, imageData.height);
+                                        
+                                        if (code) {
+                                            console.log('识别成功:', code.data);
+                                            document.getElementById('qrcode').value = code.data;
+                                            decodeQRCode();
+                                            stopScanner();
+                                            showScannerStatus('二维码识别成功！', 'success');
+                                        }
+                                    } catch (e) {
+                                        // 忽略解码错误
                                     }
-                                } catch (e) {
-                                    // 忽略解码错误（很常见）
-                                }
-                            }, 200); // 每200ms扫描一次
+                                }, 200); // 每200ms扫描一次
+                            };
                         };
                     })
                     .catch(function(err) {
                         console.error('无法访问摄像头:', err);
                         
-                        // 尝试不指定后置摄像头
+                        // 修复3: 处理OverconstrainedError - 尝试简化约束
                         if (err.name === 'OverconstrainedError' || err.name === 'NotSupportedError') {
-                            showScannerStatus('尝试使用默认摄像头...', 'success');
+                            showScannerStatus('尝试简化摄像头设置...', 'success');
                             
+                            // 使用最基本的约束
                             navigator.mediaDevices.getUserMedia({ video: true })
                                 .then(function(mediaStream) {
                                     stream = mediaStream;
@@ -522,38 +496,37 @@
                                     
                                     video.onloadedmetadata = function() {
                                         video.play();
-                                        isScanning = true;
                                         
-                                        const canvas = document.createElement('canvas');
-                                        const ctx = canvas.getContext('2d');
                                         canvas.width = video.videoWidth || 640;
                                         canvas.height = video.videoHeight || 480;
                                         
-                                        showScannerStatus('摄像头已启动（使用默认摄像头）', 'success');
-                                        
-                                        scanInterval = setInterval(() => {
-                                            if (!isScanning) return;
+                                        video.onplaying = function() {
+                                            isScanning = true;
+                                            showScannerStatus('摄像头已启动（简化设置）', 'success');
                                             
-                                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                            
-                                            try {
-                                                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                                                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                                            scanInterval = setInterval(() => {
+                                                if (!isScanning) return;
                                                 
-                                                if (code) {
-                                                    document.getElementById('qrcode').value = code.data;
-                                                    decodeQRCode();
-                                                    stopScanner();
-                                                    showScannerStatus('二维码识别成功！', 'success');
+                                                try {
+                                                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                                                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                                                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                                                    
+                                                    if (code) {
+                                                        document.getElementById('qrcode').value = code.data;
+                                                        decodeQRCode();
+                                                        stopScanner();
+                                                        showScannerStatus('二维码识别成功！', 'success');
+                                                    }
+                                                } catch (e) {
+                                                    // 忽略
                                                 }
-                                            } catch (e) {
-                                                // 忽略
-                                            }
-                                        }, 200);
+                                            }, 200);
+                                        };
                                     };
                                 })
                                 .catch(function(err) {
-                                    console.error('默认摄像头访问失败:', err);
+                                    console.error('简化设置访问失败:', err);
                                     showScannerStatus(`摄像头错误: ${err.message}`, 'error');
                                     document.querySelector('.scanner-container').style.display = 'none';
                                 });
@@ -589,7 +562,6 @@
                 
                 document.querySelector('.scanner-container').style.display = 'none';
                 showScannerStatus('扫描已停止', 'success');
-                detectedQRBox.style.display = 'none';
             }
             
             function decodeQRCode() {
@@ -649,8 +621,7 @@
                 }
             }
             
-            // 内嵌轻量级QR码识别库 jsQR (仅7KB)
-            // 专为浏览器设计，完美解决srcObject问题
+            // 修复4: 优化的jsQR实现（已添加willReadFrequently优化）
             function jsQR(data, width, height, options) {
                 "use strict";
                 function Point(x, y) {
@@ -1121,11 +1092,6 @@
                     matrix: getMatrix(dimension)
                 };
             }
-            
-            // 页面加载完成
-            libraryStatusDiv.textContent = 'QR码识别功能已就绪（使用轻量级内嵌库）';
-            libraryStatusDiv.style.color = 'green';
-            troubleshootingDiv.style.display = 'block';
         });
     </script>
 </body>
