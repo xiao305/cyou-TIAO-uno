@@ -265,6 +265,11 @@
             .scanner-container {
                 height: 250px;
             }
+            
+            .scanner-frame {
+                width: 180px;
+                height: 180px;
+            }
         }
     </style>
 </head>
@@ -438,9 +443,9 @@
                 // 使用更灵活的约束条件
                 const constraints = {
                     video: {
-                        facingMode: "environment",
-                        width: { min: 640, ideal: 1280 },
-                        height: { min: 480, ideal: 720 }
+                        facingMode: "environment",  // 优先使用后置摄像头
+                        width: { min: 640, ideal: 1280, max: 1920 },
+                        height: { min: 480, ideal: 720, max: 1080 }
                     }
                 };
                 
@@ -463,8 +468,8 @@
                                 isScanning = true;
                                 showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
                                 
-                                // 开始扫描循环
-                                scanInterval = setInterval(() => {
+                                // 使用requestAnimationFrame而不是setInterval以获得更好的性能
+                                function scanFrame() {
                                     if (!isScanning) return;
                                     
                                     try {
@@ -481,12 +486,19 @@
                                             decodeQRCode();
                                             stopScanner();
                                             showScannerStatus('二维码识别成功！', 'success');
+                                        } else {
+                                            // 继续扫描
+                                            requestAnimationFrame(scanFrame);
                                         }
                                     } catch (e) {
                                         console.error('扫描错误:', e);
-                                        // 忽略解码错误
+                                        // 继续扫描
+                                        requestAnimationFrame(scanFrame);
                                     }
-                                }, 100); // 每100ms扫描一次
+                                }
+                                
+                                // 开始扫描循环
+                                requestAnimationFrame(scanFrame);
                             };
                         };
                     })
@@ -494,11 +506,11 @@
                         console.error('无法访问摄像头:', err);
                         
                         // 处理OverconstrainedError - 尝试简化约束
-                        if (err.name === 'OverconstrainedError' || err.name === 'NotSupportedError') {
+                        if (err.name === 'OverconstrainedError' || err.name === 'NotSupportedError' || err.name === 'ConstraintNotSatisfiedError') {
                             showScannerStatus('尝试简化摄像头设置...', 'success');
                             
                             // 使用最基本的约束
-                            navigator.mediaDevices.getUserMedia({ video: true })
+                            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
                                 .then(function(mediaStream) {
                                     stream = mediaStream;
                                     video.srcObject = stream;
@@ -513,7 +525,7 @@
                                             isScanning = true;
                                             showScannerStatus('摄像头已启动（简化设置）', 'success');
                                             
-                                            scanInterval = setInterval(() => {
+                                            function scanFrame() {
                                                 if (!isScanning) return;
                                                 
                                                 try {
@@ -526,11 +538,16 @@
                                                         decodeQRCode();
                                                         stopScanner();
                                                         showScannerStatus('二维码识别成功！', 'success');
+                                                    } else {
+                                                        requestAnimationFrame(scanFrame);
                                                     }
                                                 } catch (e) {
                                                     console.error('扫描错误:', e);
+                                                    requestAnimationFrame(scanFrame);
                                                 }
-                                            }, 100);
+                                            }
+                                            
+                                            requestAnimationFrame(scanFrame);
                                         };
                                     };
                                 })
@@ -552,12 +569,6 @@
                 }
                 
                 isScanning = false;
-                
-                // 清理扫描循环
-                if (scanInterval) {
-                    clearInterval(scanInterval);
-                    scanInterval = null;
-                }
                 
                 // 停止所有视频轨道
                 if (stream) {
@@ -634,6 +645,12 @@
             console.log("页面初始化完成，所有功能已准备就绪");
             libraryStatusDiv.textContent = 'QR码识别功能已就绪';
             libraryStatusDiv.style.color = 'green';
+            
+            // 检查是否在移动设备上
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                console.log("检测到移动设备，优化扫描设置");
+                // 可以在这里添加移动设备特定的优化
+            }
         });
     </script>
 </body>
