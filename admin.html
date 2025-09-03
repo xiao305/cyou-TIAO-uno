@@ -333,50 +333,25 @@
     </div>
 
     <script>
-        // 预加载jsQR库 - 使用多个CDN作为备选
+        // 预加载jsQR库
         (function() {
-            const cdns = [
-                'https://unpkg.com/jsqr@1.4.0/dist/jsQR.js',
-                'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js',
-                'https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js'
-            ];
-            
-            let loaded = false;
-            let index = 0;
-            
-            function showScannerStatus(text, type) {
-                const statusDiv = document.getElementById('scanner-status');
-                if (statusDiv) {
-                    statusDiv.textContent = text;
-                    statusDiv.className = 'status-message ' + (type === 'error' ? 'error' : 'success');
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/jsqr@1.4.0/dist/jsQR.js';
+            script.onload = function() {
+                console.log('jsQR库加载成功');
+                if (document.getElementById('scanner-status')) {
+                    document.getElementById('scanner-status').textContent = '二维码识别库加载成功';
+                    document.getElementById('scanner-status').className = 'status-message success';
                 }
-            }
-            
-            function loadNext() {
-                if (index >= cdns.length) {
-                    console.error('所有CDN都加载失败');
-                    showScannerStatus('二维码识别库加载失败，请刷新页面重试', 'error');
-                    return;
+            };
+            script.onerror = function() {
+                console.error('jsQR库加载失败');
+                if (document.getElementById('scanner-status')) {
+                    document.getElementById('scanner-status').textContent = '二维码识别库加载失败，请刷新页面重试';
+                    document.getElementById('scanner-status').className = 'status-message error';
                 }
-                
-                const script = document.createElement('script');
-                script.src = cdns[index];
-                script.onload = function() {
-                    if (!loaded) {
-                        loaded = true;
-                        console.log('jsQR库加载成功');
-                        showScannerStatus('二维码识别库加载成功', 'success');
-                    }
-                };
-                script.onerror = function() {
-                    console.error('CDN加载失败:', cdns[index]);
-                    index++;
-                    loadNext();
-                };
-                document.head.appendChild(script);
-            }
-            
-            loadNext();
+            };
+            document.head.appendChild(script);
         })();
         
         document.addEventListener('DOMContentLoaded', function() {
@@ -437,8 +412,8 @@
                 const constraints = {
                     video: {
                         facingMode: "environment", // 优先使用后置摄像头
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
+                        width: { min: 640, ideal: 1280, max: 1920 },
+                        height: { min: 480, ideal: 720, max: 1080 }
                     },
                     audio: false
                 };
@@ -487,12 +462,9 @@
             function scanQRCode() {
                 if (!scanning) return;
                 
-                // 使用setInterval确保持续扫描
-                scanInterval = setInterval(() => {
-                    if (!scanning) {
-                        clearInterval(scanInterval);
-                        return;
-                    }
+                // 使用requestAnimationFrame确保流畅扫描
+                function scanFrame() {
+                    if (!scanning) return;
                     
                     if (video.readyState === video.HAVE_ENOUGH_DATA) {
                         const canvas = document.createElement('canvas');
@@ -510,22 +482,29 @@
                             console.error("扫描过程中出现错误:", e);
                         }
                     }
-                }, 100); // 每100ms扫描一次，提高识别速度
+                    
+                    // 继续下一帧扫描
+                    requestAnimationFrame(scanFrame);
+                }
+                
+                // 开始扫描
+                scanFrame();
             }
             
             function processImageData(imageData, canvas) {
                 // 确保jsQR库已加载
                 if (typeof jsQR === 'undefined') {
-                    // 显示加载状态
-                    if (!statusDiv.textContent.includes('加载')) {
-                        showScannerStatus('正在加载二维码识别库...', 'success');
-                    }
                     return;
                 }
                 
-                // 尝试识别二维码
+                // 尝试识别二维码 - 使用更宽松的参数
                 const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                    inversionAttempts: "attemptBoth", // 尝试反转颜色
+                    inversionAttempts: "attemptBoth",
+                    greyscaleWeights: {
+                        r: 0.299,
+                        g: 0.587,
+                        b: 0.114
+                    }
                 });
                 
                 if (code) {
