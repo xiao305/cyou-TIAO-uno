@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>二维码信息查看 - 红姐私房</title>
     <style>
         * {
@@ -16,7 +16,6 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             padding: 20px;
-            -webkit-tap-highlight-color: transparent;
         }
         
         .container {
@@ -61,8 +60,6 @@
             color: #7f8c8d;
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
-            flex: 1;
-            text-align: center;
         }
         
         .tab.active {
@@ -248,16 +245,6 @@
             color: #7f8c8d;
         }
         
-        .mobile-tip {
-            text-align: center;
-            padding: 10px;
-            background: #fff8e1;
-            border-radius: 5px;
-            margin-top: 15px;
-            font-size: 14px;
-            display: none;
-        }
-        
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -277,11 +264,6 @@
             
             .scanner-container {
                 height: 250px;
-            }
-            
-            .scanner-frame {
-                width: 180px;
-                height: 180px;
             }
         }
     </style>
@@ -327,7 +309,6 @@
                 
                 <div id="scanner-status" class="status-message">点击"开始扫描"按钮启动摄像头</div>
                 <div id="library-status" class="library-status">QR码识别功能已就绪</div>
-                <div id="mobile-tip" class="mobile-tip">提示：将手机靠近二维码，保持稳定</div>
             </div>
             
             <div id="result" class="result">
@@ -360,13 +341,11 @@
         </div>
     </div>
 
-    <!-- 引入真正的jsQR库 -->
+    <!-- 重要：引入真正的jsQR库 -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("页面初始化开始");
-            
             // 获取所有DOM元素
             const video = document.getElementById('scanner-video');
             const startButton = document.getElementById('start-camera');
@@ -376,42 +355,15 @@
             const qrcodeTextarea = document.getElementById('qrcode');
             const statusDiv = document.getElementById('scanner-status');
             const libraryStatusDiv = document.getElementById('library-status');
-            const mobileTipDiv = document.getElementById('mobile-tip');
             
             let isScanning = false;
             let stream = null;
             let scanInterval = null;
             
-            // 关键修复1: 检测是否是移动设备
-            function isMobileDevice() {
-                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            }
-            
-            // 关键修复2: 根据设备类型获取摄像头约束
-            function getCameraConstraints() {
-                if (isMobileDevice()) {
-                    // 手机上使用更灵活的约束
-                    return {
-                        video: {
-                            facingMode: "environment"  // 不使用exact
-                        }
-                    };
-                } else {
-                    // 电脑上可以使用更具体的约束
-                    return {
-                        video: {
-                            facingMode: "environment",
-                            width: { min: 640, ideal: 1280 },
-                            height: { min: 480, ideal: 720 }
-                        }
-                    };
-                }
-            }
-            
             // 创建canvas用于处理图像
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d', { 
-                willReadFrequently: true  // 关键修复：根据HTML规范优化getImageData性能
+                willReadFrequently: true  // 根据HTML规范优化getImageData性能
             });
             
             // Tab切换功能
@@ -420,8 +372,6 @@
             
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    console.log(`切换到标签: ${tab.getAttribute('data-tab')}`);
-                    
                     // 移除所有活动状态
                     tabs.forEach(t => t.classList.remove('active'));
                     tabContents.forEach(tc => tc.classList.add('hidden'));
@@ -434,13 +384,6 @@
                     // 切换到扫描标签时显示状态
                     if (tabId === 'scanner') {
                         showScannerStatus('点击"开始扫描"启动摄像头', 'success');
-                        
-                        // 关键修复3: 手机上显示提示
-                        if (isMobileDevice()) {
-                            mobileTipDiv.style.display = 'block';
-                        }
-                    } else {
-                        mobileTipDiv.style.display = 'none';
                     }
                 });
             });
@@ -448,13 +391,11 @@
             // 手动解析按钮事件
             decodeButton.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log("手动解析按钮被点击");
                 decodeQRCode();
             });
             
             // 清空按钮事件
             clearButton.addEventListener('click', function() {
-                console.log("清空按钮被点击");
                 qrcodeTextarea.value = '';
                 document.getElementById('result').style.display = 'none';
                 document.getElementById('message').innerHTML = '';
@@ -464,7 +405,6 @@
             qrcodeTextarea.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    console.log("在文本区域按下回车键");
                     decodeQRCode();
                 }
             });
@@ -472,263 +412,145 @@
             // 摄像头相关事件监听
             startButton.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log("开始扫描按钮被点击");
                 startScanner();
             });
             
             stopButton.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log("停止扫描按钮被点击");
                 stopScanner();
             });
             
             // 页面卸载时停止摄像头
             window.addEventListener('beforeunload', function() {
-                console.log("页面即将卸载，停止扫描");
                 stopScanner();
             });
             
-            // 关键修复4: 优化摄像头初始化流程
+            // 修复后的摄像头访问和QR码扫描
             function startScanner() {
                 if (isScanning) {
-                    console.log("已经在扫描中，无需重复启动");
                     return;
                 }
-                
-                console.log("开始启动扫描...");
                 
                 // 显示扫描容器
                 document.querySelector('.scanner-container').style.display = 'block';
                 showScannerStatus('请求摄像头权限...', 'success');
                 
-                // 关键修复5: 手机上需要更长的初始化时间
-                const initDelay = isMobileDevice() ? 1500 : 500;
+                // 使用更灵活的约束条件
+                const constraints = {
+                    video: {
+                        facingMode: "environment",
+                        width: { min: 640, ideal: 1280 },
+                        height: { min: 480, ideal: 720 }
+                    }
+                };
                 
-                setTimeout(() => {
-                    // 使用更灵活的约束条件
-                    const constraints = getCameraConstraints();
-                    
-                    // 请求摄像头权限
-                    navigator.mediaDevices.getUserMedia(constraints)
-                        .then(function(mediaStream) {
-                            console.log("成功获取摄像头流");
-                            stream = mediaStream;
-                            video.srcObject = stream;
+                // 请求摄像头权限
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function(mediaStream) {
+                        stream = mediaStream;
+                        video.srcObject = stream;
+                        
+                        // 确保视频加载完成后再开始扫描
+                        video.onloadedmetadata = function() {
+                            video.play();
                             
-                            // 关键修复6: 确保视频完全加载
-                            video.onloadedmetadata = function() {
-                                console.log("视频元数据已加载");
-                                video.play();
+                            // 设置canvas尺寸与视频相同
+                            canvas.width = video.videoWidth || 640;
+                            canvas.height = video.videoHeight || 480;
+                            
+                            // 等待视频完全开始播放再启动扫描
+                            video.onplaying = function() {
+                                isScanning = true;
+                                showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
                                 
-                                // 关键修复7: 等待视频完全开始播放
-                                video.onplaying = function() {
-                                    console.log("视频已开始播放");
+                                // 开始扫描循环
+                                scanInterval = setInterval(() => {
+                                    if (!isScanning) return;
                                     
-                                    // 关键修复8: 确保视频尺寸有效
-                                    const videoWidth = video.videoWidth || 640;
-                                    const videoHeight = video.videoHeight || 480;
-                                    
-                                    // 关键修复9: 手机上使用更小的canvas尺寸以提高性能
-                                    if (isMobileDevice()) {
-                                        const scale = Math.min(1, 640 / Math.max(videoWidth, videoHeight));
-                                        canvas.width = Math.floor(videoWidth * scale);
-                                        canvas.height = Math.floor(videoHeight * scale);
-                                    } else {
-                                        canvas.width = videoWidth;
-                                        canvas.height = videoHeight;
-                                    }
-                                    
-                                    console.log(`设置canvas尺寸: ${canvas.width}x${canvas.height}`);
-                                    
-                                    isScanning = true;
-                                    showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
-                                    
-                                    // 关键修复10: 手机上降低扫描频率
-                                    const scanIntervalTime = isMobileDevice() ? 150 : 100;
-                                    
-                                    // 开始扫描循环
-                                    scanInterval = setInterval(() => {
-                                        if (!isScanning) return;
+                                    try {
+                                        // 绘制视频帧到canvas
+                                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                                         
-                                        try {
-                                            // 绘制视频帧到canvas
-                                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                            
-                                            // 关键修复11: 确保canvas尺寸有效
-                                            if (canvas.width <= 0 || canvas.height <= 0) {
-                                                console.warn("canvas尺寸无效，跳过本次扫描");
-                                                return;
-                                            }
-                                            
-                                            // 尝试解码QR码
-                                            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                                            
-                                            // 关键修复12: 手机上增强图像预处理
-                                            if (isMobileDevice()) {
-                                                preprocessMobileImage(imageData);
-                                            }
-                                            
-                                            const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                                                inversionAttempts: "attemptBoth"
-                                            });
-                                            
-                                            if (code) {
-                                                console.log('识别成功:', code.data);
-                                                document.getElementById('qrcode').value = code.data;
-                                                decodeQRCode();
-                                                stopScanner();
-                                                showScannerStatus('二维码识别成功！', 'success');
-                                                
-                                                // 关键修复13: 手机上添加振动反馈
-                                                if (isMobileDevice() && navigator.vibrate) {
-                                                    navigator.vibrate(200);
-                                                }
-                                            }
-                                        } catch (e) {
-                                            console.error('扫描错误:', e);
-                                            // 忽略解码错误
+                                        // 尝试解码QR码 - 使用真正的jsQR库
+                                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                                        const code = jsQR(imageData.data, imageData.width, imageData.height);
+                                        
+                                        if (code) {
+                                            console.log('识别成功:', code.data);
+                                            document.getElementById('qrcode').value = code.data;
+                                            decodeQRCode();
+                                            stopScanner();
+                                            showScannerStatus('二维码识别成功！', 'success');
                                         }
-                                    }, scanIntervalTime);
-                                };
+                                    } catch (e) {
+                                        console.error('扫描错误:', e);
+                                        // 忽略解码错误
+                                    }
+                                }, 100); // 每100ms扫描一次
                             };
-                        })
-                        .catch(function(err) {
-                            console.error('无法访问摄像头:', err);
+                        };
+                    })
+                    .catch(function(err) {
+                        console.error('无法访问摄像头:', err);
+                        
+                        // 处理OverconstrainedError - 尝试简化约束
+                        if (err.name === 'OverconstrainedError' || err.name === 'NotSupportedError') {
+                            showScannerStatus('尝试简化摄像头设置...', 'success');
                             
-                            // 关键修复14: 处理OverconstrainedError - 尝试简化约束
-                            if (err.name === 'OverconstrainedError' || err.name === 'NotSupportedError') {
-                                showScannerStatus('尝试简化摄像头设置...', 'success');
-                                
-                                // 使用最基本的约束
-                                navigator.mediaDevices.getUserMedia({ video: true })
-                                    .then(function(mediaStream) {
-                                        stream = mediaStream;
-                                        video.srcObject = stream;
+                            // 使用最基本的约束
+                            navigator.mediaDevices.getUserMedia({ video: true })
+                                .then(function(mediaStream) {
+                                    stream = mediaStream;
+                                    video.srcObject = stream;
+                                    
+                                    video.onloadedmetadata = function() {
+                                        video.play();
                                         
-                                        video.onloadedmetadata = function() {
-                                            video.play();
+                                        canvas.width = video.videoWidth || 640;
+                                        canvas.height = video.videoHeight || 480;
+                                        
+                                        video.onplaying = function() {
+                                            isScanning = true;
+                                            showScannerStatus('摄像头已启动（简化设置）', 'success');
                                             
-                                            // 确保视频尺寸有效
-                                            const videoWidth = video.videoWidth || 640;
-                                            const videoHeight = video.videoHeight || 480;
-                                            
-                                            // 设置canvas尺寸
-                                            if (isMobileDevice()) {
-                                                const scale = Math.min(1, 640 / Math.max(videoWidth, videoHeight));
-                                                canvas.width = Math.floor(videoWidth * scale);
-                                                canvas.height = Math.floor(videoHeight * scale);
-                                            } else {
-                                                canvas.width = videoWidth;
-                                                canvas.height = videoHeight;
-                                            }
-                                            
-                                            video.onplaying = function() {
-                                                isScanning = true;
-                                                showScannerStatus('摄像头已启动（简化设置）', 'success');
+                                            scanInterval = setInterval(() => {
+                                                if (!isScanning) return;
                                                 
-                                                const scanIntervalTime = isMobileDevice() ? 150 : 100;
-                                                
-                                                scanInterval = setInterval(() => {
-                                                    if (!isScanning) return;
+                                                try {
+                                                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                                                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                                                    const code = jsQR(imageData.data, imageData.width, imageData.height);
                                                     
-                                                    try {
-                                                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                                        
-                                                        // 确保canvas尺寸有效
-                                                        if (canvas.width <= 0 || canvas.height <= 0) {
-                                                            return;
-                                                        }
-                                                        
-                                                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                                                        
-                                                        // 手机上增强图像预处理
-                                                        if (isMobileDevice()) {
-                                                            preprocessMobileImage(imageData);
-                                                        }
-                                                        
-                                                        const code = jsQR(imageData.data, imageData.width, imageData.height);
-                                                        
-                                                        if (code) {
-                                                            document.getElementById('qrcode').value = code.data;
-                                                            decodeQRCode();
-                                                            stopScanner();
-                                                            showScannerStatus('二维码识别成功！', 'success');
-                                                            
-                                                            // 手机上添加振动反馈
-                                                            if (isMobileDevice() && navigator.vibrate) {
-                                                                navigator.vibrate(200);
-                                                            }
-                                                        }
-                                                    } catch (e) {
-                                                        console.error('扫描错误:', e);
+                                                    if (code) {
+                                                        document.getElementById('qrcode').value = code.data;
+                                                        decodeQRCode();
+                                                        stopScanner();
+                                                        showScannerStatus('二维码识别成功！', 'success');
                                                     }
-                                                }, scanIntervalTime);
-                                            };
+                                                } catch (e) {
+                                                    console.error('扫描错误:', e);
+                                                }
+                                            }, 100);
                                         };
-                                    })
-                                    .catch(function(err) {
-                                        console.error('简化设置访问失败:', err);
-                                        showScannerStatus(`摄像头错误: ${err.message}`, 'error');
-                                        document.querySelector('.scanner-container').style.display = 'none';
-                                    });
-                            } else {
-                                showScannerStatus(`摄像头错误: ${err.message}`, 'error');
-                                document.querySelector('.scanner-container').style.display = 'none';
-                            }
-                        });
-                }, initDelay);
-            }
-            
-            // 关键修复15: 手机上增强图像预处理
-            function preprocessMobileImage(imageData) {
-                const data = imageData.data;
-                const width = imageData.width;
-                const height = imageData.height;
-                
-                // 计算平均亮度
-                let sum = 0;
-                for (let i = 0; i < data.length; i += 4) {
-                    const r = data[i];
-                    const g = data[i + 1];
-                    const b = data[i + 2];
-                    // 转换为灰度
-                    const gray = 0.299 * r + 0.587 * g + 0.114 * b;
-                    sum += gray;
-                }
-                const avg = sum / (data.length / 4);
-                
-                // 手机上使用更强的对比度和亮度调整
-                const contrast = 1.4;
-                const brightness = avg > 127 ? -25 : 25;
-                
-                for (let i = 0; i < data.length; i += 4) {
-                    const r = data[i];
-                    const g = data[i + 1];
-                    const b = data[i + 2];
-                    
-                    // 转换为灰度
-                    let gray = 0.299 * r + 0.587 * g + 0.114 * b;
-                    
-                    // 应用对比度和亮度
-                    gray = contrast * (gray - 127) + 127 + brightness;
-                    
-                    // 二值化处理（手机上使用更低的阈值）
-                    const threshold = avg * 0.85;
-                    const binary = gray > threshold ? 255 : 0;
-                    
-                    // 应用回RGB
-                    data[i] = data[i + 1] = data[i + 2] = binary;
-                    // 保持alpha通道不变
-                }
+                                    };
+                                })
+                                .catch(function(err) {
+                                    console.error('简化设置访问失败:', err);
+                                    showScannerStatus(`摄像头错误: ${err.message}`, 'error');
+                                    document.querySelector('.scanner-container').style.display = 'none';
+                                });
+                        } else {
+                            showScannerStatus(`摄像头错误: ${err.message}`, 'error');
+                            document.querySelector('.scanner-container').style.display = 'none';
+                        }
+                    });
             }
             
             function stopScanner() {
                 if (!isScanning) {
-                    console.log("未在扫描中，无需停止");
                     return;
                 }
                 
-                console.log("停止扫描...");
                 isScanning = false;
                 
                 // 清理扫描循环
@@ -783,4 +605,36 @@
                     document.getElementById('specification').textContent = data.specification || '-';
                     document.getElementById('order-time').textContent = data.orderTime || '-';
                     document.getElementById('print-time').textContent = data.printTime || '-';
-              
+                    document.getElementById('remark').textContent = data.remark || '-';
+                    
+                    resultDiv.style.display = 'block';
+                    showMessage('', ''); // 清空消息
+                } catch (e) {
+                    showMessage('二维码内容格式错误，请检查输入: ' + e.message, 'error');
+                    resultDiv.style.display = 'none';
+                }
+            }
+            
+            function showMessage(text, type) {
+                const messageDiv = document.getElementById('message');
+                messageDiv.textContent = text;
+                messageDiv.className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            }
+            
+            function showScannerStatus(text, type) {
+                if (statusDiv) {
+                    statusDiv.textContent = text;
+                    statusDiv.className = 'status-message ' + 
+                        (type === 'error' ? 'error' : 
+                         type === 'success' ? 'success' : '');
+                }
+            }
+            
+            // 初始化完成
+            console.log("页面初始化完成，所有功能已准备就绪");
+            libraryStatusDiv.textContent = 'QR码识别功能已就绪';
+            libraryStatusDiv.style.color = 'green';
+        });
+    </script>
+</body>
+</html>
