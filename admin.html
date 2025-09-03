@@ -3,606 +3,439 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二维码信息查看 - 红姐私房</title>
+    <title>二维码识别工具</title>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
         }
         
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             padding: 20px;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
         
         header {
             text-align: center;
-            padding: 20px 0;
             margin-bottom: 30px;
         }
         
         h1 {
-            color: #2c3e50;
             font-size: 2.5rem;
             margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-        }
-        
-        .content {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .tab {
-            padding: 12px 20px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #7f8c8d;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .tab.active {
-            color: #3498db;
-            border-bottom: 3px solid #3498db;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
             color: #2c3e50;
         }
         
-        input, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+        .description {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
-        input:focus, textarea:focus {
-            border-color: #3498db;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-        }
-        
-        textarea {
-            height: 120px;
-            resize: vertical;
-        }
-        
-        .btn-group {
+        .main-content {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
         }
         
-        button {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            background: #3498db;
-            color: white;
-            transition: all 0.3s;
+        .qr-scanner, .result-container {
             flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 25px;
         }
         
-        button:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #3498db;
+            display: flex;
+            align-items: center;
         }
         
-        .btn-secondary {
-            background: #95a5a6;
+        .section-title i {
+            margin-right: 10px;
         }
         
-        .btn-secondary:hover {
-            background: #7f8c8d;
-        }
-        
-        .scanner-container {
+        .camera-container {
             position: relative;
             width: 100%;
             height: 300px;
-            background: #000;
-            border-radius: 8px;
             overflow: hidden;
+            border-radius: 8px;
+            background-color: #f8f9fa;
             margin-bottom: 20px;
-            display: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #ddd;
         }
         
-        #scanner-video {
+        #video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-        
-        .scanner-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        
-        .scanner-frame {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-        
-        .detected-qr-box {
-            position: absolute;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
             display: none;
         }
         
-        .result {
-            margin-top: 30px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: #f8f9fa;
-            display: none;
-        }
-        
-        .result-header {
+        .camera-placeholder {
             text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            color: #2c3e50;
+            color: #7f8c8d;
         }
         
-        .item {
+        .camera-placeholder i {
+            font-size: 64px;
             margin-bottom: 15px;
+            color: #bdc3c7;
+        }
+        
+        .controls {
             display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
         }
         
-        .label {
-            font-weight: bold;
-            width: 100px;
-            color: #2c3e50;
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
         }
         
-        .value {
-            flex: 1;
-            color: #34495e;
+        button i {
+            margin-right: 8px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button#stop {
+            background-color: #e74c3c;
+        }
+        
+        button#stop:hover {
+            background-color: #c0392b;
+        }
+        
+        button#upload {
+            background-color: #2ecc71;
+        }
+        
+        button#upload:hover {
+            background-color: #27ae60;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .result-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            border: 1px solid #e9ecef;
         }
         
         .error {
-            color: red;
-            margin-top: 15px;
+            color: #e74c3c;
             text-align: center;
-            padding: 10px;
-            border-radius: 5px;
-            background: #ffeaea;
+            padding: 20px;
         }
         
         .success {
-            color: green;
-            margin-top: 15px;
-            text-align: center;
-            padding: 10px;
-            border-radius: 5px;
-            background: #eaffea;
+            color: #2ecc71;
         }
         
-        .hidden {
+        .scan-line {
+            position: absolute;
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(to right, transparent, #3498db, transparent);
+            top: 50%;
+            animation: scan 2s linear infinite;
             display: none;
         }
         
-        .status-message {
+        @keyframes scan {
+            0% { top: 20%; }
+            50% { top: 80%; }
+            100% { top: 20%; }
+        }
+        
+        .instructions {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #ff9800;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        footer {
             text-align: center;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
         }
         
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .content {
-                padding: 20px;
+            .main-content {
+                flex-direction: column;
             }
             
             h1 {
                 font-size: 2rem;
             }
-            
-            .btn-group {
-                flex-direction: column;
-            }
-            
-            .scanner-container {
-                height: 250px;
-            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>二维码信息查看</h1>
-            <p class="subtitle">扫描二维码获取订单详情</p>
+            <h1><i class="fas fa-qrcode"></i> 二维码识别工具</h1>
+            <p class="description">使用摄像头实时扫描或上传二维码图片，自动解码JSON内容并格式化显示</p>
         </header>
         
-        <div class="content">
-            <div class="tabs">
-                <div class="tab active" data-tab="manual">手动输入</div>
-                <div class="tab" data-tab="scanner">扫码识别</div>
-            </div>
-            
-            <div id="manual-tab" class="tab-content">
-                <div class="form-group">
-                    <label for="qrcode">请输入二维码内容：</label>
-                    <textarea id="qrcode" placeholder="粘贴二维码内容..."></textarea>
-                </div>
-                
-                <div class="btn-group">
-                    <button id="decode-btn">解析二维码</button>
-                    <button id="clear-btn" class="btn-secondary">清空内容</button>
-                </div>
-            </div>
-            
-            <div id="scanner-tab" class="tab-content hidden">
-                <div class="scanner-container">
-                    <video id="scanner-video"></video>
-                    <div class="scanner-overlay">
-                        <div class="scanner-frame"></div>
-                        <div class="detected-qr-box" id="detected-qr-box"></div>
+        <div class="main-content">
+            <div class="qr-scanner">
+                <h2 class="section-title"><i class="fas fa-camera"></i> 扫描二维码</h2>
+                <div class="camera-container">
+                    <video id="video" playsinline></video>
+                    <div class="camera-placeholder" id="camera-placeholder">
+                        <i class="fas fa-camera"></i>
+                        <p>摄像头未启动</p>
                     </div>
+                    <div class="scan-line" id="scan-line"></div>
                 </div>
                 
-                <div class="btn-group">
-                    <button id="start-camera">开始扫描</button>
-                    <button id="stop-camera" class="btn-secondary">停止扫描</button>
+                <div class="controls">
+                    <button id="start"><i class="fas fa-play"></i> 启动摄像头</button>
+                    <button id="stop" disabled><i class="fas fa-stop"></i> 停止摄像头</button>
+                    <button id="upload"><i class="fas fa-upload"></i> 上传图片</button>
+                    <input type="file" id="file-input" accept="image/*">
                 </div>
                 
-                <div id="scanner-status" class="status-message">正在加载二维码识别库...</div>
-            </div>
-            
-            <div id="result" class="result">
-                <div class="result-header">
-                    <h2>订单详情</h2>
-                </div>
-                <div class="item">
-                    <div class="label">产品:</div>
-                    <div class="value" id="product">-</div>
-                </div>
-                <div class="item">
-                    <div class="label">规格:</div>
-                    <div class="value" id="specification">-</div>
-                </div>
-                <div class="item">
-                    <div class="label">下单时间:</div>
-                    <div class="value" id="order-time">-</div>
-                </div>
-                <div class="item">
-                    <div class="label">打印时间:</div>
-                    <div class="value" id="print-time">-</div>
-                </div>
-                <div class="item">
-                    <div class="label">备注:</div>
-                    <div class="value" id="remark">-</div>
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
+                    <ul>
+                        <li>点击"启动摄像头"按钮开始实时扫描二维码</li>
+                        <li>或者点击"上传图片"按钮选择包含二维码的图片</li>
+                        <li>系统会自动识别二维码内容并解析为JSON格式</li>
+                        <li>确保二维码清晰可见，以提高识别成功率</li>
+                    </ul>
                 </div>
             </div>
             
-            <div id="message"></div>
+            <div class="result-container">
+                <h2 class="section-title"><i class="fas fa-code"></i> 解码结果</h2>
+                <div class="result-box" id="result">
+                    <div class="error">暂无扫描结果</div>
+                </div>
+            </div>
         </div>
+        
+        <footer>
+            <p>本工具使用纯前端JavaScript实现，无需服务器支持 | 基于jsQR库开发</p>
+        </footer>
     </div>
 
+    <!-- 引入jsQR库 -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    
     <script>
-        // 内嵌精简版jsQR库代码
-        // 为了解决CDN加载问题和确保库正确初始化，我们直接内嵌一个精简版本的jsQR核心功能
-        // 注意：这是一个非常精简的版本，仅包含本页面所需的核心解码功能
-        (function() {
-            // 简化的jsQR实现，包含核心解码逻辑
-            window.jsQR = function(imageData, width, height, options) {
-                // 为了简化问题，我们直接返回null，表示未识别到二维码
-                // 在实际应用中，这里会包含复杂的图像处理和二维码解码逻辑
-                // 但由于我们之前的尝试都失败了，我们暂时禁用自动识别功能
-                // 用户需要手动点击“停止扫描”然后粘贴二维码内容进行解析
-                
-                // 这里我们模拟一个简单的检查，如果图像中心区域有明显的对比度变化，就认为可能有二维码
-                // 这只是一个非常粗糙的模拟，实际应用中不会这样实现
-                /*
-                const centerX = Math.floor(width / 2);
-                const centerY = Math.floor(height / 2);
-                const centerIndex = (centerY * width + centerX) * 4;
-                
-                // 检查中心点和周围点的亮度差异
-                const centerR = imageData.data[centerIndex];
-                const centerG = imageData.data[centerIndex + 1];
-                const centerB = imageData.data[centerIndex + 2];
-                const centerBrightness = 0.299 * centerR + 0.587 * centerG + 0.114 * centerB;
-                
-                const offsetX = Math.min(10, Math.floor(width * 0.1));
-                const offsetY = Math.min(10, Math.floor(height * 0.1));
-                const neighborIndex = ((centerY + offsetY) * width + (centerX + offsetX)) * 4;
-                const neighborR = imageData.data[neighborIndex];
-                const neighborG = imageData.data[neighborIndex + 1];
-                const neighborB = imageData.data[neighborIndex + 2];
-                const neighborBrightness = 0.299 * neighborR + 0.587 * neighborG + 0.114 * neighborB;
-                
-                // 如果亮度差异较大，模拟识别成功（这完全是模拟，实际不会这样工作）
-                if (Math.abs(centerBrightness - neighborBrightness) > 50) {
-                    console.log("模拟识别到二维码");
-                    return {
-                        data: '{"productName":"模拟产品","specification":"模拟规格","orderTime":"01-01 12:00","printTime":"2023-01-01 12:00:00","remark":"这是模拟数据"}',
-                        location: {
-                            topLeftCorner: { x: centerX - 50, y: centerY - 50 },
-                            bottomRightCorner: { x: centerX + 50, y: centerY + 50 }
-                        }
-                    };
-                }
-                */
-                
-                // 默认返回null，表示未识别到二维码
-                return null;
-            };
-            
-            // 库加载成功提示
-            document.addEventListener('DOMContentLoaded', function() {
-                const statusDiv = document.getElementById('scanner-status');
-                if (statusDiv) {
-                    statusDiv.textContent = '二维码识别库已就绪（模拟版本）';
-                    statusDiv.className = 'status-message success';
-                }
-            });
-            
-            console.log('精简版jsQR库已加载');
-        })();
-        
         document.addEventListener('DOMContentLoaded', function() {
-            // Tab切换功能
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
+            // 获取DOM元素
+            const video = document.getElementById('video');
+            const startButton = document.getElementById('start');
+            const stopButton = document.getElementById('stop');
+            const uploadButton = document.getElementById('upload');
+            const fileInput = document.getElementById('file-input');
+            const resultDiv = document.getElementById('result');
+            const cameraPlaceholder = document.getElementById('camera-placeholder');
+            const scanLine = document.getElementById('scan-line');
             
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    // 移除所有活动状态
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabContents.forEach(tc => tc.classList.add('hidden'));
-                    
-                    // 添加当前活动状态
-                    tab.classList.add('active');
-                    const tabId = tab.getAttribute('data-tab');
-                    document.getElementById(`${tabId}-tab`).classList.remove('hidden');
-                });
-            });
+            let streaming = false;
+            let mediaStream = null;
             
-            // 手动解析按钮事件
-            document.getElementById('decode-btn').addEventListener('click', decodeQRCode);
-            
-            // 清空按钮事件
-            document.getElementById('clear-btn').addEventListener('click', () => {
-                document.getElementById('qrcode').value = '';
-                document.getElementById('result').style.display = 'none';
-                document.getElementById('message').innerHTML = '';
-            });
-            
-            // 回车键触发解析
-            document.getElementById('qrcode').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    decodeQRCode();
-                }
-            });
-            
-            // 摄像头相关元素
-            const video = document.getElementById('scanner-video');
-            const startButton = document.getElementById('start-camera');
-            const stopButton = document.getElementById('stop-camera');
-            const statusDiv = document.getElementById('scanner-status');
-            const detectedQRBox = document.getElementById('detected-qr-box');
-            let stream = null;
-            let scanning = false;
-            
-            // 开始扫描按钮事件
-            startButton.addEventListener('click', startScanner);
-            
-            // 停止扫描按钮事件
-            stopButton.addEventListener('click', stopScanner);
-            
-            function startScanner() {
-                // 显示扫描容器
-                document.querySelector('.scanner-container').style.display = 'block';
-                
-                const constraints = {
-                    video: {
-                        facingMode: "environment", // 优先使用后置摄像头
-                        width: { min: 320, ideal: 640, max: 1280 },
-                        height: { min: 240, ideal: 480, max: 720 }
-                    },
-                    audio: false
-                };
-                
-                navigator.mediaDevices.getUserMedia(constraints)
-                    .then(function(mediaStream) {
-                        stream = mediaStream;
-                        video.srcObject = stream;
-                        video.setAttribute("playsinline", true); // iOS Safari兼容
-                        video.play();
-                        scanning = true;
-                        showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
-                        
-                        // 开始扫描
-                        scanQRCode();
-                    })
-                    .catch(function(err) {
-                        console.error("无法访问摄像头:", err);
-                        showScannerStatus('无法访问摄像头，请检查权限设置：' + err.message, 'error');
-                        document.querySelector('.scanner-container').style.display = 'none';
+            // 启动摄像头
+            startButton.addEventListener('click', async function() {
+                try {
+                    // 请求摄像头权限
+                    mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: "environment" } 
                     });
-            }
+                    
+                    video.srcObject = mediaStream;
+                    video.play();
+                    streaming = true;
+                    
+                    // 更新UI
+                    video.style.display = 'block';
+                    cameraPlaceholder.style.display = 'none';
+                    scanLine.style.display = 'block';
+                    startButton.disabled = true;
+                    stopButton.disabled = false;
+                    
+                    // 开始扫描
+                    requestAnimationFrame(scanQR);
+                    
+                } catch (err) {
+                    showError('无法访问摄像头: ' + err.message);
+                }
+            });
             
-            function stopScanner() {
-                scanning = false;
-                
-                if (stream) {
-                    const tracks = stream.getTracks();
-                    tracks.forEach(track => track.stop());
-                    stream = null;
+            // 停止摄像头
+            stopButton.addEventListener('click', function() {
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                    mediaStream = null;
                 }
                 
-                // 隐藏扫描容器
-                document.querySelector('.scanner-container').style.display = 'none';
-                showScannerStatus('扫描已停止', 'success');
-                
-                // 隐藏检测框
-                detectedQRBox.style.display = 'none';
-            }
+                streaming = false;
+                video.style.display = 'none';
+                cameraPlaceholder.style.display = 'flex';
+                scanLine.style.display = 'none';
+                startButton.disabled = false;
+                stopButton.disabled = true;
+            });
             
-            function scanQRCode() {
-                if (!scanning) return;
-                
-                function scanFrame() {
-                    if (!scanning) return;
+            // 上传图片
+            uploadButton.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    const img = new Image();
                     
-                    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                        // 创建canvas并绘制视频帧
-                        const canvas = document.createElement('canvas');
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        const ctx = canvas.getContext('2d');
-                        
-                        // 绘制视频帧到canvas
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        
-                        // 获取图像数据
-                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                        
-                        try {
-                            processImageData(imageData);
-                        } catch (e) {
-                            console.error("扫描过程中出现错误:", e);
-                        }
+                    img.onload = function() {
+                        processImage(img);
+                    };
+                    
+                    img.src = URL.createObjectURL(file);
+                }
+            });
+            
+            // 扫描二维码函数
+            function scanQR() {
+                if (!streaming) return;
+                
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    // 创建画布用于处理视频帧
+                    const canvas = document.createElement('canvas');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // 绘制当前视频帧
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    
+                    // 获取图像数据
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    
+                    // 尝试解码二维码
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                    
+                    if (code) {
+                        // 找到二维码，处理数据
+                        processQRCodeData(code.data);
                     }
-                    
-                    // 继续下一帧扫描
-                    requestAnimationFrame(scanFrame);
                 }
                 
-                // 开始扫描
-                scanFrame();
+                // 继续扫描
+                if (streaming) {
+                    requestAnimationFrame(scanQR);
+                }
             }
             
-            function processImageData(imageData) {
-                // 使用内嵌的jsQR库尝试识别二维码
-                // 由于我们使用的是模拟版本，这里总是返回null
-                // 在实际应用中，这里会进行真正的二维码识别
-                const code = window.jsQR(imageData, imageData.width, imageData.height, {
-                    inversionAttempts: "attemptBoth"
-                });
+            // 处理图片中的二维码
+            function processImage(img) {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                
+                // 绘制图像
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                // 获取图像数据
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                // 尝试解码二维码
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
                 
                 if (code) {
-                    // 显示检测到的二维码框
-                    const videoRect = video.getBoundingClientRect();
-                    const scaleX = videoRect.width / imageData.width;
-                    const scaleY = videoRect.height / imageData.height;
-                    
-                    detectedQRBox.style.display = 'block';
-                    detectedQRBox.style.left = (code.location.topLeftCorner.x * scaleX) + 'px';
-                    detectedQRBox.style.top = (code.location.topLeftCorner.y * scaleY) + 'px';
-                    detectedQRBox.style.width = ((code.location.bottomRightCorner.x - code.location.topLeftCorner.x) * scaleX) + 'px';
-                    detectedQRBox.style.height = ((code.location.bottomRightCorner.y - code.location.topLeftCorner.y) * scaleY) + 'px';
-                    
-                    // 成功识别二维码
-                    document.getElementById('qrcode').value = code.data;
-                    decodeQRCode();
-                    stopScanner();
-                    showScannerStatus('二维码识别成功！', 'success');
+                    // 找到二维码，处理数据
+                    processQRCodeData(code.data);
                 } else {
-                    // 没有检测到二维码时隐藏框
-                    detectedQRBox.style.display = 'none';
+                    showError('未发现二维码或识别失败');
                 }
             }
             
-            function decodeQRCode() {
-                const qrcodeInput = document.getElementById('qrcode').value.trim();
-                const resultDiv = document.getElementById('result');
-                const messageDiv = document.getElementById('message');
-                
-                if (!qrcodeInput) {
-                    showMessage('请输入二维码内容', 'error');
-                    resultDiv.style.display = 'none';
-                    return;
-                }
-                
+            // 处理二维码数据
+            function processQRCodeData(data) {
                 try {
-                    // 解码JSON数据
-                    const data = JSON.parse(qrcodeInput);
+                    // 尝试解析为JSON
+                    const jsonData = JSON.parse(data);
+                    
+                    // 格式化JSON
+                    const formattedJSON = JSON.stringify(jsonData, null, 2);
                     
                     // 显示结果
-                    document.getElementById('product').textContent = data.productName || '-';
-                    document.getElementById('specification').textContent = data.specification || '-';
-                    document.getElementById('order-time').textContent = data.orderTime || '-';
-                    document.getElementById('print-time').textContent = data.printTime || '-';
-                    document.getElementById('remark').textContent = data.remark || '-';
-                    
-                    resultDiv.style.display = 'block';
-                    showMessage('', ''); // 清空消息
+                    resultDiv.innerHTML = `<pre class="success">${formattedJSON}</pre>`;
                 } catch (e) {
-                    showMessage('二维码内容格式错误，请检查输入', 'error');
-                    resultDiv.style.display = 'none';
+                    // 如果不是JSON，直接显示原始内容
+                    resultDiv.innerHTML = `<pre>${data}</pre>`;
                 }
             }
             
-            function showMessage(text, type) {
-                const messageDiv = document.getElementById('message');
-                messageDiv.textContent = text;
-                messageDiv.className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            // 显示错误信息
+            function showError(message) {
+                resultDiv.innerHTML = `<div class="error">${message}</div>`;
             }
-            
-            function showScannerStatus(text, type) {
-                if (statusDiv) {
-                    statusDiv.textContent = text;
-                    statusDiv.className = 'status-message ' + (type === 'error' ? 'error' : 'success');
-                }
-            }
-            
-            // 页面卸载时停止摄像头
-            window.addEventListener('beforeunload', stopScanner);
         });
     </script>
 </body>
