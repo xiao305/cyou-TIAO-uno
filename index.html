@@ -298,29 +298,68 @@
         }
         
         @media print {
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+            }
+            
             body * {
                 visibility: hidden;
+                margin: 0 !important;
+                padding: 0 !important;
             }
+            
+            .container, .main-content, .preview-section, 
+            .label-preview, .label-container, .label-template {
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                height: auto !important;
+                display: block !important;
+                position: relative !important;
+            }
+            
             .print-area, .print-area * {
                 visibility: visible;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
             }
+            
             .print-area {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
                 display: flex;
-                justify-content: center;
+                flex-direction: column;
                 align-items: center;
-                height: 100vh;
-                margin: 0;
-                padding: 0;
+                justify-content: center;
+                page-break-inside: avoid;
             }
+            
             .print-label {
-                box-shadow: none;
-                border: none;
-                margin: 0;
-                padding: 0;
+                margin: 0 !important;
+                padding: 5mm !important;
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            @page {
+                size: auto;
+                margin: 0mm;
             }
         }
         
@@ -531,7 +570,7 @@
                     </div>
                 </div>
                 
-                <div class="instructions">
+                <div class="instructions no-print">
                     <h2 class="section-title">使用说明</h2>
                     <ul>
                         <li>填写产品信息并选择标签模板</li>
@@ -752,8 +791,16 @@
                 const printTimeString = formatDateTime(printTime);
                 document.getElementById('print-print-time').textContent = `打印时间: ${printTimeString}`;
                 
+                // 显示打印区域
+                document.querySelector('.print-area').style.display = 'block';
+                
                 // 触发打印
                 window.print();
+                
+                // 打印后隐藏打印区域
+                setTimeout(() => {
+                    document.querySelector('.print-area').style.display = 'none';
+                }, 100);
             }
             
             function syncCurrentTime() {
