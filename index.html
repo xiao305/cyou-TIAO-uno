@@ -351,6 +351,12 @@
                 border: 1px solid #000 !important;
                 page-break-inside: avoid;
                 break-inside: avoid;
+                width: 50mm !important;
+                height: 40mm !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
             }
             
             .no-print {
@@ -358,8 +364,8 @@
             }
             
             @page {
-                size: auto;
-                margin: 0mm;
+                size: 50mm 40mm;
+                margin: 0;
             }
         }
         
@@ -791,16 +797,8 @@
                 const printTimeString = formatDateTime(printTime);
                 document.getElementById('print-print-time').textContent = `打印时间: ${printTimeString}`;
                 
-                // 显示打印区域
-                document.querySelector('.print-area').style.display = 'block';
-                
                 // 触发打印
                 window.print();
-                
-                // 打印后隐藏打印区域
-                setTimeout(() => {
-                    document.querySelector('.print-area').style.display = 'none';
-                }, 100);
             }
             
             function syncCurrentTime() {
