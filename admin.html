@@ -157,6 +157,17 @@
             pointer-events: none;
         }
         
+        .scanner-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        
         .scanner-line {
             position: absolute;
             top: 50%;
@@ -171,17 +182,6 @@
         @keyframes scan {
             0% { transform: translateY(-50%); }
             100% { transform: translateY(50%); }
-        }
-        
-        .scanner-frame {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
         }
         
         .result {
@@ -341,6 +341,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Tab切换功能
