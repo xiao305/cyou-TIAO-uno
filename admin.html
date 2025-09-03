@@ -466,6 +466,8 @@
                         canvas.width = video.videoWidth;
                         canvas.height = video.videoHeight;
                         const ctx = canvas.getContext('2d');
+                        
+                        // 绘制视频帧到canvas
                         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         
@@ -485,8 +487,9 @@
                     return;
                 }
                 
+                // 尝试识别二维码
                 const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                    inversionAttempts: "dontInvert",
+                    inversionAttempts: "attemptBoth", // 尝试反转颜色
                 });
                 
                 if (code) {
