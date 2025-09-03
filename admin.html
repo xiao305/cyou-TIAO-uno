@@ -299,7 +299,7 @@
                     <button id="stop-camera" class="btn-secondary">停止扫描</button>
                 </div>
                 
-                <div id="scanner-status" class="status-message"></div>
+                <div id="scanner-status" class="status-message">正在加载二维码识别库...</div>
             </div>
             
             <div id="result" class="result">
@@ -336,13 +336,21 @@
         // 预加载jsQR库 - 使用多个CDN作为备选
         (function() {
             const cdns = [
-                'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js',
                 'https://unpkg.com/jsqr@1.4.0/dist/jsQR.js',
+                'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js',
                 'https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js'
             ];
             
             let loaded = false;
             let index = 0;
+            
+            function showScannerStatus(text, type) {
+                const statusDiv = document.getElementById('scanner-status');
+                if (statusDiv) {
+                    statusDiv.textContent = text;
+                    statusDiv.className = 'status-message ' + (type === 'error' ? 'error' : 'success');
+                }
+            }
             
             function loadNext() {
                 if (index >= cdns.length) {
@@ -509,7 +517,7 @@
                 // 确保jsQR库已加载
                 if (typeof jsQR === 'undefined') {
                     // 显示加载状态
-                    if (!document.getElementById('scanner-status').textContent.includes('加载')) {
+                    if (!statusDiv.textContent.includes('加载')) {
                         showScannerStatus('正在加载二维码识别库...', 'success');
                     }
                     return;
@@ -580,8 +588,10 @@
             }
             
             function showScannerStatus(text, type) {
-                statusDiv.textContent = text;
-                statusDiv.className = 'status-message ' + (type === 'error' ? 'error' : 'success');
+                if (statusDiv) {
+                    statusDiv.textContent = text;
+                    statusDiv.className = 'status-message ' + (type === 'error' ? 'error' : 'success');
+                }
             }
             
             // 页面卸载时停止摄像头
