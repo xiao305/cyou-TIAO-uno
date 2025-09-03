@@ -332,8 +332,20 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
     <script>
+        // 预加载jsQR库
+        (function() {
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
+            script.onload = function() {
+                console.log('jsQR库加载成功');
+            };
+            script.onerror = function() {
+                console.error('jsQR库加载失败');
+            };
+            document.head.appendChild(script);
+        })();
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Tab切换功能
             const tabs = document.querySelectorAll('.tab');
@@ -467,6 +479,12 @@
             }
             
             function processImageData(imageData, canvas) {
+                // 确保jsQR库已加载
+                if (typeof jsQR === 'undefined') {
+                    console.log('jsQR库尚未加载完成');
+                    return;
+                }
+                
                 const code = jsQR(imageData.data, imageData.width, imageData.height, {
                     inversionAttempts: "dontInvert",
                 });
