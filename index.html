@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>二维码标签生成器</title>
+    <!-- 引入必要的库 -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -170,12 +174,12 @@
             box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
         }
         
-        .btn-custom-print {
+        .btn-pdf {
             background: #27ae60;
             color: white;
         }
         
-        .btn-custom-print:hover {
+        .btn-pdf:hover {
             background: #219653;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
@@ -308,7 +312,83 @@
             line-height: 1.6;
         }
         
+        @media print {
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+            }
+            
+            body * {
+                visibility: hidden;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .container, .main-content, .preview-section, 
+            .label-preview, .label-container, .label-template {
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                height: auto !important;
+                display: block !important;
+                position: relative !important;
+            }
+            
+            .print-area, .print-area * {
+                visibility: visible;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            
+            .print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                page-break-inside: avoid;
+            }
+            
+            .print-label {
+                margin: 0 !important;
+                padding: 5mm !important;
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+                page-break-inside: avoid;
+                break-inside: avoid;
+                width: 50mm !important;
+                height: 40mm !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            @page {
+                size: 50mm 40mm;
+                margin: 0;
+            }
+        }
+        
         .hidden {
+            display: none;
+        }
+        
+        .print-area {
             display: none;
         }
         
@@ -390,20 +470,21 @@
             font-size: 14px;
         }
         
-        /* 添加打印计数器 */
+        /* 打印数量输入 */
         .print-count-container {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 15px;
         }
         
         .print-count-container label {
             margin-bottom: 0;
+            font-weight: normal;
         }
         
         .print-count-container input {
-            width: 60px;
+            width: 80px;
             padding: 8px;
         }
     </style>
@@ -455,299 +536,4 @@
                 <div class="form-group">
                     <label for="order-time">下单时间</label>
                     <input type="datetime-local" id="order-time" value="2023-06-15T14:30">
-                    <button class="sync-time-btn" onclick="syncCurrentTime()">同步当前时间</button>
-                </div>
-                
-                <div class="form-group">
-                    <label for="remark">备注</label>
-                    <textarea id="remark" rows="3" placeholder="输入备注信息"></textarea>
-                    
-                    <div class="common-remarks">
-                        <button class="remark-btn" onclick="insertRemark('加珍珠')">加珍珠</button>
-                        <button class="remark-btn" onclick="insertRemark('少冰')">少冰</button>
-                        <button class="remark-btn" onclick="insertRemark('去冰')">去冰</button>
-                        <button class="remark-btn" onclick="insertRemark('加糖')">加糖</button>
-                        <button class="remark-btn" onclick="insertRemark('不加糖')">不加糖</button>
-                        <button class="remark-btn" onclick="insertRemark('加料')">加料</button>
-                        <button class="remark-btn" onclick="insertRemark('不要盖子')">不要盖子</button>
-                        <button class="remark-btn" onclick="insertRemark('打包')">打包</button>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>选择模板</label>
-                    <div class="template-selector">
-                        <div class="template-option active" data-template="50-40">
-                            <h3>50×40mm</h3>
-                            <p>完整信息标签</p>
-                        </div>
-                        <div class="template-option" data-template="50-20">
-                            <h3>50×20mm</h3>
-                            <p>简化信息标签</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="print-count">打印数量</label>
-                    <div class="print-count-container">
-                        <input type="number" id="print-count" value="1" min="1" max="50">
-                        <span>个标签</span>
-                    </div>
-                </div>
-                
-                <div class="btn-group">
-                    <button id="generate-btn" class="btn-primary">生成标签</button>
-                    <button id="print-btn" class="btn-print">浏览器打印</button>
-                    <button id="custom-print-btn" class="btn-custom-print">PDF打印</button>
-                </div>
-            </div>
-            
-            <div class="preview-section">
-                <div class="label-preview">
-                    <h2 class="section-title">标签预览</h2>
-                    <div class="label-container">
-                        <div class="label-template label-50-40" id="label-template">
-                            <div class="label-header">
-                                <div class="order-time" id="preview-order-time">09-03 07:51</div>
-                                <div class="print-time" id="preview-print-time">打印时间: 2025-09-03 15:52:09</div>
-                            </div>
-                            
-                            <div class="label-content">
-                                <div class="label-item">
-                                    <div class="label-item-label">产品:</div>
-                                    <div class="label-item-value" id="preview-product">珍珠奶茶</div>
-                                </div>
-                                <div class="label-item">
-                                    <div class="label-item-label">规格:</div>
-                                    <div class="label-item-value" id="preview-spec">大杯/去冰/少糖</div>
-                                </div>
-                                <div class="label-item" id="remark-item">
-                                    <div class="label-item-label">备注:</div>
-                                    <div class="label-item-value" id="preview-remark">加珍珠，少冰</div>
-                                </div>
-                            </div>
-                            
-                            <div class="qr-container">
-                                <div class="qr-code" id="qr-code">
-                                    <div class="loading">等待生成二维码...</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="instructions no-print">
-                    <h2 class="section-title">使用说明</h2>
-                    <ul>
-                        <li>填写产品信息并选择标签模板</li>
-                        <li>点击"生成标签"创建二维码标签</li>
-                        <li>二维码包含所有标签信息，可被扫描读取</li>
-                        <li>点击"PDF打印"进行打印（推荐使用）</li>
-                        <li>所有数据保存在浏览器本地，无需服务器支持</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 用于打印的隐藏区域 -->
-    <div class="print-area" style="display:none;">
-        <div class="print-label" id="print-label">
-            <div class="label-header">
-                <div class="order-time" id="print-order-time">09-03 07:51</div>
-                <div class="print-time" id="print-print-time">打印时间: 2025-09-03 15:52:09</div>
-            </div>
-            
-            <div class="label-content">
-                <div class="label-item">
-                    <div class="label-item-label">产品:</div>
-                    <div class="label-item-value" id="print-product">珍珠奶茶</div>
-                </div>
-                <div class="label-item">
-                    <div class="label-item-label">规格:</div>
-                    <div class="label-item-value" id="print-spec">大杯/去冰/少糖</div>
-                </div>
-                <div class="label-item" id="print-remark-item">
-                    <div class="label-item-label">备注:</div>
-                    <div class="label-item-value" id="print-remark">加珍珠，少冰</div>
-                </div>
-            </div>
-            
-            <div class="qr-container">
-                <div class="qr-code" id="print-qr-code">
-                    <div class="loading">等待生成二维码...</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 添加必要的库 -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode.js@1.0.0/lib/qrcode.min.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化当前时间
-            const now = new Date();
-            const nowString = now.toISOString().slice(0, 16);
-            document.getElementById('order-time').value = nowString;
-            
-            // 更新打印时间显示
-            const printTimeElement = document.getElementById('preview-print-time');
-            printTimeElement.textContent = `打印时间: ${formatDateTime(now)}`;
-            
-            // 模板选择
-            const templateOptions = document.querySelectorAll('.template-option');
-            templateOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    templateOptions.forEach(opt => opt.classList.remove('active'));
-                    this.classList.add('active');
-                    updateTemplate();
-                });
-            });
-            
-            // 生成按钮事件
-            document.getElementById('generate-btn').addEventListener('click', generateLabel);
-            
-            // 浏览器打印按钮事件
-            document.getElementById('print-btn').addEventListener('click', printLabel);
-            
-            // PDF打印按钮事件
-            document.getElementById('custom-print-btn').addEventListener('click', customPrintLabel);
-            
-            // 初始化生成一次标签
-            generateLabel();
-            
-            // 监听产品名称选择变化
-            document.getElementById('product-name').addEventListener('change', function() {
-                const selectedValue = this.value;
-                const customInput = document.getElementById('product-custom-input');
-                
-                if (selectedValue === '自定义') {
-                    customInput.style.display = 'block';
-                } else {
-                    customInput.style.display = 'none';
-                    document.getElementById('product-custom').value = '';
-                }
-            });
-            
-            // 监听规格选择变化
-            document.getElementById('specification').addEventListener('change', function() {
-                const selectedValue = this.value;
-                const customInput = document.getElementById('specification-custom-input');
-                
-                if (selectedValue === '其他') {
-                    customInput.style.display = 'block';
-                } else {
-                    customInput.style.display = 'none';
-                    document.getElementById('specification-custom').value = '';
-                }
-            });
-            
-            function updateTemplate() {
-                const activeTemplate = document.querySelector('.template-option.active').dataset.template;
-                const labelTemplate = document.getElementById('label-template');
-                const printLabel = document.getElementById('print-label');
-                
-                // 移除所有模板类
-                labelTemplate.classList.remove('label-50-40', 'label-50-20');
-                printLabel.classList.remove('label-50-40', 'label-50-20');
-                
-                // 添加当前模板类
-                labelTemplate.classList.add(`label-${activeTemplate}`);
-                printLabel.classList.add(`label-${activeTemplate}`);
-                
-                // 如果是50-20模板，简化显示内容
-                if (activeTemplate === '50-20') {
-                    document.getElementById('remark-item').style.display = 'none';
-                    document.getElementById('print-remark-item').style.display = 'none';
-                } else {
-                    document.getElementById('remark-item').style.display = 'flex';
-                    document.getElementById('print-remark-item').style.display = 'flex';
-                }
-                
-                // 重新生成标签
-                generateLabel();
-            }
-            
-            function generateLabel() {
-                // 获取表单数据
-                const productName = document.getElementById('product-name').value || '未命名产品';
-                const specification = document.getElementById('specification').value || '无规格';
-                const orderTime = document.getElementById('order-time').value;
-                const remark = document.getElementById('remark').value || '无备注';
-                
-                // 处理自定义产品名称
-                let finalProductName = productName;
-                if (productName === '自定义') {
-                    const customProduct = document.getElementById('product-custom').value;
-                    if (customProduct) {
-                        finalProductName = customProduct;
-                    }
-                }
-                
-                // 处理自定义规格
-                let finalSpecification = specification;
-                if (specification === '其他') {
-                    const customSpec = document.getElementById('specification-custom').value;
-                    if (customSpec) {
-                        finalSpecification = customSpec;
-                    }
-                }
-                
-                // 格式化时间显示
-                const orderDate = new Date(orderTime);
-                const orderTimeString = formatOrderTime(orderDate);
-                const printTime = new Date();
-                const printTimeString = formatDateTime(printTime);
-                
-                // 更新预览
-                document.getElementById('preview-product').textContent = finalProductName;
-                document.getElementById('preview-spec').textContent = finalSpecification;
-                document.getElementById('preview-remark').textContent = remark;
-                document.getElementById('preview-order-time').textContent = orderTimeString;
-                document.getElementById('preview-print-time').textContent = `打印时间: ${printTimeString}`;
-                
-                // 更新打印区域
-                document.getElementById('print-product').textContent = finalProductName;
-                document.getElementById('print-spec').textContent = finalSpecification;
-                document.getElementById('print-remark').textContent = remark;
-                document.getElementById('print-order-time').textContent = orderTimeString;
-                document.getElementById('print-print-time').textContent = `打印时间: ${printTimeString}`;
-                
-                // 生成二维码数据
-                const qrData = {
-                    productName: finalProductName,
-                    specification: finalSpecification,
-                    orderTime: orderTimeString,
-                    printTime: printTimeString,
-                    remark: remark
-                };
-                
-                // 使用API生成二维码
-                generateQRCode(JSON.stringify(qrData));
-            }
-            
-            function generateQRCode(text) {
-                // 显示加载状态
-                document.getElementById('qr-code').innerHTML = '<div class="loading">生成二维码中...</div>';
-                document.getElementById('print-qr-code').innerHTML = '<div class="loading">生成二维码中...</div>';
-                
-                // 使用 qrcode.js 本地生成
-                const qrCodeElement = document.getElementById('qr-code');
-                const printQrCodeElement = document.getElementById('print-qr-code');
-                
-                // 清空
-                qrCodeElement.innerHTML = '';
-                printQrCodeElement.innerHTML = '';
-                
-                // 生成二维码
-                try {
-                    const qrCanvas = document.createElement('canvas');
-                    qrCanvas.width = 70;
-                    qrCanvas.height = 70;
-                    
-                    new QRCode(qrCanvas, {
-   
+                   
