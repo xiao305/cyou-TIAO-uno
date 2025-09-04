@@ -1,26 +1,257 @@
-function generateQRCode(text) {
-    // 显示加载状态
-    document.getElementById('qr-code').innerHTML = '<div class="loading">生成高质量二维码中...</div>';
-    
-    // 使用更大的尺寸和更高的纠错级别
-    const encodedText = encodeURIComponent(text);
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&ecc=H&data=${encodedText}`;
-    
-    // 创建图片元素
-    const qrImage = document.createElement('img');
-    qrImage.src = qrUrl;
-    qrImage.style.width = '100px';
-    qrImage.style.height = '100px';
-    qrImage.alt = '二维码';
-    
-    qrImage.onload = function() {
-        // 清空并添加图片到预览区域
-        const qrCodeElement = document.getElementById('qr-code');
-        qrCodeElement.innerHTML = '';
-        qrCodeElement.appendChild(qrImage.cloneNode());
-    };
-    
-    qrImage.onerror = function() {
-        document.getElementById('qr-code').innerHTML = '<div style="color:red;font-size:12px;">二维码生成失败</div>';
-    };
-}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二维码标签生成器 - 增强版</title>
+    <style>
+        /* 保持原有样式不变，只添加新样式 */
+        
+        .print-settings {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .print-settings h3 {
+            margin-top: 0;
+            color: #3498db;
+            font-size: 16px;
+        }
+        
+        .printer-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+            background: white;
+        }
+        
+        .printer-item {
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .printer-item:hover {
+            background-color: #e8f4fd;
+        }
+        
+        .printer-item.selected {
+            background-color: #d1e9ff;
+            font-weight: bold;
+        }
+        
+        .print-copies {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .print-copies input {
+            width: 60px;
+            margin-left: 10px;
+            padding: 8px;
+        }
+        
+        .print-status {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-loading {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部和表单部分保持不变 -->
+        
+        <div class="form-section">
+            <!-- 原有表单内容保持不变 -->
+            
+            <!-- 添加打印设置区域 -->
+            <div class="print-settings">
+                <h3>打印设置</h3>
+                
+                <div class="form-group">
+                    <label>选择打印机</label>
+                    <button onclick="refreshPrinterList()" type="button">刷新打印机列表</button>
+                    <div class="printer-list" id="printer-list">
+                        <div class="loading">正在加载打印机列表...</div>
+                    </div>
+                </div>
+                
+                <div class="form-group print-copies">
+                    <label for="print-copies">打印份数:</label>
+                    <input type="number" id="print-copies" min="1" max="99" value="1">
+                </div>
+                
+                <div class="print-status" id="print-status"></div>
+                
+                <div class="btn-group">
+                    <button id="generate-btn" class="btn-primary">生成标签</button>
+                    <button id="direct-print-btn" class="btn-print">直接打印</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 预览部分保持不变 -->
+    </div>
+
+    <script>
+        // 全局变量
+        let selectedPrinter = null;
+        let httpPrinterBaseURL = "http://localhost:8080"; // HttpPrinter服务地址
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 原有初始化代码保持不变
+            
+            // 新增直接打印按钮事件
+            document.getElementById('direct-print-btn').addEventListener('click', directPrint);
+            
+            // 初始化时加载打印机列表
+            refreshPrinterList();
+        });
+        
+        // 刷新打印机列表
+        async function refreshPrinterList() {
+            const printerList = document.getElementById('printer-list');
+            printerList.innerHTML = '<div class="loading">正在加载打印机列表...</div>';
+            
+            try {
+                const response = await fetch(`${httpPrinterBaseURL}/printers`);
+                const printers = await response.json();
+                
+                if (printers.length === 0) {
+                    printerList.innerHTML = '<div class="no-printers">未找到可用打印机</div>';
+                    return;
+                }
+                
+                printerList.innerHTML = '';
+                printers.forEach(printer => {
+                    const printerItem = document.createElement('div');
+                    printerItem.className = 'printer-item';
+                    printerItem.textContent = printer.name;
+                    printerItem.dataset.name = printer.name;
+                    
+                    printerItem.addEventListener('click', () => {
+                        // 移除之前选中的打印机
+                        document.querySelectorAll('.printer-item.selected').forEach(item => {
+                            item.classList.remove('selected');
+                        });
+                        
+                        // 选中当前打印机
+                        printerItem.classList.add('selected');
+                        selectedPrinter = printer.name;
+                    });
+                    
+                    printerList.appendChild(printerItem);
+                });
+            } catch (error) {
+                printerList.innerHTML = '<div class="error">无法获取打印机列表: ' + error.message + '</div>';
+            }
+        }
+        
+        // 直接打印功能
+        async function directPrint() {
+            if (!selectedPrinter) {
+                showStatus('请先选择打印机', 'error');
+                return;
+            }
+            
+            // 生成标签内容
+            generateLabel();
+            
+            const copies = parseInt(document.getElementById('print-copies').value) || 1;
+            showStatus('准备打印中...', 'loading');
+            
+            try {
+                // 获取二维码图片数据
+                const qrCodeImg = document.querySelector('#qr-code img');
+                if (!qrCodeImg) {
+                    throw new Error('请先生成二维码');
+                }
+                
+                // 获取标签数据
+                const productName = document.getElementById('preview-product').textContent;
+                const specification = document.getElementById('preview-spec').textContent;
+                const remark = document.getElementById('preview-remark').textContent;
+                const orderTime = document.getElementById('preview-order-time').textContent;
+                
+                // 创建打印数据
+                const printData = {
+                    productName,
+                    specification,
+                    remark,
+                    orderTime,
+                    qrCode: qrCodeImg.src,
+                    copies
+                };
+                
+                // 发送打印请求
+                const response = await fetch(`${httpPrinterBaseURL}/print`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        printer: selectedPrinter,
+                        copies: copies,
+                        content: printData
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStatus(`成功发送打印任务: ${result.jobId}`, 'success');
+                } else {
+                    throw new Error(result.message || '打印失败');
+                }
+            } catch (error) {
+                showStatus('打印错误: ' + error.message, 'error');
+            }
+        }
+        
+        // 显示状态信息
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('print-status');
+            statusElement.textContent = message;
+            statusElement.className = `print-status status-${type}`;
+            statusElement.style.display = 'block';
+            
+            // 5秒后隐藏状态信息
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        // 保持其他原有函数不变
+    </script>
+</body>
+</html>
