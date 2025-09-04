@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Script-Type" content="text/javascript">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <title>二维码标签打印系统</title>
-    <!-- 引入C-Lodop -->
-    <script src="http://localhost:8000/CLodopFuncs.js?priority=1"></script>
     <style>
         * {
             margin: 0;
@@ -478,7 +478,7 @@
                 <div class="form-group">
                     <label for="product-name">产品名称</label>
                     <div class="dropdown-container">
-                        <select id="product-name" style="width: 100%;">
+                        <select id="product-name" name="product-name" style="width: 100%;">
                             <option value="">请选择产品</option>
                             <option value="冰杯">冰杯</option>
                             <option value="鲜肉包子">鲜肉包子</option>
@@ -488,14 +488,15 @@
                         </select>
                     </div>
                     <div class="custom-input" id="product-custom-input">
-                        <input type="text" id="product-custom" placeholder="请输入自定义产品名称" style="width: 100%;">
+                        <label for="product-custom" class="hidden">自定义产品名称</label>
+                        <input type="text" id="product-custom" name="product-custom" placeholder="请输入自定义产品名称" style="width: 100%;">
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="specification">规格</label>
                     <div class="dropdown-container">
-                        <select id="specification" style="width: 100%;">
+                        <select id="specification" name="specification" style="width: 100%;">
                             <option value="">请选择规格</option>
                             <option value="大杯/去冰/少糖">大杯/去冰/少糖</option>
                             <option value="中杯/正常冰/正常糖">中杯/正常冰/正常糖</option>
@@ -504,29 +505,30 @@
                         </select>
                     </div>
                     <div class="custom-input" id="specification-custom-input">
-                        <input type="text" id="specification-custom" placeholder="请输入自定义规格" style="width: 100%;">
+                        <label for="specification-custom" class="hidden">自定义规格</label>
+                        <input type="text" id="specification-custom" name="specification-custom" placeholder="请输入自定义规格" style="width: 100%;">
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="order-time">下单时间</label>
-                    <input type="datetime-local" id="order-time" value="2023-06-15T14:30">
-                    <button class="sync-time-btn" onclick="syncCurrentTime()">同步当前时间</button>
+                    <input type="datetime-local" id="order-time" name="order-time" value="2023-06-15T14:30">
+                    <button type="button" class="sync-time-btn" onclick="syncCurrentTime()">同步当前时间</button>
                 </div>
                 
                 <div class="form-group">
                     <label for="remark">备注</label>
-                    <textarea id="remark" rows="3" placeholder="输入备注信息"></textarea>
+                    <textarea id="remark" name="remark" rows="3" placeholder="输入备注信息"></textarea>
                     
                     <div class="common-remarks">
-                        <button class="remark-btn" onclick="insertRemark('加珍珠')">加珍珠</button>
-                        <button class="remark-btn" onclick="insertRemark('少冰')">少冰</button>
-                        <button class="remark-btn" onclick="insertRemark('去冰')">去冰</button>
-                        <button class="remark-btn" onclick="insertRemark('加糖')">加糖</button>
-                        <button class="remark-btn" onclick="insertRemark('不加糖')">不加糖</button>
-                        <button class="remark-btn" onclick="insertRemark('加料')">加料</button>
-                        <button class="remark-btn" onclick="insertRemark('不要盖子')">不要盖子</button>
-                        <button class="remark-btn" onclick="insertRemark('打包')">打包</button>
+                        <button type="button" class="remark-btn" onclick="insertRemark('加珍珠')">加珍珠</button>
+                        <button type="button" class="remark-btn" onclick="insertRemark('少冰')">少冰</button>
+                        <button type="button" class="remark-btn" onclick="insertRemark('去冰')">去冰</button>
+                        <button type="button" class="remark-btn" onclick="insertRemark('加糖')">加糖</button>
+                        <button type="button" class="remark-btn" onclick="insertRemark('不加糖')">不加糖</button>
+                        <button type="button" class="remark-btn" onclick="insertRemark('加料')">加料</button>
+                        <button type="button" class="remark-btn" onclick="insertRemark('不要盖子')">不要盖子</button>
+                        <button type="button" class="remark-btn" onclick="insertRemark('打包')">打包</button>
                     </div>
                 </div>
                 
@@ -558,14 +560,14 @@
                     
                     <div class="form-group print-copies">
                         <label for="print-copies">打印份数:</label>
-                        <input type="number" id="print-copies" min="1" max="99" value="1">
+                        <input type="number" id="print-copies" name="print-copies" min="1" max="99" value="1">
                     </div>
                     
                     <div class="print-status" id="print-status"></div>
                     
                     <div class="btn-group">
-                        <button id="generate-btn" class="btn-primary">生成标签</button>
-                        <button id="direct-print-btn" class="btn-print">直接打印</button>
+                        <button type="button" id="generate-btn" class="btn-primary">生成标签</button>
+                        <button type="button" id="direct-print-btn" class="btn-print">直接打印</button>
                     </div>
                 </div>
             </div>
@@ -625,6 +627,18 @@
         // 全局变量
         let selectedPrinter = null;
         let LODOP = null; // LODOP对象
+        const qrCodeCache = {}; // 二维码缓存
+        
+        // 加载C-Lodop脚本
+        function loadCLodopScript() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'http://localhost:8000/CLodopFuncs.js?priority=1';
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error('Failed to load C-Lodop script'));
+                document.head.appendChild(script);
+            });
+        }
         
         // 初始化Lodop
         function initLodop() {
@@ -676,6 +690,19 @@
             }
         }
         
+        // 显示二维码
+        function displayQRCode(src) {
+            const qrImage = document.createElement('img');
+            qrImage.src = src;
+            qrImage.style.width = '90px';
+            qrImage.style.height = '90px';
+            qrImage.alt = '二维码';
+            
+            const qrCodeElement = document.getElementById('qr-code');
+            qrCodeElement.innerHTML = '';
+            qrCodeElement.appendChild(qrImage);
+        }
+        
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             // 初始化当前时间
@@ -706,8 +733,16 @@
             // 初始化生成一次标签
             generateLabel();
             
-            // 初始化Lodop - 延迟执行以确保CLodopFuncs.js已加载
-            setTimeout(initLodop, 500);
+            // 加载并初始化Lodop
+            loadCLodopScript()
+                .then(() => {
+                    console.log('C-Lodop脚本加载成功');
+                    initLodop();
+                })
+                .catch(error => {
+                    console.error('加载C-Lodop脚本失败:', error);
+                    showStatus('加载C-Lodop脚本失败: ' + error.message, 'error');
+                });
             
             // 监听产品名称选择变化
             document.getElementById('product-name').addEventListener('change', function() {
@@ -947,8 +982,16 @@
                 remark: remark
             };
             
+            const qrDataString = JSON.stringify(qrData);
+            
+            // 检查缓存
+            if (qrCodeCache[qrDataString]) {
+                displayQRCode(qrCodeCache[qrDataString]);
+                return;
+            }
+            
             // 使用API生成二维码
-            generateQRCode(JSON.stringify(qrData));
+            generateQRCode(qrDataString);
         }
         
         function generateQRCode(text) {
@@ -965,11 +1008,13 @@
             qrImage.style.width = '90px';
             qrImage.style.height = '90px';
             qrImage.alt = '二维码';
+            
             qrImage.onload = function() {
-                // 清空并添加图片到预览区域
-                const qrCodeElement = document.getElementById('qr-code');
-                qrCodeElement.innerHTML = '';
-                qrCodeElement.appendChild(qrImage.cloneNode());
+                // 缓存结果
+                qrCodeCache[text] = qrImage.src;
+                
+                // 显示二维码
+                displayQRCode(qrImage.src);
             };
             
             qrImage.onerror = function() {
