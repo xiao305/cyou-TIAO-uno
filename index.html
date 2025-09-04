@@ -6,6 +6,8 @@
     <meta http-equiv="Content-Script-Type" content="text/javascript">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <title>二维码标签打印系统</title>
+    <!-- 使用HTTPS端口引用C-Lodop -->
+    <script src="https://localhost:8443/CLodopFuncs.js?priority=1"></script>
     <style>
         * {
             margin: 0;
@@ -462,6 +464,30 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        
+        /* 添加连接测试区域 */
+        .connection-test {
+            margin-top: 15px;
+            padding: 10px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .test-btn {
+            padding: 8px 12px;
+            background: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -563,6 +589,15 @@
                         <input type="number" id="print-copies" name="print-copies" min="1" max="99" value="1">
                     </div>
                     
+                    <!-- 连接测试区域 -->
+                    <div class="connection-test">
+                        <p><strong>连接诊断:</strong> 如果C-Lodop无法连接，请先尝试以下步骤：</p>
+                        <div class="test-buttons">
+                            <button class="test-btn" onclick="testCLodopConnection()">测试C-Lodop连接</button>
+                            <button class="test-btn" onclick="window.open('https://localhost:8443', '_blank')">访问C-Lodop页面</button>
+                        </div>
+                    </div>
+                    
                     <div class="print-status" id="print-status"></div>
                     
                     <div class="btn-group">
@@ -629,15 +664,28 @@
         let LODOP = null; // LODOP对象
         const qrCodeCache = {}; // 二维码缓存
         
-        // 加载C-Lodop脚本
-        function loadCLodopScript() {
-            return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = 'http://localhost:8000/CLodopFuncs.js?priority=1';
-                script.onload = () => resolve();
-                script.onerror = () => reject(new Error('Failed to load C-Lodop script'));
-                document.head.appendChild(script);
-            });
+        // 测试C-Lodop连接
+        function testCLodopConnection() {
+            showStatus('正在测试C-Lodop连接...', 'loading');
+            
+            // 尝试直接访问C-Lodop页面
+            const testFrame = document.createElement('iframe');
+            testFrame.style.display = 'none';
+            testFrame.src = 'https://localhost:8443';
+            document.body.appendChild(testFrame);
+            
+            testFrame.onload = function() {
+                document.body.removeChild(testFrame);
+                showStatus('C-Lodop页面访问成功，请检查浏览器是否提示证书问题', 'success');
+                
+                // 重新初始化Lodop
+                setTimeout(initLodop, 1000);
+            };
+            
+            testFrame.onerror = function() {
+                document.body.removeChild(testFrame);
+                showStatus('无法访问C-Lodop页面，请确保服务正在运行且端口8443可访问', 'error');
+            };
         }
         
         // 初始化Lodop
@@ -664,6 +712,7 @@
                 if (LODOP.CVERSION) {
                     console.log("C-Lodop版本:", LODOP.CVERSION);
                     updateLodopStatus(true);
+                    showStatus('C-Lodop初始化成功!', 'success');
                     return true;
                 } else {
                     showStatus('C-Lodop未启动，请确保C-Lodop服务正在运行', 'error');
@@ -733,16 +782,15 @@
             // 初始化生成一次标签
             generateLabel();
             
-            // 加载并初始化Lodop
-            loadCLodopScript()
-                .then(() => {
-                    console.log('C-Lodop脚本加载成功');
+            // 延迟初始化Lodop，确保脚本已加载
+            setTimeout(() => {
+                if (typeof getLodop === 'function') {
                     initLodop();
-                })
-                .catch(error => {
-                    console.error('加载C-Lodop脚本失败:', error);
-                    showStatus('加载C-Lodop脚本失败: ' + error.message, 'error');
-                });
+                } else {
+                    showStatus('C-Lodop脚本加载失败，请检查HTTPS连接', 'error');
+                    updateLodopStatus(false);
+                }
+            }, 2000);
             
             // 监听产品名称选择变化
             document.getElementById('product-name').addEventListener('change', function() {
