@@ -11,41 +11,34 @@
             box-sizing: border-box;
             font-family: 'Microsoft YaHei', Arial, sans-serif;
         }
-        
         body {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
-        
         header {
             text-align: center;
             padding: 20px 0;
             margin-bottom: 30px;
         }
-        
         h1 {
             color: #2c3e50;
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
-        
         .subtitle {
             color: #7f8c8d;
             font-size: 1.1rem;
         }
-        
         .main-content {
             display: flex;
             flex-wrap: wrap;
             gap: 30px;
         }
-        
         .form-section {
             flex: 1;
             min-width: 300px;
@@ -54,7 +47,6 @@
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-        
         .preview-section {
             flex: 1;
             min-width: 300px;
@@ -62,25 +54,21 @@
             flex-direction: column;
             gap: 30px;
         }
-        
         .section-title {
             color: #3498db;
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid #eee;
         }
-        
         .form-group {
             margin-bottom: 20px;
         }
-        
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: #2c3e50;
         }
-        
         input, select, textarea {
             width: 100%;
             padding: 12px 15px;
@@ -89,19 +77,16 @@
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
         input:focus, select:focus, textarea:focus {
             border-color: #3498db;
             outline: none;
             box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         }
-        
         .template-selector {
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
         }
-        
         .template-option {
             flex: 1;
             text-align: center;
@@ -111,32 +96,26 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
         .template-option:hover {
             border-color: #3498db;
         }
-        
         .template-option.active {
             border-color: #3498db;
             background-color: #e1f0fa;
         }
-        
         .template-option h3 {
             margin-bottom: 5px;
             color: #2c3e50;
         }
-        
         .template-option p {
             font-size: 0.9rem;
             color: #7f8c8d;
         }
-        
         .btn-group {
             display: flex;
             gap: 15px;
             margin-top: 20px;
         }
-        
         button {
             flex: 1;
             padding: 14px;
@@ -147,42 +126,35 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
         .btn-primary {
             background: #3498db;
             color: white;
         }
-        
         .btn-primary:hover {
             background: #2980b9;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
         }
-        
         .btn-print {
             background: #9b59b6;
             color: white;
         }
-        
         .btn-print:hover {
             background: #8e44ad;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
         }
-        
         .label-preview {
             background: white;
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-        
         .label-container {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        
         .label-template {
             border: 1px dashed #ccc;
             padding: 10px;
@@ -193,63 +165,53 @@
             box-sizing: border-box;
             overflow: hidden;
         }
-        
         /* 标签尺寸样式 */
         .label-50-40 {
             width: 250px;
             height: 200px;
         }
-        
         .label-50-20 {
             width: 250px;
             height: 100px;
         }
-        
         .label-header {
             text-align: center;
             margin-bottom: 10px;
             padding-bottom: 8px;
             border-bottom: 1px solid #eee;
         }
-        
         .order-time {
             font-size: 20px;
             font-weight: bold;
             color: #000;
             margin-bottom: 3px;
         }
-        
         .print-time {
             font-size: 10px;
             color: #000;
             margin-top: 3px;
         }
-        
         .label-content {
             margin-bottom: 10px;
             font-size: 12px;
             flex: 1;
             overflow: hidden;
         }
-        
         .label-item {
             margin-bottom: 5px;
             display: flex;
             line-height: 1.4;
         }
-        
         .label-item-label {
             font-weight: bold;
             width: 50px;
             color: #000;
         }
-        
         .label-item-value {
             flex: 1;
             color: #000;
             word-break: break-all;
         }
-        
         /* 修复50x20标签的二维码位置问题 */
         .label-50-40 .qr-container {
             position: absolute;
@@ -259,7 +221,6 @@
             width: 100px;
             height: 100px;
         }
-        
         .label-50-20 .qr-container {
             position: absolute;
             top: 25px;
@@ -268,7 +229,6 @@
             width: 60px;
             height: 60px;
         }
-        
         .qr-code {
             width: 100%;
             height: 100%;
@@ -279,7 +239,6 @@
             align-items: center;
             justify-content: center;
         }
-        
         .instructions {
             background: white;
             border-radius: 15px;
@@ -287,26 +246,21 @@
             margin-top: 30px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-        
         .instructions ul {
             padding-left: 20px;
             margin-top: 15px;
         }
-        
         .instructions li {
             margin-bottom: 10px;
             line-height: 1.6;
         }
-        
         .hidden {
             display: none;
         }
-        
         .loading {
             font-size: 12px;
             color: #3498db;
         }
-        
         /* 限制文本长度 */
         .label-item-value {
             max-width: 150px;
@@ -314,19 +268,16 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        
         /* 下拉列表和常用备注样式 */
         .dropdown-container {
             margin-bottom: 15px;
         }
-        
         .common-remarks {
             margin-top: 10px;
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
-        
         .remark-btn {
             padding: 5px 10px;
             background: #f0f0f0;
@@ -336,11 +287,9 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
         .remark-btn:hover {
             background: #e0e0e0;
         }
-        
         .sync-time-btn {
             margin-top: 5px;
             padding: 5px 10px;
@@ -352,17 +301,14 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
         .sync-time-btn:hover {
             background: #2980b9;
         }
-        
         /* 自定义输入框 */
         .custom-input {
             display: none;
             margin-top: 5px;
         }
-        
         .custom-input input {
             width: 100%;
             padding: 8px;
@@ -370,7 +316,6 @@
             border-radius: 4px;
             font-size: 14px;
         }
-        
         /* 打印设置样式 */
         .print-settings {
             margin-top: 20px;
@@ -379,72 +324,59 @@
             border-radius: 8px;
             background-color: #f9f9f9;
         }
-        
         .print-settings h3 {
             margin-top: 0;
             color: #3498db;
             font-size: 16px;
         }
-        
         .print-copies {
             display: flex;
             align-items: center;
             margin: 15px 0;
         }
-        
         .print-copies input {
             width: 60px;
             margin-left: 10px;
             padding: 8px;
         }
-        
         .print-status {
             margin-top: 10px;
             padding: 8px;
             border-radius: 4px;
             display: none;
         }
-        
         .status-success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
         .status-error {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-        
         .status-loading {
             background-color: #d1ecf1;
             color: #0c5460;
             border: 1px solid #bee5eb;
         }
-        
         /* 50x20模板的特殊样式 */
         .label-50-20 .label-content {
             margin-right: 70px; /* 为二维码留出空间 */
         }
-        
         .label-50-20 .order-time {
             font-size: 16px;
         }
-        
         .label-50-20 .print-time {
             font-size: 8px;
         }
-        
         .label-50-20 .label-item-label {
             font-size: 10px;
             width: 40px;
         }
-        
         .label-50-20 .label-item-value {
             font-size: 10px;
         }
-        
         /* 打印预览对话框 */
         .print-dialog {
             position: fixed;
@@ -459,7 +391,6 @@
             max-width: 90%;
             text-align: center;
         }
-        
         .print-dialog-overlay {
             position: fixed;
             top: 0;
@@ -469,7 +400,6 @@
             background: rgba(0,0,0,0.5);
             z-index: 999;
         }
-        
         .dialog-btn {
             margin-top: 15px;
             padding: 10px 20px;
@@ -479,7 +409,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        
         .dialog-btn.cancel {
             background: #e74c3c;
             margin-left: 10px;
@@ -492,11 +421,9 @@
             <h1>二维码标签打印系统</h1>
             <p class="subtitle">使用浏览器原生打印功能</p>
         </header>
-        
         <div class="main-content">
             <div class="form-section">
                 <h2 class="section-title">标签信息设置</h2>
-                
                 <div class="form-group">
                     <label for="product-name">产品名称</label>
                     <div class="dropdown-container">
@@ -514,7 +441,6 @@
                         <input type="text" id="product-custom" name="product-custom" placeholder="请输入自定义产品名称" style="width: 100%;">
                     </div>
                 </div>
-                
                 <div class="form-group">
                     <label for="specification">规格</label>
                     <div class="dropdown-container">
@@ -531,17 +457,14 @@
                         <input type="text" id="specification-custom" name="specification-custom" placeholder="请输入自定义规格" style="width: 100%;">
                     </div>
                 </div>
-                
                 <div class="form-group">
                     <label for="order-time">下单时间</label>
                     <input type="datetime-local" id="order-time" name="order-time" value="2023-06-15T14:30">
                     <button type="button" class="sync-time-btn" onclick="syncCurrentTime()">同步当前时间</button>
                 </div>
-                
                 <div class="form-group">
                     <label for="remark">备注</label>
                     <textarea id="remark" name="remark" rows="3" placeholder="输入备注信息"></textarea>
-                    
                     <div class="common-remarks">
                         <button type="button" class="remark-btn" onclick="insertRemark('加珍珠')">加珍珠</button>
                         <button type="button" class="remark-btn" onclick="insertRemark('少冰')">少冰</button>
@@ -553,7 +476,6 @@
                         <button type="button" class="remark-btn" onclick="insertRemark('打包')">打包</button>
                     </div>
                 </div>
-                
                 <div class="form-group">
                     <label>选择模板</label>
                     <div class="template-selector">
@@ -567,31 +489,25 @@
                         </div>
                     </div>
                 </div>
-                
                 <!-- 打印设置区域 -->
                 <div class="print-settings">
                     <h3>打印设置</h3>
-                    
                     <div class="form-group print-copies">
                         <label for="print-copies">打印份数:</label>
                         <input type="number" id="print-copies" name="print-copies" min="1" max="99" value="1">
                     </div>
-                    
                     <div class="form-group">
                         <label for="label-count">标签数量:</label>
                         <input type="number" id="label-count" name="label-count" min="1" max="50" value="1">
                         <p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">设置一次打印的标签数量</p>
                     </div>
-                    
                     <div class="print-status" id="print-status"></div>
-                    
                     <div class="btn-group">
                         <button type="button" id="generate-btn" class="btn-primary">生成标签</button>
                         <button type="button" id="direct-print-btn" class="btn-print">直接打印</button>
                     </div>
                 </div>
             </div>
-            
             <div class="preview-section">
                 <div class="label-preview">
                     <h2 class="section-title">标签预览</h2>
@@ -601,7 +517,6 @@
                                 <div class="order-time" id="preview-order-time">09-03 07:51</div>
                                 <div class="print-time" id="preview-print-time">打印时间: 2025-09-03 15:52:09</div>
                             </div>
-                            
                             <div class="label-content">
                                 <div class="label-item">
                                     <div class="label-item-label">产品:</div>
@@ -616,7 +531,6 @@
                                     <div class="label-item-value" id="preview-remark">加珍珠，少冰</div>
                                 </div>
                             </div>
-                            
                             <div class="qr-container">
                                 <div class="qr-code" id="qr-code">
                                     <div class="loading">等待生成二维码...</div>
@@ -625,7 +539,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="instructions">
                     <h2 class="section-title">使用说明</h2>
                     <ul>
@@ -641,25 +554,20 @@
             </div>
         </div>
     </div>
-
     <!-- 用于打印的临时元素 -->
     <div id="print-temp"></div>
-
     <script>
         // 全局变量
         const qrCodeCache = {}; // 二维码缓存
-        
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             // 初始化当前时间
             const now = new Date();
             const nowString = now.toISOString().slice(0, 16);
             document.getElementById('order-time').value = nowString;
-            
             // 更新打印时间显示
             const printTimeElement = document.getElementById('preview-print-time');
             printTimeElement.textContent = `打印时间: ${formatDateTime(now)}`;
-            
             // 模板选择
             const templateOptions = document.querySelectorAll('.template-option');
             templateOptions.forEach(option => {
@@ -669,33 +577,26 @@
                     updateTemplate();
                 });
             });
-            
             // 生成按钮事件
             document.getElementById('generate-btn').addEventListener('click', generateLabel);
-            
             // 直接打印按钮事件
             document.getElementById('direct-print-btn').addEventListener('click', startPrint);
-            
             // 初始化生成一次标签
             generateLabel();
-            
             // 监听产品名称选择变化
             document.getElementById('product-name').addEventListener('change', function() {
                 const selectedValue = this.value;
                 const customInput = document.getElementById('product-custom-input');
-                
                 if (selectedValue === '自定义') {
                     customInput.style.display = 'block';
                 } else {
                     customInput.style.display = 'none';
                 }
             });
-            
             // 监听规格选择变化
             document.getElementById('specification').addEventListener('change', function() {
                 const selectedValue = this.value;
                 const customInput = document.getElementById('specification-custom-input');
-                
                 if (selectedValue === '其他') {
                     customInput.style.display = 'block';
                 } else {
@@ -703,13 +604,11 @@
                 }
             });
         });
-        
         // 开始打印 - 使用全新的方法
         function startPrint() {
             const copies = parseInt(document.getElementById('print-copies').value) || 1;
             const labelCount = parseInt(document.getElementById('label-count').value) || 1;
             const activeTemplate = document.querySelector('.template-option.active').dataset.template;
-            
             // 获取当前标签数据
             const productName = document.getElementById('preview-product').textContent;
             const specification = document.getElementById('preview-spec').textContent;
@@ -717,16 +616,13 @@
             const orderTime = document.getElementById('preview-order-time').textContent;
             const printTime = document.getElementById('preview-print-time').textContent;
             const qrImgSrc = document.querySelector('#qr-code img')?.src || '';
-            
             // 创建新的打印窗口
             const printWindow = window.open('', '_blank', 'width=800,height=600');
-            
             if (!printWindow) {
                 alert('请允许弹出窗口以进行打印');
                 return;
             }
-            
-            // 构建打印页面内容
+            // 构建打印页面内容 - 修复HTML转义问题
             let printHtml = `
                 <!DOCTYPE html>
                 <html>
@@ -745,25 +641,21 @@
                                 print-color-adjust: exact;
                             }
                         }
-                        
                         body {
                             margin: 0;
                             padding: 5mm;
                             font-family: Arial, sans-serif;
                             background: white;
                         }
-                        
                         .print-container {
                             width: 100%;
                             padding: 5mm;
                         }
-                        
                         .label-grid {
                             display: flex;
                             flex-wrap: wrap;
                             width: 100%;
                         }
-                        
                         .print-label {
                             width: 50mm;
                             height: 40mm;
@@ -776,43 +668,36 @@
                             page-break-inside: avoid;
                             break-inside: avoid;
                         }
-                        
                         .label-header {
                             text-align: center;
                             margin-bottom: 3px;
                             padding-bottom: 2px;
                             border-bottom: 1px solid #000;
                         }
-                        
                         .order-time {
                             font-weight: bold;
                             font-size: 12px;
                             margin-bottom: 1px;
                         }
-                        
                         .print-time {
                             font-size: 8px;
                         }
-                        
                         .label-content {
                             display: flex;
                             flex-direction: column;
                             flex: 1;
                             font-size: 10px;
                         }
-                        
                         .label-item {
                             display: flex;
                             margin-bottom: 2px;
                             line-height: 1.3;
                         }
-                        
                         .label-item-label {
                             font-weight: bold;
                             width: 35px;
                             color: #000;
                         }
-                        
                         .label-item-value {
                             flex: 1;
                             color: #000;
@@ -822,7 +707,6 @@
                             text-overflow: ellipsis;
                             white-space: nowrap;
                         }
-                        
                         .qr-container {
                             position: absolute;
                             bottom: 3mm;
@@ -830,7 +714,6 @@
                             width: 25mm;
                             height: 25mm;
                         }
-                        
                         .qr-code {
                             width: 100%;
                             height: 100%;
@@ -841,38 +724,31 @@
                             align-items: center;
                             justify-content: center;
                         }
-                        
                         .qr-code img {
                             width: 100%;
                             height: 100%;
                             object-fit: contain;
                         }
-                        
                         /* 50x20模板样式 */
                         .template-50-20 {
                             height: 20mm !important;
                         }
-                        
                         .template-50-20 .qr-container {
                             top: 8mm;
                             bottom: auto;
                             width: 18mm;
                             height: 18mm;
                         }
-                        
                         .template-50-20 .order-time {
                             font-size: 10px !important;
                         }
-                        
                         .template-50-20 .print-time {
                             font-size: 7px !important;
                         }
-                        
                         .template-50-20 .label-item-label {
                             width: 28px !important;
                             font-size: 9px !important;
                         }
-                        
                         .template-50-20 .label-item-value {
                             max-width: 45px !important;
                             font-size: 9px !important;
@@ -883,7 +759,6 @@
                     <div class="print-container">
                         <div class="label-grid">
             `;
-            
             // 为每份副本创建内容
             for (let copy = 0; copy < copies; copy++) {
                 // 为每个标签创建内容
@@ -891,7 +766,6 @@
                     printHtml += createPrintLabelHTML(productName, specification, remark, orderTime, printTime, qrImgSrc, activeTemplate);
                 }
             }
-            
             printHtml += `
                         </div>
                     </div>
@@ -910,20 +784,17 @@
                                 }
                             }, 500);
                         });
-                    </script>
+                    <\\/script>
                 </body>
                 </html>
             `;
-            
             // 写入打印窗口
             printWindow.document.open();
             printWindow.document.write(printHtml);
             printWindow.document.close();
-            
             // 显示状态
             showStatus('正在准备打印...', 'loading');
         }
-        
         // 创建单个打印标签的HTML
         function createPrintLabelHTML(productName, specification, remark, orderTime, printTime, qrImgSrc, template) {
             // 转义特殊字符
@@ -932,7 +803,6 @@
             const safeRemark = escapeHtml(remark);
             const safeOrderTime = escapeHtml(orderTime);
             const safePrintTime = escapeHtml(printTime.replace('打印时间: ', ''));
-            
             let html = `
                 <div class="print-label ${template === '50-20' ? 'template-50-20' : ''}">
                     <div class="label-header">
@@ -949,7 +819,6 @@
                             <div class="label-item-value">${safeSpecification}</div>
                         </div>
             `;
-            
             // 仅在50-40模板中显示备注
             if (template !== '50-20') {
                 html += `
@@ -959,13 +828,11 @@
                         </div>
                 `;
             }
-            
             html += `
                     </div>
                     <div class="qr-container">
                         <div class="qr-code">
             `;
-            
             if (qrImgSrc) {
                 // 转义二维码URL中的特殊字符
                 const safeQrSrc = qrImgSrc.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\\/g, '\\\\');
@@ -973,16 +840,13 @@
             } else {
                 html += '<div style="font-size:8px;text-align:center;">QR</div>';
             }
-            
             html += `
                         </div>
                     </div>
                 </div>
             `;
-            
             return html;
         }
-        
         // HTML转义函数
         function escapeHtml(text) {
             if (!text) return '';
@@ -994,14 +858,12 @@
                 .replace(/'/g, "&#039;")
                 .replace(/\\/g, "\\\\");
         }
-        
         // 显示状态信息
         function showStatus(message, type) {
             const statusElement = document.getElementById('print-status');
             statusElement.textContent = message;
             statusElement.className = `print-status status-${type}`;
             statusElement.style.display = 'block';
-            
             // 5秒后隐藏状态信息
             if (type !== 'loading') {
                 setTimeout(() => {
@@ -1009,17 +871,13 @@
                 }, 5000);
             }
         }
-        
         function updateTemplate() {
             const activeTemplate = document.querySelector('.template-option.active').dataset.template;
             const labelTemplate = document.getElementById('label-template');
-            
             // 移除所有模板类
             labelTemplate.classList.remove('label-50-40', 'label-50-20');
-            
             // 添加当前模板类
             labelTemplate.classList.add(`label-${activeTemplate}`);
-            
             // 如果是50-20模板，简化显示内容
             if (activeTemplate === '50-20') {
                 document.getElementById('remark-item').style.display = 'none';
@@ -1036,18 +894,15 @@
                     contentDiv.style.marginRight = '0';
                 }
             }
-            
             // 重新生成标签以应用新样式
             generateLabel();
         }
-        
         function generateLabel() {
             // 获取表单数据
             const productName = document.getElementById('product-name').value || '未命名产品';
             const specification = document.getElementById('specification').value || '无规格';
             const orderTime = document.getElementById('order-time').value;
             const remark = document.getElementById('remark').value || '无备注';
-            
             // 处理自定义产品名称
             let finalProductName = productName;
             if (productName === '自定义') {
@@ -1056,7 +911,6 @@
                     finalProductName = customProduct;
                 }
             }
-            
             // 处理自定义规格
             let finalSpecification = specification;
             if (specification === '其他') {
@@ -1065,20 +919,17 @@
                     finalSpecification = customSpec;
                 }
             }
-            
             // 格式化时间显示
             const orderDate = new Date(orderTime);
             const orderTimeString = formatOrderTime(orderDate);
             const printTime = new Date();
             const printTimeString = formatDateTime(printTime);
-            
             // 更新预览
             document.getElementById('preview-product').textContent = finalProductName;
             document.getElementById('preview-spec').textContent = finalSpecification;
             document.getElementById('preview-remark').textContent = remark;
             document.getElementById('preview-order-time').textContent = orderTimeString;
             document.getElementById('preview-print-time').textContent = `打印时间: ${printTimeString}`;
-            
             // 生成二维码数据
             const qrData = {
                 productName: finalProductName,
@@ -1087,19 +938,15 @@
                 printTime: printTimeString,
                 remark: remark
             };
-            
             const qrDataString = JSON.stringify(qrData);
-            
             // 检查缓存
             if (qrCodeCache[qrDataString]) {
                 displayQRCode(qrCodeCache[qrDataString]);
                 return;
             }
-            
             // 使用API生成二维码
             generateQRCode(qrDataString);
         }
-        
         function displayQRCode(src) {
             const qrImage = document.createElement('img');
             qrImage.src = src;
@@ -1107,20 +954,16 @@
             qrImage.style.height = '100%';
             qrImage.style.objectFit = 'contain';
             qrImage.alt = '二维码';
-            
             const qrCodeElement = document.getElementById('qr-code');
             qrCodeElement.innerHTML = '';
             qrCodeElement.appendChild(qrImage);
         }
-        
         function generateQRCode(text) {
             // 显示加载状态
             document.getElementById('qr-code').innerHTML = '<div class="loading">生成二维码中...</div>';
-            
             // 使用免费的二维码API
             const encodedText = encodeURIComponent(text);
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodedText}`;
-            
             // 创建图片元素
             const qrImage = document.createElement('img');
             qrImage.src = qrUrl;
@@ -1128,42 +971,34 @@
             qrImage.style.height = '100%';
             qrImage.style.objectFit = 'contain';
             qrImage.alt = '二维码';
-            
             qrImage.onload = function() {
                 // 缓存结果
                 qrCodeCache[text] = qrImage.src;
-                
                 // 显示二维码
                 displayQRCode(qrImage.src);
             };
-            
             qrImage.onerror = function() {
                 document.getElementById('qr-code').innerHTML = '<div style="color:red;font-size:12px;">二维码生成失败</div>';
             };
         }
-        
         function syncCurrentTime() {
             const now = new Date();
             const nowString = now.toISOString().slice(0, 16);
             document.getElementById('order-time').value = nowString;
         }
-        
         function insertRemark(remark) {
             const remarkInput = document.getElementById('remark');
             const currentText = remarkInput.value;
             remarkInput.value = currentText + remark + '，';
             remarkInput.focus();
         }
-        
         function formatOrderTime(date) {
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
             const hours = String(date.getHours()).padStart(2, '0');
             const minutes = String(date.getMinutes()).padStart(2, '0');
-            
             return `${month}-${day} ${hours}:${minutes}`;
         }
-        
         function formatDateTime(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -1171,7 +1006,6 @@
             const hours = String(date.getHours()).padStart(2, '0');
             const minutes = String(date.getMinutes()).padStart(2, '0');
             const seconds = String(date.getSeconds()).padStart(2, '0');
-            
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
     </script>
