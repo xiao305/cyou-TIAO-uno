@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>二维码标签打印系统</title>
+    <!-- 引入 html2canvas 用于将DOM元素转换为图片 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- 引入 jspdf 用于生成PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -113,11 +117,11 @@
         }
         .btn-group {
             display: flex;
+            flex-wrap: wrap;
             gap: 15px;
             margin-top: 20px;
         }
         button {
-            flex: 1;
             padding: 14px;
             border: none;
             border-radius: 8px;
@@ -125,6 +129,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            flex: 1;
         }
         .btn-primary {
             background: #3498db;
@@ -144,23 +149,14 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
         }
-        .btn-save {
+        .btn-export {
             background: #27ae60;
             color: white;
         }
-        .btn-save:hover {
+        .btn-export:hover {
             background: #229954;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
-        }
-        .btn-pdf {
-            background: #e67e22;
-            color: white;
-        }
-        .btn-pdf:hover {
-            background: #d35400;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3);
         }
         .label-preview {
             background: white;
@@ -431,19 +427,13 @@
             background: #e74c3c;
             margin-left: 10px;
         }
-        /* 临时画布，用于生成图片，不可见 */
-        #temp-canvas {
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>二维码标签打印系统</h1>
-            <p class="subtitle">支持保存为图片或PDF文件</p>
+            <p class="subtitle">生成标签并保存为图片或PDF</p>
         </header>
         <div class="main-content">
             <div class="form-section">
@@ -515,17 +505,17 @@
                 </div>
                 <!-- 打印设置区域 -->
                 <div class="print-settings">
-                    <h3>输出设置</h3>
-                    <div class="form-group">
-                        <label for="label-count">标签数量:</label>
-                        <input type="number" id="label-count" name="label-count" min="1" max="50" value="1">
-                        <p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">设置一次生成的标签数量</p>
+                    <h3>导出设置</h3>
+                    <div class="form-group print-copies">
+                        <label for="export-count">导出数量:</label>
+                        <input type="number" id="export-count" name="export-count" min="1" max="50" value="1">
+                        <p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">设置一次导出的标签数量</p>
                     </div>
                     <div class="print-status" id="print-status"></div>
                     <div class="btn-group">
                         <button type="button" id="generate-btn" class="btn-primary">生成标签</button>
-                        <button type="button" id="save-image-btn" class="btn-save">保存为图片</button>
-                        <button type="button" id="save-pdf-btn" class="btn-pdf">保存为PDF</button>
+                        <button type="button" id="save-image-btn" class="btn-export">保存为图片</button>
+                        <button type="button" id="save-pdf-btn" class="btn-export">保存为PDF</button>
                     </div>
                 </div>
             </div>
@@ -565,25 +555,20 @@
                     <ul>
                         <li>填写产品信息并选择标签模板</li>
                         <li>点击"生成标签"创建二维码标签</li>
+                        <li>点击"保存为图片"或"保存为PDF"将标签导出</li>
                         <li>二维码包含所有标签信息，可被扫描读取</li>
-                        <li>点击"保存为图片"可将标签保存为PNG图片</li>
-                        <li>点击"保存为PDF"可将标签保存为PDF文件</li>
                         <li>所有数据保存在浏览器本地，无需服务器支持</li>
-                        <li>保存后，您可以使用任何图片或PDF查看器打开并打印</li>
+                        <li>导出后，使用专业的图片或PDF查看器进行打印，以获得最佳效果</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    <!-- 用于生成图片的临时画布 -->
-    <canvas id="temp-canvas"></canvas>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- 用于导出的临时容器 -->
+    <div id="export-container" style="position: absolute; top: -9999px; left: -9999px;"></div>
     <script>
         // 全局变量
         const qrCodeCache = {}; // 二维码缓存
-        let jsPDF = window.jspdf.jsPDF; // 引入jsPDF
-
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             // 初始化当前时间
@@ -631,147 +616,163 @@
                 }
             });
         });
-
         // 保存为图片
         async function saveAsImage() {
-            showStatus('正在生成图片...', 'loading');
+            const count = parseInt(document.getElementById('export-count').value) || 1;
+            const activeTemplate = document.querySelector('.template-option.active').dataset.template;
+            const templateElement = document.getElementById('label-template');
+            
+            // 创建一个临时容器来放置所有要导出的标签
+            const exportContainer = document.getElementById('export-container');
+            exportContainer.innerHTML = '';
+            exportContainer.style.display = 'block';
+            
+            // 设置临时容器的样式，使其与实际标签尺寸匹配
+            exportContainer.style.width = activeTemplate === '50-20' ? '250px' : '250px';
+            exportContainer.style.height = activeTemplate === '50-20' ? '100px' : '200px';
+            exportContainer.style.display = 'flex';
+            exportContainer.style.flexWrap = 'wrap';
+            exportContainer.style.gap = '10px';
+            
+            // 复制并添加多个标签到临时容器
+            for (let i = 0; i < count; i++) {
+                const clone = templateElement.cloneNode(true);
+                // 移除可能存在的id，避免重复
+                clone.id = '';
+                clone.querySelector('#preview-product').id = '';
+                clone.querySelector('#preview-spec').id = '';
+                clone.querySelector('#preview-remark').id = '';
+                clone.querySelector('#preview-order-time').id = '';
+                clone.querySelector('#preview-print-time').id = '';
+                clone.querySelector('#qr-code').id = '';
+                exportContainer.appendChild(clone);
+            }
+            
             try {
-                const labelCount = parseInt(document.getElementById('label-count').value) || 1;
-                const activeTemplate = document.querySelector('.template-option.active').dataset.template;
-
-                // 获取单个标签的DOM元素
-                const labelElement = document.getElementById('label-template').cloneNode(true);
-                
-                // 创建一个容器来放置所有标签
-                const container = document.createElement('div');
-                container.style.display = 'flex';
-                container.style.flexWrap = 'wrap';
-                container.style.width = '100%';
-                container.style.justifyContent = 'flex-start';
-                
-                // 根据模板设置单个标签的尺寸
-                const labelWidth = activeTemplate === '50-20' ? 250 : 250; // 像素宽度
-                const labelHeight = activeTemplate === '50-20' ? 100 : 200; // 像素高度
-                
-                // 添加多个标签到容器
-                for (let i = 0; i < labelCount; i++) {
-                    const clonedLabel = labelElement.cloneNode(true);
-                    clonedLabel.style.width = `${labelWidth}px`;
-                    clonedLabel.style.height = `${labelHeight}px`;
-                    clonedLabel.style.margin = '5px';
-                    container.appendChild(clonedLabel);
-                }
-                
-                // 将容器添加到body中（临时）
-                document.body.appendChild(container);
-                
-                // 使用html2canvas生成图片
-                const canvas = await html2canvas(container, {
-                    scale: 2, // 提高分辨率
+                showStatus('正在生成图片...', 'loading');
+                // 使用 html2canvas 将DOM元素转换为canvas
+                const canvas = await html2canvas(exportContainer, {
                     backgroundColor: '#ffffff',
-                    useCORS: true // 允许跨域图片
+                    scale: 3, // 提高分辨率
+                    useCORS: true, // 允许跨域资源
+                    logging: false
                 });
                 
-                // 从canvas生成图片URL
-                const imgData = canvas.toDataURL('image/png');
-                
+                // 将canvas转换为数据URL
+                const imageData = canvas.toDataURL('image/png');
                 // 创建下载链接
                 const link = document.createElement('a');
-                link.download = `标签_${new Date().toISOString().slice(0, 10)}.png`;
-                link.href = imgData;
+                link.download = `二维码标签_${activeTemplate}_${formatDateTime(new Date()).replace(/:/g, '-')}.png`;
+                link.href = imageData;
                 link.click();
-                
-                // 移除临时容器
-                document.body.removeChild(container);
-                
                 showStatus('图片保存成功！', 'success');
             } catch (error) {
                 console.error('保存图片失败:', error);
                 showStatus('保存图片失败: ' + error.message, 'error');
+            } finally {
+                // 清理临时容器
+                exportContainer.innerHTML = '';
+                exportContainer.style.display = 'none';
             }
         }
-
         // 保存为PDF
         async function saveAsPDF() {
-            showStatus('正在生成PDF...', 'loading');
+            const { jsPDF } = window.jspdf;
+            const count = parseInt(document.getElementById('export-count').value) || 1;
+            const activeTemplate = document.querySelector('.template-option.active').dataset.template;
+            const templateElement = document.getElementById('label-template');
+            
+            // 创建一个临时容器来放置所有要导出的标签
+            const exportContainer = document.getElementById('export-container');
+            exportContainer.innerHTML = '';
+            exportContainer.style.display = 'block';
+            
+            // 计算PDF页面尺寸 (A4)
+            const A4_WIDTH = 210;
+            const A4_HEIGHT = 297;
+            // 计算标签在PDF中的尺寸 (mm)
+            const LABEL_WIDTH_MM = 50;
+            const LABEL_HEIGHT_MM = activeTemplate === '50-20' ? 20 : 40;
+            // 计算每行和每列的数量
+            const labelsPerRow = Math.floor(A4_WIDTH / LABEL_WIDTH_MM);
+            const labelsPerPage = Math.floor(A4_HEIGHT / LABEL_HEIGHT_MM) * labelsPerRow;
+            
+            // 设置临时容器的样式
+            exportContainer.style.width = activeTemplate === '50-20' ? '250px' : '250px';
+            exportContainer.style.height = activeTemplate === '50-20' ? '100px' : '200px';
+            exportContainer.style.display = 'flex';
+            exportContainer.style.flexWrap = 'wrap';
+            exportContainer.style.gap = '10px';
+            
             try {
-                const labelCount = parseInt(document.getElementById('label-count').value) || 1;
-                const activeTemplate = document.querySelector('.template-option.active').dataset.template;
-
+                showStatus('正在生成PDF...', 'loading');
                 // 创建一个新的jsPDF实例
-                // A4纸张尺寸: 210mm x 297mm
                 const pdf = new jsPDF({
                     orientation: 'portrait',
                     unit: 'mm',
                     format: 'a4'
                 });
-
-                // 获取单个标签的DOM元素
-                const labelElement = document.getElementById('label-template').cloneNode(true);
                 
-                // 将标签元素添加到body中（临时），以便html2canvas可以渲染它
-                document.body.appendChild(labelElement);
+                let currentPageLabels = 0;
+                let page = 1;
                 
-                // 使用html2canvas生成单个标签的图片
-                const canvas = await html2canvas(labelElement, {
-                    scale: 2,
-                    backgroundColor: '#ffffff',
-                    useCORS: true
-                });
-                
-                // 移除临时元素
-                document.body.removeChild(labelElement);
-                
-                // 将canvas转换为图片数据
-                const imgData = canvas.toDataURL('image/png');
-                
-                // 计算标签在PDF中的尺寸 (mm)
-                const labelWidthMM = 50; // 50mm宽
-                const labelHeightMM = activeTemplate === '50-20' ? 20 : 40; // 20mm或40mm高
-                
-                // 计算A4纸张可容纳的标签数量
-                const a4Width = 210;
-                const a4Height = 297;
-                const labelsPerRow = Math.floor(a4Width / (labelWidthMM + 5)); // 每行标签数，留5mm间距
-                const labelsPerColumn = Math.floor(a4Height / (labelHeightMM + 5)); // 每列标签数
-                
-                let currentX = 5; // 起始X坐标
-                let currentY = 5; // 起始Y坐标
-                let labelsOnPage = 0;
-                
-                // 循环添加所有标签
-                for (let i = 0; i < labelCount; i++) {
+                // 逐页处理标签
+                for (let i = 0; i < count; i++) {
                     // 如果当前页已满，添加新页
-                    if (labelsOnPage >= labelsPerRow * labelsPerColumn && i > 0) {
+                    if (currentPageLabels >= labelsPerPage && i > 0) {
                         pdf.addPage();
-                        currentX = 5;
-                        currentY = 5;
-                        labelsOnPage = 0;
+                        currentPageLabels = 0;
+                        page++;
                     }
                     
-                    // 在PDF中添加图片
-                    pdf.addImage(imgData, 'PNG', currentX, currentY, labelWidthMM, labelHeightMM);
+                    // 清空临时容器
+                    exportContainer.innerHTML = '';
+                    // 添加单个标签到临时容器
+                    const clone = templateElement.cloneNode(true);
+                    clone.id = '';
+                    clone.querySelector('#preview-product').id = '';
+                    clone.querySelector('#preview-spec').id = '';
+                    clone.querySelector('#preview-remark').id = '';
+                    clone.querySelector('#preview-order-time').id = '';
+                    clone.querySelector('#preview-print-time').id = '';
+                    clone.querySelector('#qr-code').id = '';
+                    exportContainer.appendChild(clone);
                     
-                    // 更新坐标
-                    currentX += labelWidthMM + 5;
-                    if (currentX + labelWidthMM > a4Width) {
-                        currentX = 5;
-                        currentY += labelHeightMM + 5;
-                    }
+                    // 使用 html2canvas 将单个标签转换为canvas
+                    const canvas = await html2canvas(exportContainer, {
+                        backgroundColor: '#ffffff',
+                        scale: 2,
+                        useCORS: true,
+                        logging: false
+                    });
                     
-                    labelsOnPage++;
+                    // 将canvas转换为图像数据
+                    const imgData = canvas.toDataURL('image/png');
+                    
+                    // 计算当前标签在页面上的位置
+                    const row = Math.floor(currentPageLabels / labelsPerRow);
+                    const col = currentPageLabels % labelsPerRow;
+                    const x = col * LABEL_WIDTH_MM;
+                    const y = row * LABEL_HEIGHT_MM;
+                    
+                    // 将图像添加到PDF
+                    pdf.addImage(imgData, 'PNG', x, y, LABEL_WIDTH_MM, LABEL_HEIGHT_MM);
+                    
+                    currentPageLabels++;
                 }
                 
                 // 保存PDF文件
-                pdf.save(`标签_${new Date().toISOString().slice(0, 10)}.pdf`);
-                
+                pdf.save(`二维码标签_${activeTemplate}_${formatDateTime(new Date()).replace(/:/g, '-')}.pdf`);
                 showStatus('PDF保存成功！', 'success');
             } catch (error) {
                 console.error('保存PDF失败:', error);
                 showStatus('保存PDF失败: ' + error.message, 'error');
+            } finally {
+                // 清理临时容器
+                exportContainer.innerHTML = '';
+                exportContainer.style.display = 'none';
             }
         }
-
         // 显示状态信息
         function showStatus(message, type) {
             const statusElement = document.getElementById('print-status');
@@ -785,7 +786,6 @@
                 }, 5000);
             }
         }
-
         function updateTemplate() {
             const activeTemplate = document.querySelector('.template-option.active').dataset.template;
             const labelTemplate = document.getElementById('label-template');
@@ -812,7 +812,6 @@
             // 重新生成标签以应用新样式
             generateLabel();
         }
-
         function generateLabel() {
             // 获取表单数据
             const productName = document.getElementById('product-name').value || '未命名产品';
@@ -863,7 +862,6 @@
             // 使用API生成二维码
             generateQRCode(qrDataString);
         }
-
         function displayQRCode(src) {
             const qrImage = document.createElement('img');
             qrImage.src = src;
@@ -875,7 +873,6 @@
             qrCodeElement.innerHTML = '';
             qrCodeElement.appendChild(qrImage);
         }
-
         function generateQRCode(text) {
             // 显示加载状态
             document.getElementById('qr-code').innerHTML = '<div class="loading">生成二维码中...</div>';
@@ -899,20 +896,17 @@
                 document.getElementById('qr-code').innerHTML = '<div style="color:red;font-size:12px;">二维码生成失败</div>';
             };
         }
-
         function syncCurrentTime() {
             const now = new Date();
             const nowString = now.toISOString().slice(0, 16);
             document.getElementById('order-time').value = nowString;
         }
-
         function insertRemark(remark) {
             const remarkInput = document.getElementById('remark');
             const currentText = remarkInput.value;
             remarkInput.value = currentText + remark + '，';
             remarkInput.focus();
         }
-
         function formatOrderTime(date) {
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
@@ -920,7 +914,6 @@
             const minutes = String(date.getMinutes()).padStart(2, '0');
             return `${month}-${day} ${hours}:${minutes}`;
         }
-
         function formatDateTime(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
