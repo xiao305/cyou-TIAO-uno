@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Script-Type" content="text/javascript">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.qrserver.com; img-src 'self' data: https://api.qrserver.com; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'">
     <title>二维码标签打印系统</title>
     <style>
         * {
@@ -258,8 +257,8 @@
             bottom: 10px;
             right: 10px;
             text-align: center;
-            width: 80px;
-            height: 80px;
+            width: 100px; /* 增大二维码尺寸 */
+            height: 100px; /* 增大二维码尺寸 */
         }
         
         .label-50-20 .qr-container {
@@ -425,13 +424,6 @@
             border: 1px solid #bee5eb;
         }
         
-        /* 隐藏用于打印的临时元素 */
-        #print-temp {
-            position: absolute;
-            left: -9999px;
-            top: -9999px;
-        }
-        
         /* 50x20模板的特殊样式 */
         .label-50-20 .label-content {
             margin-right: 70px; /* 为二维码留出空间 */
@@ -492,6 +484,32 @@
         .dialog-btn.cancel {
             background: #e74c3c;
             margin-left: 10px;
+        }
+        
+        /* 打印样式 */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-container, #print-container * {
+                visibility: visible;
+            }
+            #print-container {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                padding: 5mm !important;
+                page-break-after: avoid !important;
+            }
+            .print-label {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                margin: 2mm !important;
+            }
         }
     </style>
 </head>
@@ -644,6 +662,7 @@
                         <li>点击"直接打印"使用浏览器打印功能</li>
                         <li>所有数据保存在浏览器本地，无需服务器支持</li>
                         <li>打印前请确保已正确设置打印机和纸张尺寸</li>
+                        <li>在打印对话框中选择"无边距"或"最小边距"以获得最佳效果</li>
                     </ul>
                 </div>
             </div>
@@ -723,17 +742,18 @@
             const dialog = document.createElement('div');
             dialog.className = 'print-dialog';
             dialog.innerHTML = `
-                <h3>打印设置</h3>
-                <p>请在打印对话框中设置以下参数:</p>
-                <ul style="text-align: left; margin: 15px 0;">
-                    <li>纸张尺寸: 根据所选模板设置 (50x40mm 或 50x20mm)</li>
-                    <li>页边距: 设置为"无"或"最小"</li>
-                    <li>方向: 通常为纵向</li>
-                    <li>缩放: 100%</li>
-                </ul>
-                <p><strong>重要:</strong> 请确保打印机已正确加载标签纸!</p>
+                <h3>打印设置指南</h3>
+                <p>打印前请按以下步骤设置:</p>
+                <ol style="text-align: left; margin: 15px 0;">
+                    <li>在打印对话框中设置纸张尺寸为所选模板尺寸</li>
+                    <li>页边距设置为"无"或"最小"</li>
+                    <li>缩放比例设置为"100%"或"无缩放"</li>
+                    <li>方向通常选择"纵向"</li>
+                    <li>确保打印机已正确加载标签纸</li>
+                </ol>
+                <p><strong>重要提示:</strong> 如果打印预览显示空白页，请检查是否阻止了弹出窗口</p>
                 <div>
-                    <button class="dialog-btn" onclick="startPrint()">开始打印</button>
+                    <button class="dialog-btn" onclick="startPrint()">确认并开始打印</button>
                     <button class="dialog-btn cancel" onclick="closePrintDialog()">取消</button>
                 </div>
             `;
@@ -765,97 +785,115 @@
         
         // 创建打印内容
         function createPrintContent(copies, labelCount, template) {
-            // 获取标签数据
-            const productName = document.getElementById('preview-product').textContent;
-            const specification = document.getElementById('preview-spec').textContent;
-            const remark = document.getElementById('preview-remark').textContent;
-            const orderTime = document.getElementById('preview-order-time').textContent;
-            const printTime = document.getElementById('preview-print-time').textContent;
-            const qrImgSrc = document.querySelector('#qr-code img')?.src || '';
-            
-            // 创建打印容器
-            const printContainer = document.createElement('div');
-            printContainer.id = 'print-container';
-            printContainer.style.width = '100%';
-            printContainer.style.height = '100%';
-            printContainer.style.position = 'fixed';
-            printContainer.style.top = '0';
-            printContainer.style.left = '0';
-            printContainer.style.zIndex = '-1';
-            printContainer.style.opacity = '0';
-            
-            // 根据模板设置尺寸
-            let labelWidth, labelHeight;
-            if (template === '50-20') {
-                labelWidth = '50mm';
-                labelHeight = '20mm';
-            } else {
-                labelWidth = '50mm';
-                labelHeight = '40mm';
-            }
-            
-            // 为每份副本创建内容
-            for (let copy = 0; copy < copies; copy++) {
-                // 为每个标签创建内容
-                for (let i = 0; i < labelCount; i++) {
-                    const labelElement = createLabelElement(
-                        productName, 
-                        specification, 
-                        remark, 
-                        orderTime, 
-                        printTime, 
-                        qrImgSrc, 
-                        template
-                    );
-                    
-                    // 设置标签尺寸
-                    labelElement.style.width = labelWidth;
-                    labelElement.style.height = labelHeight;
-                    labelElement.style.margin = '2mm';
-                    labelElement.style.boxSizing = 'border-box';
-                    
-                    printContainer.appendChild(labelElement);
-                }
-            }
-            
-            // 添加到页面
-            document.body.appendChild(printContainer);
-            
-            // 延迟执行打印，确保内容渲染完成
-            setTimeout(() => {
-                // 打印
-                window.print();
+            try {
+                // 获取标签数据
+                const productName = document.getElementById('preview-product').textContent;
+                const specification = document.getElementById('preview-spec').textContent;
+                const remark = document.getElementById('preview-remark').textContent;
+                const orderTime = document.getElementById('preview-order-time').textContent;
+                const printTime = document.getElementById('preview-print-time').textContent;
+                const qrImgSrc = document.querySelector('#qr-code img')?.src || '';
                 
-                // 打印完成后移除元素
+                // 移除之前可能存在的打印容器
+                const oldPrintContainer = document.getElementById('print-container');
+                if (oldPrintContainer) {
+                    document.body.removeChild(oldPrintContainer);
+                }
+                
+                // 创建新的打印容器
+                const printContainer = document.createElement('div');
+                printContainer.id = 'print-container';
+                
+                // 根据模板设置尺寸
+                let labelWidth, labelHeight, qrSize;
+                if (template === '50-20') {
+                    labelWidth = '50mm';
+                    labelHeight = '20mm';
+                    qrSize = '25mm';
+                } else {
+                    labelWidth = '50mm';
+                    labelHeight = '40mm';
+                    qrSize = '30mm'; // 50x40模板使用更大的二维码
+                }
+                
+                // 为每份副本创建内容
+                for (let copy = 0; copy < copies; copy++) {
+                    // 为每个标签创建内容
+                    for (let i = 0; i < labelCount; i++) {
+                        const labelElement = createLabelElement(
+                            productName, 
+                            specification, 
+                            remark, 
+                            orderTime, 
+                            printTime, 
+                            qrImgSrc, 
+                            template,
+                            qrSize
+                        );
+                        
+                        // 设置标签尺寸
+                        labelElement.style.width = labelWidth;
+                        labelElement.style.height = labelHeight;
+                        labelElement.style.margin = '2mm';
+                        labelElement.style.boxSizing = 'border-box';
+                        labelElement.className = 'print-label';
+                        
+                        printContainer.appendChild(labelElement);
+                    }
+                }
+                
+                // 添加到页面
+                document.body.appendChild(printContainer);
+                
+                // 延迟执行打印，确保内容渲染完成
                 setTimeout(() => {
-                    document.body.removeChild(printContainer);
-                }, 1000);
-            }, 500);
+                    try {
+                        window.print();
+                        
+                        // 打印完成后移除元素
+                        setTimeout(() => {
+                            const container = document.getElementById('print-container');
+                            if (container) {
+                                document.body.removeChild(container);
+                            }
+                            showStatus('打印完成', 'success');
+                        }, 1000);
+                    } catch (error) {
+                        showStatus('打印失败: ' + error.message, 'error');
+                    }
+                }, 500);
+            } catch (error) {
+                showStatus('创建打印内容时出错: ' + error.message, 'error');
+            }
         }
         
         // 创建单个标签元素
-        function createLabelElement(productName, specification, remark, orderTime, printTime, qrImgSrc, template) {
+        function createLabelElement(productName, specification, remark, orderTime, printTime, qrImgSrc, template, qrSize) {
             const labelDiv = document.createElement('div');
-            labelDiv.className = `label-template label-${template}`;
             labelDiv.style.position = 'relative';
             labelDiv.style.border = '1px solid #000';
             labelDiv.style.padding = '3mm';
             labelDiv.style.fontSize = '12px';
             labelDiv.style.fontFamily = 'Arial, sans-serif';
             labelDiv.style.pageBreakInside = 'avoid';
+            labelDiv.style.breakInside = 'avoid';
+            labelDiv.style.display = 'flex';
+            labelDiv.style.flexDirection = 'column';
             
             // 创建头部
             const headerDiv = document.createElement('div');
-            headerDiv.className = 'label-header';
+            headerDiv.style.textAlign = 'center';
+            headerDiv.style.marginBottom = '5px';
+            headerDiv.style.paddingBottom = '3px';
+            headerDiv.style.borderBottom = '1px solid #000';
             
             const orderTimeDiv = document.createElement('div');
-            orderTimeDiv.className = 'order-time';
             orderTimeDiv.textContent = orderTime;
             orderTimeDiv.style.fontSize = template === '50-20' ? '14px' : '16px';
             orderTimeDiv.style.fontWeight = 'bold';
+            orderTimeDiv.style.marginBottom = '2px';
             
             const printTimeDiv = document.createElement('div');
-            printTimeDiv.className = 'print-time';
             printTimeDiv.textContent = printTime;
             printTimeDiv.style.fontSize = template === '50-20' ? '8px' : '10px';
             
@@ -864,10 +902,10 @@
             
             // 创建内容区
             const contentDiv = document.createElement('div');
-            contentDiv.className = 'label-content';
             contentDiv.style.display = 'flex';
             contentDiv.style.flexDirection = 'column';
             contentDiv.style.fontSize = template === '50-20' ? '10px' : '12px';
+            contentDiv.style.flex = '1';
             
             // 产品行
             const productItem = createLabelItem('产品:', productName, template);
@@ -885,24 +923,22 @@
             
             // 创建二维码容器
             const qrContainer = document.createElement('div');
-            qrContainer.className = 'qr-container';
             qrContainer.style.position = 'absolute';
             
             // 根据模板设置二维码位置和尺寸
             if (template === '50-20') {
                 qrContainer.style.top = '20px';
                 qrContainer.style.right = '5px';
-                qrContainer.style.width = '25mm';
-                qrContainer.style.height = '25mm';
+                qrContainer.style.width = qrSize;
+                qrContainer.style.height = qrSize;
             } else {
                 qrContainer.style.bottom = '5px';
                 qrContainer.style.right = '5px';
-                qrContainer.style.width = '30mm';
-                qrContainer.style.height = '30mm';
+                qrContainer.style.width = qrSize;
+                qrContainer.style.height = qrSize;
             }
             
             const qrCodeDiv = document.createElement('div');
-            qrCodeDiv.className = 'qr-code';
             qrCodeDiv.style.width = '100%';
             qrCodeDiv.style.height = '100%';
             qrCodeDiv.style.border = '1px solid #000';
@@ -934,7 +970,7 @@
             
             // 为50-20模板调整内容区的右边距，避免与二维码重叠
             if (template === '50-20') {
-                contentDiv.style.marginRight = template === '50-20' ? '30mm' : '0';
+                contentDiv.style.marginRight = '30mm';
             }
             
             return labelDiv;
@@ -943,20 +979,17 @@
         // 创建标签项
         function createLabelItem(labelText, valueText, template) {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'label-item';
             itemDiv.style.display = 'flex';
             itemDiv.style.marginBottom = '3px';
             itemDiv.style.lineHeight = '1.3';
             
             const labelSpan = document.createElement('div');
-            labelSpan.className = 'label-item-label';
             labelSpan.textContent = labelText;
             labelSpan.style.fontWeight = 'bold';
             labelSpan.style.width = template === '50-20' ? '35px' : '50px';
             labelSpan.style.color = '#000';
             
             const valueSpan = document.createElement('div');
-            valueSpan.className = 'label-item-value';
             valueSpan.textContent = valueText;
             valueSpan.style.flex = '1';
             valueSpan.style.color = '#000';
@@ -1096,7 +1129,7 @@
             
             // 使用免费的二维码API
             const encodedText = encodeURIComponent(text);
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodedText}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodedText}`; // 增大生成尺寸
             
             // 创建图片元素
             const qrImage = document.createElement('img');
@@ -1151,35 +1184,6 @@
             
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
-        
-        // 添加CSS打印样式
-        const printStyle = document.createElement('style');
-        printStyle.textContent = `
-            @media print {
-                body * {
-                    visibility: hidden;
-                }
-                #print-container, #print-container * {
-                    visibility: visible;
-                }
-                #print-container {
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    flex-wrap: wrap;
-                    align-content: flex-start;
-                    padding: 5mm;
-                }
-                .label-template {
-                    break-inside: avoid;
-                    page-break-inside: avoid;
-                }
-            }
-        `;
-        document.head.appendChild(printStyle);
     </script>
 </body>
 </html>
