@@ -726,7 +726,7 @@
                 return;
             }
             
-            // 构建打印页面内容 - 修复HTML转义问题
+            // 构建打印页面内容
             let printHtml = `
                 <!DOCTYPE html>
                 <html>
@@ -735,6 +735,17 @@
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <title>打印标签</title>
                     <style>
+                        @media print {
+                            @page {
+                                margin: 0;
+                                size: auto;
+                            }
+                            body {
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                            }
+                        }
+                        
                         body {
                             margin: 0;
                             padding: 5mm;
@@ -866,17 +877,6 @@
                             max-width: 45px !important;
                             font-size: 9px !important;
                         }
-                        
-                        @media print {
-                            @page {
-                                margin: 0;
-                                size: auto;
-                            }
-                            body {
-                                -webkit-print-color-adjust: exact;
-                                print-color-adjust: exact;
-                            }
-                        }
                     </style>
                 </head>
                 <body>
@@ -910,7 +910,7 @@
                                 }
                             }, 500);
                         };
-                    <\/script>
+                    </script>
                 </body>
                 </html>
             `;
