@@ -485,14 +485,16 @@
             margin-left: 10px;
         }
         
-        /* 打印样式 - 确保只打印标签内容 */
+        /* 打印样式 - 解决缩放和空白页问题 */
         @media print {
             body * {
                 visibility: hidden;
             }
+            
             #print-container, #print-container * {
                 visibility: visible;
             }
+            
             #print-container {
                 position: absolute;
                 left: 0;
@@ -500,17 +502,103 @@
                 width: 100%;
                 height: auto;
                 padding: 5mm;
+                page-break-after: avoid;
             }
+            
             .print-label-wrapper {
                 display: flex;
                 flex-wrap: wrap;
-                page-break-inside: avoid;
+                width: 100%;
             }
+            
             .print-label {
-                break-inside: avoid;
-                page-break-inside: avoid;
+                width: 50mm;
+                height: 40mm;
                 margin: 2mm;
+                border: 1px solid #000;
+                padding: 3mm;
                 box-sizing: border-box;
+                page-break-inside: avoid;
+                break-inside: avoid;
+                position: relative;
+            }
+            
+            .print-label .label-header {
+                text-align: center;
+                margin-bottom: 5px;
+                padding-bottom: 3px;
+                border-bottom: 1px solid #000;
+            }
+            
+            .print-label .order-time {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 2px;
+            }
+            
+            .print-label .print-time {
+                font-size: 8px;
+                margin-top: 2px;
+            }
+            
+            .print-label .label-content {
+                margin-bottom: 5px;
+                font-size: 10px;
+                flex: 1;
+                overflow: hidden;
+            }
+            
+            .print-label .label-item {
+                margin-bottom: 3px;
+                display: flex;
+                line-height: 1.3;
+            }
+            
+            .print-label .label-item-label {
+                font-weight: bold;
+                width: 40px;
+                color: #000;
+            }
+            
+            .print-label .label-item-value {
+                flex: 1;
+                color: #000;
+                word-break: break-all;
+                max-width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            .print-label .qr-container {
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+                width: 30mm;
+                height: 30mm;
+            }
+            
+            .print-label .qr-code {
+                width: 100%;
+                height: 100%;
+                border: 1px solid #000;
+                padding: 1px;
+                background: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .print-label .qr-code img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+            
+            /* 确保没有额外的页面断点 */
+            @page {
+                margin: 0;
+                size: auto;
             }
         }
     </style>
@@ -762,6 +850,12 @@
             // 创建打印容器
             const printContainer = document.createElement('div');
             printContainer.id = 'print-container';
+            printContainer.style.position = 'fixed';
+            printContainer.style.top = '-10000px';
+            printContainer.style.left = '-10000px';
+            printContainer.style.width = '210mm'; // A4宽度
+            printContainer.style.padding = '5mm';
+            printContainer.style.backgroundColor = 'white';
             
             // 创建标签包装器
             const labelWrapper = document.createElement('div');
@@ -786,17 +880,15 @@
                     
                     // 打印完成后移除元素
                     setTimeout(() => {
-                        const container = document.getElementById('print-container');
-                        if (container) {
-                            document.body.removeChild(container);
+                        if (document.getElementById('print-container')) {
+                            document.body.removeChild(document.getElementById('print-container'));
                         }
                         showStatus('打印完成', 'success');
                     }, 1000);
                 } catch (error) {
                     showStatus('打印失败: ' + error.message, 'error');
-                    const container = document.getElementById('print-container');
-                    if (container) {
-                        document.body.removeChild(container);
+                    if (document.getElementById('print-container')) {
+                        document.body.removeChild(document.getElementById('print-container'));
                     }
                 }
             }, 500);
