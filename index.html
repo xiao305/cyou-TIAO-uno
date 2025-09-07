@@ -6,8 +6,6 @@
     <meta http-equiv="Content-Script-Type" content="text/javascript">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <title>二维码标签打印系统</title>
-    <!-- 使用HTTPS端口引用C-Lodop -->
-    <script src="https://localhost:8443/CLodopFuncs.js?priority=1"></script>
     <style>
         * {
             margin: 0;
@@ -195,6 +193,7 @@
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
+            overflow: hidden;
         }
         
         /* 标签尺寸样式 */
@@ -253,21 +252,30 @@
             word-break: break-all;
         }
         
-        .qr-container {
+        /* 修复50x20标签的二维码位置问题 */
+        .label-50-40 .qr-container {
             position: absolute;
             bottom: 10px;
             right: 10px;
             text-align: center;
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .label-50-20 .qr-container {
+            position: absolute;
+            top: 25px;
+            right: 10px;
+            text-align: center;
+            width: 60px;
+            height: 60px;
         }
         
         .qr-code {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto;
+            width: 100%;
+            height: 100%;
             border: 1px solid #000;
-            padding: 3px;
+            padding: 2px;
             background: white;
             display: flex;
             align-items: center;
@@ -380,31 +388,6 @@
             font-size: 16px;
         }
         
-        .printer-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 8px;
-            background: white;
-        }
-        
-        .printer-item {
-            padding: 8px;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .printer-item:hover {
-            background-color: #e8f4fd;
-        }
-        
-        .printer-item.selected {
-            background-color: #d1e9ff;
-            font-weight: bold;
-        }
-        
         .print-copies {
             display: flex;
             align-items: center;
@@ -442,51 +425,73 @@
             border: 1px solid #bee5eb;
         }
         
-        /* 添加Lodop状态指示器 */
-        .lodop-status {
+        /* 隐藏用于打印的临时元素 */
+        #print-temp {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+        }
+        
+        /* 50x20模板的特殊样式 */
+        .label-50-20 .label-content {
+            margin-right: 70px; /* 为二维码留出空间 */
+        }
+        
+        .label-50-20 .order-time {
+            font-size: 16px;
+        }
+        
+        .label-50-20 .print-time {
+            font-size: 8px;
+        }
+        
+        .label-50-20 .label-item-label {
+            font-size: 10px;
+            width: 40px;
+        }
+        
+        .label-50-20 .label-item-value {
+            font-size: 10px;
+        }
+        
+        /* 打印预览对话框 */
+        .print-dialog {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
             z-index: 1000;
+            max-width: 90%;
+            text-align: center;
         }
         
-        .lodop-connected {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        .print-dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
         }
         
-        .lodop-disconnected {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        /* 添加连接测试区域 */
-        .connection-test {
+        .dialog-btn {
             margin-top: 15px;
-            padding: 10px;
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 5px;
-        }
-        
-        .test-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .test-btn {
-            padding: 8px 12px;
-            background: #17a2b8;
+            padding: 10px 20px;
+            background: #3498db;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
+        }
+        
+        .dialog-btn.cancel {
+            background: #e74c3c;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -494,7 +499,7 @@
     <div class="container">
         <header>
             <h1>二维码标签打印系统</h1>
-            <p class="subtitle">使用C-Lodop实现直接打印功能</p>
+            <p class="subtitle">使用浏览器原生打印功能</p>
         </header>
         
         <div class="main-content">
@@ -576,26 +581,15 @@
                 <div class="print-settings">
                     <h3>打印设置</h3>
                     
-                    <div class="form-group">
-                        <label>选择打印机</label>
-                        <button type="button" onclick="refreshPrinterList()" style="padding: 8px; margin-bottom: 10px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">刷新打印机列表</button>
-                        <div class="printer-list" id="printer-list">
-                            <div class="loading">请先点击"刷新打印机列表"</div>
-                        </div>
-                    </div>
-                    
                     <div class="form-group print-copies">
                         <label for="print-copies">打印份数:</label>
                         <input type="number" id="print-copies" name="print-copies" min="1" max="99" value="1">
                     </div>
                     
-                    <!-- 连接测试区域 -->
-                    <div class="connection-test">
-                        <p><strong>连接诊断:</strong> 如果C-Lodop无法连接，请先尝试以下步骤：</p>
-                        <div class="test-buttons">
-                            <button class="test-btn" onclick="testCLodopConnection()">测试C-Lodop连接</button>
-                            <button class="test-btn" onclick="window.open('https://localhost:8443', '_blank')">访问C-Lodop页面</button>
-                        </div>
+                    <div class="form-group">
+                        <label for="label-count">标签数量:</label>
+                        <input type="number" id="label-count" name="label-count" min="1" max="50" value="1">
+                        <p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">设置一次打印的标签数量</p>
                     </div>
                     
                     <div class="print-status" id="print-status"></div>
@@ -647,110 +641,21 @@
                         <li>填写产品信息并选择标签模板</li>
                         <li>点击"生成标签"创建二维码标签</li>
                         <li>二维码包含所有标签信息，可被扫描读取</li>
-                        <li>点击"直接打印"使用C-Lodop进行打印</li>
+                        <li>点击"直接打印"使用浏览器打印功能</li>
                         <li>所有数据保存在浏览器本地，无需服务器支持</li>
+                        <li>打印前请确保已正确设置打印机和纸张尺寸</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Lodop状态指示器 -->
-    <div id="lodop-status" class="lodop-status lodop-disconnected">C-Lodop: 未连接</div>
+    <!-- 用于打印的临时元素 -->
+    <div id="print-temp"></div>
 
     <script>
         // 全局变量
-        let selectedPrinter = null;
-        let LODOP = null; // LODOP对象
         const qrCodeCache = {}; // 二维码缓存
-        
-        // 测试C-Lodop连接
-        function testCLodopConnection() {
-            showStatus('正在测试C-Lodop连接...', 'loading');
-            
-            // 尝试直接访问C-Lodop页面
-            const testFrame = document.createElement('iframe');
-            testFrame.style.display = 'none';
-            testFrame.src = 'https://localhost:8443';
-            document.body.appendChild(testFrame);
-            
-            testFrame.onload = function() {
-                document.body.removeChild(testFrame);
-                showStatus('C-Lodop页面访问成功，请检查浏览器是否提示证书问题', 'success');
-                
-                // 重新初始化Lodop
-                setTimeout(initLodop, 1000);
-            };
-            
-            testFrame.onerror = function() {
-                document.body.removeChild(testFrame);
-                showStatus('无法访问C-Lodop页面，请确保服务正在运行且端口8443可访问', 'error');
-            };
-        }
-        
-        // 初始化Lodop
-        function initLodop() {
-            try {
-                // 检查是否已加载CLodopFuncs.js
-                if (typeof getLodop !== 'function') {
-                    showStatus('错误: C-Lodop库未正确加载，请检查服务状态', 'error');
-                    updateLodopStatus(false);
-                    return false;
-                }
-                
-                // 获取LODOP对象
-                LODOP = getLodop();
-                
-                // 检查是否成功获取LODOP对象
-                if (!LODOP || !LODOP.VERSION) {
-                    showStatus('错误: 无法初始化C-Lodop服务，请确保C-Lodop已运行', 'error');
-                    updateLodopStatus(false);
-                    return false;
-                }
-                
-                // 检查C-Lodop状态
-                if (LODOP.CVERSION) {
-                    console.log("C-Lodop版本:", LODOP.CVERSION);
-                    updateLodopStatus(true);
-                    showStatus('C-Lodop初始化成功!', 'success');
-                    return true;
-                } else {
-                    showStatus('C-Lodop未启动，请确保C-Lodop服务正在运行', 'error');
-                    updateLodopStatus(false);
-                    return false;
-                }
-            } catch (error) {
-                console.error('初始化C-Lodop时出错:', error);
-                showStatus('初始化C-Lodop时出错: ' + error.message, 'error');
-                updateLodopStatus(false);
-                return false;
-            }
-        }
-        
-        // 更新Lodop连接状态显示
-        function updateLodopStatus(connected) {
-            const statusElement = document.getElementById('lodop-status');
-            if (connected) {
-                statusElement.textContent = 'C-Lodop: 已连接 (' + LODOP.CVERSION + ')';
-                statusElement.className = 'lodop-status lodop-connected';
-            } else {
-                statusElement.textContent = 'C-Lodop: 未连接';
-                statusElement.className = 'lodop-status lodop-disconnected';
-            }
-        }
-        
-        // 显示二维码
-        function displayQRCode(src) {
-            const qrImage = document.createElement('img');
-            qrImage.src = src;
-            qrImage.style.width = '90px';
-            qrImage.style.height = '90px';
-            qrImage.alt = '二维码';
-            
-            const qrCodeElement = document.getElementById('qr-code');
-            qrCodeElement.innerHTML = '';
-            qrCodeElement.appendChild(qrImage);
-        }
         
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
@@ -777,20 +682,10 @@
             document.getElementById('generate-btn').addEventListener('click', generateLabel);
             
             // 直接打印按钮事件
-            document.getElementById('direct-print-btn').addEventListener('click', printWithLodop);
+            document.getElementById('direct-print-btn').addEventListener('click', showPrintDialog);
             
             // 初始化生成一次标签
             generateLabel();
-            
-            // 延迟初始化Lodop，确保脚本已加载
-            setTimeout(() => {
-                if (typeof getLodop === 'function') {
-                    initLodop();
-                } else {
-                    showStatus('C-Lodop脚本加载失败，请检查HTTPS连接', 'error');
-                    updateLodopStatus(false);
-                }
-            }, 2000);
             
             // 监听产品名称选择变化
             document.getElementById('product-name').addEventListener('change', function() {
@@ -817,137 +712,264 @@
             });
         });
         
-        // 刷新打印机列表
-        function refreshPrinterList() {
-            if (!LODOP && !initLodop()) {
-                showStatus('错误: C-Lodop未初始化，无法获取打印机列表', 'error');
-                return;
-            }
+        // 显示打印对话框
+        function showPrintDialog() {
+            // 创建遮罩层
+            const overlay = document.createElement('div');
+            overlay.className = 'print-dialog-overlay';
+            overlay.id = 'print-dialog-overlay';
             
-            const printerList = document.getElementById('printer-list');
-            printerList.innerHTML = '<div class="loading">正在获取打印机列表...</div>';
+            // 创建对话框
+            const dialog = document.createElement('div');
+            dialog.className = 'print-dialog';
+            dialog.innerHTML = `
+                <h3>打印设置</h3>
+                <p>请在打印对话框中设置以下参数:</p>
+                <ul style="text-align: left; margin: 15px 0;">
+                    <li>纸张尺寸: 根据所选模板设置 (50x40mm 或 50x20mm)</li>
+                    <li>页边距: 设置为"无"或"最小"</li>
+                    <li>方向: 通常为纵向</li>
+                    <li>缩放: 100%</li>
+                </ul>
+                <p><strong>重要:</strong> 请确保打印机已正确加载标签纸!</p>
+                <div>
+                    <button class="dialog-btn" onclick="startPrint()">开始打印</button>
+                    <button class="dialog-btn cancel" onclick="closePrintDialog()">取消</button>
+                </div>
+            `;
             
-            try {
-                // 获取打印机列表
-                const printerCount = LODOP.GET_PRINTER_COUNT();
-                if (printerCount === 0) {
-                    printerList.innerHTML = '<div class="no-printers">未找到可用打印机</div>';
-                    return;
-                }
-                
-                printerList.innerHTML = '';
-                for (let i = 0; i < printerCount; i++) {
-                    const printerName = LODOP.GET_PRINTER_NAME(i);
-                    const printerItem = document.createElement('div');
-                    printerItem.className = 'printer-item';
-                    printerItem.textContent = printerName;
-                    printerItem.dataset.index = i;
-                    
-                    printerItem.addEventListener('click', () => {
-                        // 移除之前选中的打印机
-                        document.querySelectorAll('.printer-item.selected').forEach(item => {
-                            item.classList.remove('selected');
-                        });
-                        
-                        // 选中当前打印机
-                        printerItem.classList.add('selected');
-                        selectedPrinter = {
-                            index: i,
-                            name: printerName
-                        };
-                        
-                        showStatus(`已选择打印机: ${printerName}`, 'success');
-                    });
-                    
-                    printerList.appendChild(printerItem);
-                }
-            } catch (error) {
-                printerList.innerHTML = '<div class="error">获取打印机列表失败: ' + error.message + '</div>';
-            }
+            document.body.appendChild(overlay);
+            document.body.appendChild(dialog);
         }
         
-        // 使用Lodop打印
-        function printWithLodop() {
-            if (!selectedPrinter) {
-                showStatus('请先选择打印机', 'error');
-                return;
-            }
+        // 关闭打印对话框
+        function closePrintDialog() {
+            const overlay = document.getElementById('print-dialog-overlay');
+            const dialog = document.querySelector('.print-dialog');
             
-            if (!LODOP && !initLodop()) {
-                showStatus('错误: C-Lodop未初始化，无法打印', 'error');
-                return;
-            }
+            if (overlay) document.body.removeChild(overlay);
+            if (dialog) document.body.removeChild(dialog);
+        }
+        
+        // 开始打印
+        function startPrint() {
+            closePrintDialog();
             
             const copies = parseInt(document.getElementById('print-copies').value) || 1;
-            showStatus('准备打印中...', 'loading');
+            const labelCount = parseInt(document.getElementById('label-count').value) || 1;
+            const activeTemplate = document.querySelector('.template-option.active').dataset.template;
             
-            try {
-                // 获取标签数据
-                const productName = document.getElementById('preview-product').textContent;
-                const specification = document.getElementById('preview-spec').textContent;
-                const remark = document.getElementById('preview-remark').textContent;
-                const orderTime = document.getElementById('preview-order-time').textContent;
-                const printTime = document.getElementById('preview-print-time').textContent;
-                
-                // 获取当前模板类型
-                const activeTemplate = document.querySelector('.template-option.active').dataset.template;
-                const isSmallTemplate = activeTemplate === '50-20';
-                
-                // 设置打印机
-                LODOP.SET_PRINTER_INDEX(selectedPrinter.index);
-                
-                // 初始化打印任务
-                LODOP.PRINT_INIT("二维码标签打印");
-                
-                // 根据模板类型设置纸张大小
-                if (isSmallTemplate) {
-                    LODOP.SET_PRINT_PAGESIZE(1, 500, 200, ""); // 50x20mm
-                } else {
-                    LODOP.SET_PRINT_PAGESIZE(1, 500, 400, ""); // 50x40mm
-                }
-                
-                // 设置打印份数
-                LODOP.SET_PRINT_COPIES(copies);
-                
-                // 添加文本内容
-                LODOP.ADD_PRINT_TEXT(10, 10, 200, 20, orderTime);
-                LODOP.SET_PRINT_STYLE("FontSize", 12);
-                LODOP.SET_PRINT_STYLE("Bold", 1);
-                
-                LODOP.ADD_PRINT_TEXT(35, 10, 200, 15, printTime);
-                LODOP.SET_PRINT_STYLE("FontSize", 8);
-                
-                LODOP.ADD_PRINT_TEXT(60, 10, 150, 15, "产品: " + productName);
-                LODOP.SET_PRINT_STYLE("FontSize", 10);
-                
-                LODOP.ADD_PRINT_TEXT(80, 10, 150, 15, "规格: " + specification);
-                LODOP.SET_PRINT_STYLE("FontSize", 10);
-                
-                if (!isSmallTemplate) {
-                    LODOP.ADD_PRINT_TEXT(100, 10, 150, 15, "备注: " + remark);
-                    LODOP.SET_PRINT_STYLE("FontSize", 10);
-                }
-                
-                // 获取二维码图片
-                const qrImg = document.querySelector('#qr-code img');
-                if (qrImg) {
-                    // 添加二维码图片
-                    LODOP.ADD_PRINT_IMAGE(60, 150, 80, 80, qrImg.src);
-                } else {
-                    // 如果没有二维码图片，添加文本提示
-                    LODOP.ADD_PRINT_TEXT(60, 150, 80, 80, "二维码\n未生成");
-                    LODOP.SET_PRINT_STYLE("Alignment", 2);
-                    LODOP.SET_PRINT_STYLE("FontSize", 10);
-                }
-                
-                // 直接打印
-                LODOP.PRINT();
-                
-                showStatus('打印任务已发送到打印机: ' + selectedPrinter.name, 'success');
-                
-            } catch (error) {
-                showStatus('打印错误: ' + error.message, 'error');
+            // 创建打印内容
+            createPrintContent(copies, labelCount, activeTemplate);
+        }
+        
+        // 创建打印内容
+        function createPrintContent(copies, labelCount, template) {
+            // 获取标签数据
+            const productName = document.getElementById('preview-product').textContent;
+            const specification = document.getElementById('preview-spec').textContent;
+            const remark = document.getElementById('preview-remark').textContent;
+            const orderTime = document.getElementById('preview-order-time').textContent;
+            const printTime = document.getElementById('preview-print-time').textContent;
+            const qrImgSrc = document.querySelector('#qr-code img')?.src || '';
+            
+            // 创建打印容器
+            const printContainer = document.createElement('div');
+            printContainer.id = 'print-container';
+            printContainer.style.width = '100%';
+            printContainer.style.height = '100%';
+            printContainer.style.position = 'fixed';
+            printContainer.style.top = '0';
+            printContainer.style.left = '0';
+            printContainer.style.zIndex = '-1';
+            printContainer.style.opacity = '0';
+            
+            // 根据模板设置尺寸
+            let labelWidth, labelHeight;
+            if (template === '50-20') {
+                labelWidth = '50mm';
+                labelHeight = '20mm';
+            } else {
+                labelWidth = '50mm';
+                labelHeight = '40mm';
             }
+            
+            // 为每份副本创建内容
+            for (let copy = 0; copy < copies; copy++) {
+                // 为每个标签创建内容
+                for (let i = 0; i < labelCount; i++) {
+                    const labelElement = createLabelElement(
+                        productName, 
+                        specification, 
+                        remark, 
+                        orderTime, 
+                        printTime, 
+                        qrImgSrc, 
+                        template
+                    );
+                    
+                    // 设置标签尺寸
+                    labelElement.style.width = labelWidth;
+                    labelElement.style.height = labelHeight;
+                    labelElement.style.margin = '2mm';
+                    labelElement.style.boxSizing = 'border-box';
+                    
+                    printContainer.appendChild(labelElement);
+                }
+            }
+            
+            // 添加到页面
+            document.body.appendChild(printContainer);
+            
+            // 延迟执行打印，确保内容渲染完成
+            setTimeout(() => {
+                // 打印
+                window.print();
+                
+                // 打印完成后移除元素
+                setTimeout(() => {
+                    document.body.removeChild(printContainer);
+                }, 1000);
+            }, 500);
+        }
+        
+        // 创建单个标签元素
+        function createLabelElement(productName, specification, remark, orderTime, printTime, qrImgSrc, template) {
+            const labelDiv = document.createElement('div');
+            labelDiv.className = `label-template label-${template}`;
+            labelDiv.style.position = 'relative';
+            labelDiv.style.border = '1px solid #000';
+            labelDiv.style.padding = '3mm';
+            labelDiv.style.fontSize = '12px';
+            labelDiv.style.fontFamily = 'Arial, sans-serif';
+            labelDiv.style.pageBreakInside = 'avoid';
+            
+            // 创建头部
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'label-header';
+            
+            const orderTimeDiv = document.createElement('div');
+            orderTimeDiv.className = 'order-time';
+            orderTimeDiv.textContent = orderTime;
+            orderTimeDiv.style.fontSize = template === '50-20' ? '14px' : '16px';
+            orderTimeDiv.style.fontWeight = 'bold';
+            
+            const printTimeDiv = document.createElement('div');
+            printTimeDiv.className = 'print-time';
+            printTimeDiv.textContent = printTime;
+            printTimeDiv.style.fontSize = template === '50-20' ? '8px' : '10px';
+            
+            headerDiv.appendChild(orderTimeDiv);
+            headerDiv.appendChild(printTimeDiv);
+            
+            // 创建内容区
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'label-content';
+            contentDiv.style.display = 'flex';
+            contentDiv.style.flexDirection = 'column';
+            contentDiv.style.fontSize = template === '50-20' ? '10px' : '12px';
+            
+            // 产品行
+            const productItem = createLabelItem('产品:', productName, template);
+            contentDiv.appendChild(productItem);
+            
+            // 规格行
+            const specItem = createLabelItem('规格:', specification, template);
+            contentDiv.appendChild(specItem);
+            
+            // 备注行（仅在50-40模板中显示）
+            if (template !== '50-20') {
+                const remarkItem = createLabelItem('备注:', remark, template);
+                contentDiv.appendChild(remarkItem);
+            }
+            
+            // 创建二维码容器
+            const qrContainer = document.createElement('div');
+            qrContainer.className = 'qr-container';
+            qrContainer.style.position = 'absolute';
+            
+            // 根据模板设置二维码位置和尺寸
+            if (template === '50-20') {
+                qrContainer.style.top = '20px';
+                qrContainer.style.right = '5px';
+                qrContainer.style.width = '25mm';
+                qrContainer.style.height = '25mm';
+            } else {
+                qrContainer.style.bottom = '5px';
+                qrContainer.style.right = '5px';
+                qrContainer.style.width = '30mm';
+                qrContainer.style.height = '30mm';
+            }
+            
+            const qrCodeDiv = document.createElement('div');
+            qrCodeDiv.className = 'qr-code';
+            qrCodeDiv.style.width = '100%';
+            qrCodeDiv.style.height = '100%';
+            qrCodeDiv.style.border = '1px solid #000';
+            qrCodeDiv.style.padding = '1px';
+            qrCodeDiv.style.backgroundColor = 'white';
+            qrCodeDiv.style.display = 'flex';
+            qrCodeDiv.style.alignItems = 'center';
+            qrCodeDiv.style.justifyContent = 'center';
+            
+            if (qrImgSrc) {
+                const qrImg = document.createElement('img');
+                qrImg.src = qrImgSrc;
+                qrImg.style.width = '100%';
+                qrImg.style.height = '100%';
+                qrImg.style.objectFit = 'contain';
+                qrCodeDiv.appendChild(qrImg);
+            } else {
+                qrCodeDiv.textContent = 'QR';
+                qrCodeDiv.style.fontSize = '10px';
+                qrCodeDiv.style.textAlign = 'center';
+            }
+            
+            qrContainer.appendChild(qrCodeDiv);
+            
+            // 组装标签
+            labelDiv.appendChild(headerDiv);
+            labelDiv.appendChild(contentDiv);
+            labelDiv.appendChild(qrContainer);
+            
+            // 为50-20模板调整内容区的右边距，避免与二维码重叠
+            if (template === '50-20') {
+                contentDiv.style.marginRight = template === '50-20' ? '30mm' : '0';
+            }
+            
+            return labelDiv;
+        }
+        
+        // 创建标签项
+        function createLabelItem(labelText, valueText, template) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'label-item';
+            itemDiv.style.display = 'flex';
+            itemDiv.style.marginBottom = '3px';
+            itemDiv.style.lineHeight = '1.3';
+            
+            const labelSpan = document.createElement('div');
+            labelSpan.className = 'label-item-label';
+            labelSpan.textContent = labelText;
+            labelSpan.style.fontWeight = 'bold';
+            labelSpan.style.width = template === '50-20' ? '35px' : '50px';
+            labelSpan.style.color = '#000';
+            
+            const valueSpan = document.createElement('div');
+            valueSpan.className = 'label-item-value';
+            valueSpan.textContent = valueText;
+            valueSpan.style.flex = '1';
+            valueSpan.style.color = '#000';
+            valueSpan.style.wordBreak = 'break-all';
+            valueSpan.style.overflow = 'hidden';
+            valueSpan.style.textOverflow = 'ellipsis';
+            valueSpan.style.whiteSpace = 'nowrap';
+            valueSpan.style.maxWidth = template === '50-20' ? '80px' : '150px';
+            
+            itemDiv.appendChild(labelSpan);
+            itemDiv.appendChild(valueSpan);
+            
+            return itemDiv;
         }
         
         // 显示状态信息
@@ -978,9 +1000,22 @@
             // 如果是50-20模板，简化显示内容
             if (activeTemplate === '50-20') {
                 document.getElementById('remark-item').style.display = 'none';
+                // 调整内容区右边距，为二维码留出空间
+                const contentDiv = labelTemplate.querySelector('.label-content');
+                if (contentDiv) {
+                    contentDiv.style.marginRight = '70px';
+                }
             } else {
                 document.getElementById('remark-item').style.display = 'flex';
+                // 恢复默认右边距
+                const contentDiv = labelTemplate.querySelector('.label-content');
+                if (contentDiv) {
+                    contentDiv.style.marginRight = '0';
+                }
             }
+            
+            // 重新生成标签以应用新样式
+            generateLabel();
         }
         
         function generateLabel() {
@@ -1042,19 +1077,33 @@
             generateQRCode(qrDataString);
         }
         
+        function displayQRCode(src) {
+            const qrImage = document.createElement('img');
+            qrImage.src = src;
+            qrImage.style.width = '100%';
+            qrImage.style.height = '100%';
+            qrImage.style.objectFit = 'contain';
+            qrImage.alt = '二维码';
+            
+            const qrCodeElement = document.getElementById('qr-code');
+            qrCodeElement.innerHTML = '';
+            qrCodeElement.appendChild(qrImage);
+        }
+        
         function generateQRCode(text) {
             // 显示加载状态
             document.getElementById('qr-code').innerHTML = '<div class="loading">生成二维码中...</div>';
             
-            // 使用免费的二维码API，增加尺寸参数
+            // 使用免费的二维码API
             const encodedText = encodeURIComponent(text);
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodedText}`;
             
             // 创建图片元素
             const qrImage = document.createElement('img');
             qrImage.src = qrUrl;
-            qrImage.style.width = '90px';
-            qrImage.style.height = '90px';
+            qrImage.style.width = '100%';
+            qrImage.style.height = '100%';
+            qrImage.style.objectFit = 'contain';
             qrImage.alt = '二维码';
             
             qrImage.onload = function() {
@@ -1102,6 +1151,35 @@
             
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
+        
+        // 添加CSS打印样式
+        const printStyle = document.createElement('style');
+        printStyle.textContent = `
+            @media print {
+                body * {
+                    visibility: hidden;
+                }
+                #print-container, #print-container * {
+                    visibility: visible;
+                }
+                #print-container {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-content: flex-start;
+                    padding: 5mm;
+                }
+                .label-template {
+                    break-inside: avoid;
+                    page-break-inside: avoid;
+                }
+            }
+        `;
+        document.head.appendChild(printStyle);
     </script>
 </body>
 </html>
