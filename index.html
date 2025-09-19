@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>绝活联盟官网</title>
+    <title>绝活联盟无畏契约玩家等级鉴定手册</title>
     <style>
         * {
             margin: 0;
@@ -16,10 +16,11 @@
             background-color: #0a121e;
             color: #ffffff;
             line-height: 1.6;
-            padding: 15px;
+            padding: 0;
             overflow-x: hidden;
         }
         
+        /* 默认样式 - 适用于手机端 */
         .container {
             max-width: 100%;
             margin: 0 auto;
@@ -346,7 +347,7 @@
             font-size: 12px;
         }
         
-        /* 响应式设计 */
+        /* 小屏幕优化 - 480px以下 */
         @media (max-width: 480px) {
             h1 {
                 font-size: 24px;
@@ -401,60 +402,229 @@
             }
         }
         
+        /* 电脑端样式 - 768px以上 */
         @media (min-width: 768px) {
-            .section, .evaluation-grid, .ob-grid {
-                grid-template-columns: 1fr 1fr;
+            /* 恢复电脑端的原始宽屏布局 */
+            body {
+                padding: 20px;
+            }
+            
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            
+            header {
+                margin-bottom: 30px;
+                padding: 20px 0;
+            }
+            
+            h1 {
+                font-size: 36px;
+                margin-bottom: 10px;
+                text-shadow: 0 0 10px rgba(233, 57, 89, 0.3);
+            }
+            
+            .subtitle {
+                font-size: 14px;
+                margin-bottom: 20px;
             }
             
             .rating-container {
+                gap: 20px;
+                margin: 30px 0;
                 flex-direction: row;
-                align-items: center;
+                flex-wrap: nowrap;
                 justify-content: center;
             }
             
             .rating {
-                margin: 5px;
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+                margin: 0;
+            }
+            
+            .intro {
+                border-radius: 10px;
+                padding: 20px;
+                margin: 30px 0;
+            }
+            
+            .intro::before {
+                left: -20px;
+                border-left: 20px solid transparent;
+                border-right: 20px solid transparent;
+                border-top: 20px solid #e93d5a;
+            }
+            
+            .intro p {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+            
+            .section {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+                margin: 40px 0;
             }
             
             .card {
+                border-radius: 10px;
                 padding: 20px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            }
+            
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
             }
             
             .card-header {
-                flex-direction: row;
-                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
             }
             
             .card-icon {
-                margin-right: 10px;
+                font-size: 24px;
             }
             
             .card-title {
-                font-size: 20px;
+                font-size: 22px;
+            }
+            
+            .quote {
+                font-size: 14px;
+                margin: 10px 0 20px;
+            }
+            
+            .core-feature {
+                font-size: 16px;
+                margin-bottom: 15px;
             }
             
             .features-list li {
                 font-size: 14px;
+                margin: 10px 0;
             }
             
-            .eval-icon, .ob-icon {
-                font-size: 28px;
-            }
-            
-            .eval-title, .ob-title {
+            .features-list i {
                 font-size: 16px;
+                margin-right: 10px;
             }
             
-            .eval-desc, .ob-desc {
-                font-size: 13px;
+            .classic-quote {
+                font-size: 14px;
+                margin-top: 15px;
+            }
+            
+            .special-section {
+                border-radius: 10px;
+                padding: 30px;
+                margin: 40px 0;
+            }
+            
+            .special-title {
+                font-size: 24px;
+                margin-bottom: 20px;
+                padding: 0 20px;
+            }
+            
+            .special-title::before {
+                margin-right: 10px;
+            }
+            
+            .sub-title {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+            
+            .evaluation-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .eval-item {
+                border-radius: 10px;
+                padding: 20px;
+            }
+            
+            .eval-icon {
+                font-size: 36px;
+                margin-bottom: 15px;
+            }
+            
+            .eval-title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            
+            .eval-desc {
+                font-size: 14px;
+            }
+            
+            .single-eval {
+                border-radius: 10px;
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            .ob-section {
+                border-radius: 10px;
+                padding: 30px;
+                margin: 40px 0;
+            }
+            
+            .ob-title {
+                font-size: 24px;
+                margin-bottom: 20px;
+                padding: 0 20px;
+            }
+            
+            .ob-title::before {
+                margin-right: 10px;
+            }
+            
+            .ob-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                margin: 20px 0;
+            }
+            
+            .ob-item {
+                border-radius: 10px;
+                padding: 20px;
+            }
+            
+            .ob-icon {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+            
+            .ob-title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            
+            .ob-desc {
+                font-size: 14px;
+            }
+            
+            .footer {
+                margin-top: 40px;
+                padding: 20px;
+                border-radius: 10px;
             }
             
             .footer-title {
-                font-size: 16px;
+                font-size: 18px;
+                margin-bottom: 10px;
             }
             
             .copyright {
-                font-size: 12px;
+                font-size: 14px;
             }
         }
     </style>
@@ -649,7 +819,7 @@
                     <p class="ob-desc">观察他的行动是否有明确目的，还是漫无目的游荡</p>
                 </div>
             </div>
-            <p style="text-align: center; color: #cccccc; font-size: 12px; margin-top: 15px;">
+            <p style="text-align: center; color: #cccccc; font-size: 14px; margin-top: 20px;">
                 随便盯一个人看两回合，重点看他的移动有没有目的、技能是不是在帮倒忙、打枪是靠运气还是真有东西
             </p>
         </div>
