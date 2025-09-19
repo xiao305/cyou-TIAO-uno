@@ -3,926 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二维码标签打印系统</title>
-    <!-- 引入 html2canvas 用于将DOM元素转换为图片 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- 引入 jspdf 用于生成PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>绝活联盟无畏契约玩家等级鉴定手册</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            font-family: 'Microsoft YaHei', sans-serif;
         }
+        
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
+            background-color: #0a121e;
+            color: #ffffff;
+            line-height: 1.6;
             padding: 20px;
         }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
+        
         header {
             text-align: center;
-            padding: 20px 0;
             margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 2px solid #e93d5a;
         }
+        
         h1 {
-            color: #2c3e50;
-            font-size: 2.5rem;
+            color: #e93d5a;
+            font-size: 36px;
             margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(233, 57, 89, 0.3);
         }
+        
         .subtitle {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-        }
-        .main-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-        }
-        .form-section {
-            flex: 1;
-            min-width: 300px;
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        .preview-section {
-            flex: 1;
-            min-width: 300px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-        .section-title {
-            color: #3498db;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-        }
-        .form-group {
+            color: #cccccc;
+            font-size: 14px;
             margin-bottom: 20px;
         }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: #3498db;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-        }
-        .template-selector {
+        
+        .rating-container {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
         }
-        .template-option {
-            flex: 1;
-            text-align: center;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .template-option:hover {
-            border-color: #3498db;
-        }
-        .template-option.active {
-            border-color: #3498db;
-            background-color: #e1f0fa;
-        }
-        .template-option h3 {
-            margin-bottom: 5px;
-            color: #2c3e50;
-        }
-        .template-option p {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-        }
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        button {
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex: 1;
-        }
-        .btn-primary {
-            background: #3498db;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
-        }
-        .btn-print {
-            background: #9b59b6;
-            color: white;
-        }
-        .btn-print:hover {
-            background: #8e44ad;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
-        }
-        .btn-export {
-            background: #27ae60;
-            color: white;
-        }
-        .btn-export:hover {
-            background: #229954;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
-        }
-        .label-preview {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        .label-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .label-template {
-            border: 1px dashed #ccc;
-            padding: 10px;
-            position: relative;
-            background: white;
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-            overflow: hidden;
-        }
-        /* 标签尺寸样式 */
-        .label-50-40 {
-            width: 250px;
-            height: 200px;
-        }
-        .label-50-20 {
-            width: 250px;
-            height: 100px;
-        }
-        .label-header {
-            text-align: center;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #eee;
-        }
-        .order-time {
-            font-size: 20px;
-            font-weight: bold;
-            color: #000;
-            margin-bottom: 3px;
-        }
-        .print-time {
-            font-size: 10px;
-            color: #000;
-            margin-top: 3px;
-        }
-        .label-content {
-            margin-bottom: 10px;
-            font-size: 12px;
-            flex: 1;
-            overflow: hidden;
-        }
-        .label-item {
-            margin-bottom: 5px;
-            display: flex;
-            line-height: 1.4;
-        }
-        .label-item-label {
-            font-weight: bold;
-            width: 50px;
-            color: #000;
-        }
-        .label-item-value {
-            flex: 1;
-            color: #000;
-            word-break: break-all;
-        }
-        /* 修复50x20标签的二维码位置问题 */
-        .label-50-40 .qr-container {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            text-align: center;
-            width: 100px;
-            height: 100px;
-        }
-        .label-50-20 .qr-container {
-            position: absolute;
-            top: 25px;
-            right: 10px;
-            text-align: center;
+        
+        .rating {
             width: 60px;
             height: 60px;
-        }
-        .qr-code {
-            width: 100%;
-            height: 100%;
-            border: 1px solid #000;
-            padding: 2px;
-            background: white;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+            transition: transform 0.3s ease;
         }
-        .instructions {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        
+        .rating:hover {
+            transform: scale(1.1);
         }
-        .instructions ul {
-            padding-left: 20px;
-            margin-top: 15px;
+        
+        .s { background-color: #f45c7b; }
+        .a { background-color: #f5925c; }
+        .b { background-color: #5cb8ff; }
+        .c { background-color: #5cb85c; }
+        .d { background-color: #c177d5; }
+        .e { background-color: #7f8fa6; }
+        
+        .intro {
+            background-color: rgba(15, 25, 40, 0.8);
+            border: 2px solid #e93d5a;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            position: relative;
         }
-        .instructions li {
-            margin-bottom: 10px;
-            line-height: 1.6;
+        
+        .intro::before {
+            content: " ";
+            position: absolute;
+            top: 0;
+            left: -20px;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 20px solid #e93d5a;
         }
-        .hidden {
-            display: none;
-        }
-        .loading {
-            font-size: 12px;
-            color: #3498db;
-        }
-        /* 限制文本长度 */
-        .label-item-value {
-            max-width: 150px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        /* 下拉列表和常用备注样式 */
-        .dropdown-container {
+        
+        .intro p {
+            color: #cccccc;
             margin-bottom: 15px;
         }
-        .common-remarks {
-            margin-top: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+        
+        .section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
         }
-        .remark-btn {
-            padding: 5px 10px;
-            background: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
+        
+        .card {
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
-        .remark-btn:hover {
-            background: #e0e0e0;
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
-        .sync-time-btn {
-            margin-top: 5px;
-            padding: 5px 10px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .sync-time-btn:hover {
-            background: #2980b9;
-        }
-        /* 自定义输入框 */
-        .custom-input {
-            display: none;
-            margin-top: 5px;
-        }
-        .custom-input input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        /* 打印设置样式 */
-        .print-settings {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-        .print-settings h3 {
-            margin-top: 0;
-            color: #3498db;
-            font-size: 16px;
-        }
-        .print-copies {
+        
+        .s-card { border-color: #e93d5a; }
+        .a-card { border-color: #f5925c; }
+        .b-card { border-color: #5cb8ff; }
+        .c-card { border-color: #5cb85c; }
+        .d-card { border-color: #c177d5; }
+        .e-card { border-color: #7f8fa6; }
+        
+        .card-header {
             display: flex;
             align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card-icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .card-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e93d5a;
+        }
+        
+        .quote {
+            color: #cccccc;
+            font-style: italic;
+            margin: 10px 0 20px;
+            font-size: 14px;
+        }
+        
+        .core-feature {
+            color: #e93d5a;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .features-list {
             margin: 15px 0;
         }
-        .print-copies input {
-            width: 60px;
-            margin-left: 10px;
-            padding: 8px;
+        
+        .features-list li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
         }
-        .print-status {
-            margin-top: 10px;
-            padding: 8px;
-            border-radius: 4px;
-            display: none;
+        
+        .features-list i {
+            margin-right: 10px;
+            color: #e93d5a;
         }
-        .status-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .status-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .status-loading {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        /* 50x20模板的特殊样式 */
-        .label-50-20 .label-content {
-            margin-right: 70px; /* 为二维码留出空间 */
-        }
-        .label-50-20 .order-time {
-            font-size: 16px;
-        }
-        .label-50-20 .print-time {
-            font-size: 8px;
-        }
-        .label-50-20 .label-item-label {
-            font-size: 10px;
-            width: 40px;
-        }
-        .label-50-20 .label-item-value {
-            font-size: 10px;
-        }
-        /* 打印预览对话框 */
-        .print-dialog {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-            z-index: 1000;
-            max-width: 90%;
-            text-align: center;
-        }
-        .print-dialog-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-        }
-        .dialog-btn {
+        
+        .classic-quote {
+            color: #e93d5a;
+            font-weight: bold;
             margin-top: 15px;
-            padding: 10px 20px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
-        .dialog-btn.cancel {
-            background: #e74c3c;
-            margin-left: 10px;
+        
+        .special-section {
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+            border: 2px solid rgba(233, 57, 89, 0.3);
+        }
+        
+        .special-title {
+            color: #e93d5a;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .special-title::before {
+            content: "★";
+            color: #e93d5a;
+            margin-right: 10px;
+        }
+        
+        .sub-title {
+            color: #cccccc;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .evaluation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .eval-item {
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(233, 57, 89, 0.3);
+        }
+        
+        .eval-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #e93d5a;
+        }
+        
+        .eval-title {
+            color: #e93d5a;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .eval-desc {
+            color: #cccccc;
+            font-size: 14px;
+            text-align: left;
+        }
+        
+        .single-eval {
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(233, 57, 89, 0.3);
+            margin: 20px 0;
+        }
+        
+        .ob-section {
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+            border: 2px solid rgba(233, 57, 89, 0.3);
+        }
+        
+        .ob-title {
+            color: #e93d5a;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .ob-title::before {
+            content: "❓";
+            margin-right: 10px;
+        }
+        
+        .ob-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .ob-item {
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(233, 57, 89, 0.3);
+        }
+        
+        .ob-icon {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #e93d5a;
+        }
+        
+        .ob-title {
+            color: #e93d5a;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .ob-desc {
+            color: #cccccc;
+            font-size: 14px;
+            text-align: left;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            border: 2px solid rgba(233, 57, 89, 0.3);
+        }
+        
+        .footer-title {
+            color: #e93d5a;
+            font-size: 18px;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-title::before {
+            content: "☰";
+            margin-right: 10px;
+        }
+        
+        .copyright {
+            color: #cccccc;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .section, .evaluation-grid, .ob-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rating-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .rating {
+                margin-bottom: 10px;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>二维码标签打印系统</h1>
-            <p class="subtitle">生成标签并保存为图片或PDF</p>
+            <h1>绝活联盟无畏契约玩家等级鉴定手册</h1>
+            <p class="subtitle">SABCDE分级系统 | S为最强，E为最弱 | 主观OB判断标准</p>
         </header>
-        <div class="main-content">
-            <div class="form-section">
-                <h2 class="section-title">标签信息设置</h2>
-                <div class="form-group">
-                    <label for="product-name">产品名称</label>
-                    <div class="dropdown-container">
-                        <select id="product-name" name="product-name" style="width: 100%;">
-                            <option value="">请选择产品</option>
-                            <option value="冰杯">冰杯</option>
-                            <option value="鲜肉包子">鲜肉包子</option>
-                            <option value="酱肉包子">酱肉包子</option>
-                            <option value="包子">包子</option>
-                            <option value="自定义">自定义</option>
-                        </select>
-                    </div>
-                    <div class="custom-input" id="product-custom-input">
-                        <label for="product-custom" class="hidden">自定义产品名称</label>
-                        <input type="text" id="product-custom" name="product-custom" placeholder="请输入自定义产品名称" style="width: 100%;">
-                    </div>
+
+        <div class="rating-container">
+            <div class="rating s">S</div>
+            <div class="rating a">A</div>
+            <div class="rating b">B</div>
+            <div class="rating c">C</div>
+            <div class="rating d">D</div>
+            <div class="rating e">E</div>
+        </div>
+
+        <div class="intro">
+            <p><i class="fas fa-binoculars"></i> 还在为看不懂队友操作而困惑吗？绝活联盟鉴定手册帮你快速鉴定队友真实水平！无需查看数据，只需OB观察几分钟，即可对号入座。</p>
+            <p>观察重点：移动方式、技能使用、地图理解、决策意识</p>
+        </div>
+
+        <div class="section">
+            <div class="card s-card">
+                <div class="card-header">
+                    <span class="card-icon"><i class="fas fa-star"></i></span>
+                    <h2 class="card-title">S级：职业候选</h2>
                 </div>
-                <div class="form-group">
-                    <label for="specification">规格</label>
-                    <div class="dropdown-container">
-                        <select id="specification" name="specification" style="width: 100%;">
-                            <option value="">请选择规格</option>
-                            <option value="大杯/去冰/少糖">大杯/去冰/少糖</option>
-                            <option value="中杯/正常冰/正常糖">中杯/正常冰/正常糖</option>
-                            <option value="小杯/加冰/多糖">小杯/加冰/多糖</option>
-                            <option value="其他">其他</option>
-                        </select>
-                    </div>
-                    <div class="custom-input" id="specification-custom-input">
-                        <label for="specification-custom" class="hidden">自定义规格</label>
-                        <input type="text" id="specification-custom" name="specification-custom" placeholder="请输入自定义规格" style="width: 100%;">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="order-time">下单时间</label>
-                    <input type="datetime-local" id="order-time" name="order-time" value="2023-06-15T14:30">
-                    <button type="button" class="sync-time-btn" onclick="syncCurrentTime()">同步当前时间</button>
-                </div>
-                <div class="form-group">
-                    <label for="remark">备注</label>
-                    <textarea id="remark" name="remark" rows="3" placeholder="输入备注信息"></textarea>
-                    <div class="common-remarks">
-                        <button type="button" class="remark-btn" onclick="insertRemark('加珍珠')">加珍珠</button>
-                        <button type="button" class="remark-btn" onclick="insertRemark('少冰')">少冰</button>
-                        <button type="button" class="remark-btn" onclick="insertRemark('去冰')">去冰</button>
-                        <button type="button" class="remark-btn" onclick="insertRemark('加糖')">加糖</button>
-                        <button type="button" class="remark-btn" onclick="insertRemark('不加糖')">不加糖</button>
-                        <button type="button" class="remark-btn" onclick="insertRemark('加料')">加料</button>
-                        <button type="button" class="remark-btn" onclick="insertRemark('不要盖子')">不要盖子</button>
-                        <button type="button" class="remark-btn" onclick="insertRemark('打包')">打包</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>选择模板</label>
-                    <div class="template-selector">
-                        <div class="template-option active" data-template="50-40">
-                            <h3>50×40mm</h3>
-                            <p>完整信息标签</p>
-                        </div>
-                        <div class="template-option" data-template="50-20">
-                            <h3>50×20mm</h3>
-                            <p>简化信息标签</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- 打印设置区域 -->
-                <div class="print-settings">
-                    <h3>导出设置</h3>
-                    <div class="form-group print-copies">
-                        <label for="export-count">导出数量:</label>
-                        <input type="number" id="export-count" name="export-count" min="1" max="50" value="1">
-                        <p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">设置一次导出的标签数量</p>
-                    </div>
-                    <div class="print-status" id="print-status"></div>
-                    <div class="btn-group">
-                        <button type="button" id="generate-btn" class="btn-primary">生成标签</button>
-                        <button type="button" id="save-image-btn" class="btn-export">保存为图片</button>
-                        <button type="button" id="save-pdf-btn" class="btn-export">保存为PDF</button>
-                    </div>
-                </div>
+                <p class="quote">"人类是有极限的，但他没有"</p>
+                <p class="core-feature">核心特征：这不是游戏，是他的个人秀</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-eye"></i> 感觉他在打人机，但对面是五个真人</li>
+                    <li><i class="fas fa-bolt"></i> 非人类的反应和瞄准，OB都看不懂他的操作</li>
+                    <li><i class="fas fa-comment"></i> 全图仿佛是他的视野，你的每一步都在他算计中</li>
+                </ul>
+                <p class="classic-quote">经典语录：（只在比赛里见到）"一波了。"</p>
             </div>
-            <div class="preview-section">
-                <div class="label-preview">
-                    <h2 class="section-title">标签预览</h2>
-                    <div class="label-container">
-                        <div class="label-template label-50-40" id="label-template">
-                            <div class="label-header">
-                                <div class="order-time" id="preview-order-time">09-03 07:51</div>
-                                <div class="print-time" id="preview-print-time">打印时间: 2025-09-03 15:52:09</div>
-                            </div>
-                            <div class="label-content">
-                                <div class="label-item">
-                                    <div class="label-item-label">产品:</div>
-                                    <div class="label-item-value" id="preview-product">珍珠奶茶</div>
-                                </div>
-                                <div class="label-item">
-                                    <div class="label-item-label">规格:</div>
-                                    <div class="label-item-value" id="preview-spec">大杯/去冰/少糖</div>
-                                </div>
-                                <div class="label-item" id="remark-item">
-                                    <div class="label-item-label">备注:</div>
-                                    <div class="label-item-value" id="preview-remark">加珍珠，少冰</div>
-                                </div>
-                            </div>
-                            <div class="qr-container">
-                                <div class="qr-code" id="qr-code">
-                                    <div class="loading">等待生成二维码...</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+            <div class="card a-card">
+                <div class="card-header">
+                    <span class="card-icon"><i class="fas fa-bolt"></i></span>
+                    <h2 class="card-title">A级：通天代</h2>
                 </div>
-                <div class="instructions">
-                    <h2 class="section-title">使用说明</h2>
-                    <ul>
-                        <li>填写产品信息并选择标签模板</li>
-                        <li>点击"生成标签"创建二维码标签</li>
-                        <li>点击"保存为图片"或"保存为PDF"将标签导出</li>
-                        <li>二维码包含所有标签信息，可被扫描读取</li>
-                        <li>所有数据保存在浏览器本地，无需服务器支持</li>
-                        <li>导出后，使用专业的图片或PDF查看器进行打印，以获得最佳效果</li>
-                    </ul>
-                </div>
+                <p class="quote">"你怀疑他开了，但他只是强"</p>
+                <p class="core-feature">核心特征：操作怪，像请了代练</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-lock"></i> 枪法准得像锁，反应快得像脚本</li>
+                    <li><i class="fas fa-rocket"></i> 身法丝滑，技能和枪结合行云流水</li>
+                    <li><i class="fas fa-smile"></i> 他一来，对面就开始公屏扣？"</li>
+                </ul>
+                <p class="classic-quote">经典语录：（沉默Carry，偶尔打一句）"..."</p>
             </div>
         </div>
+
+        <div class="section">
+            <div class="card b-card">
+                <div class="card-header">
+                    <span class="card-icon"><i class="fas fa-brain"></i></span>
+                    <h2 class="card-title">B级：专业老手</h2>
+                </div>
+                <p class="quote">"玩的不是枪，是脑子"</p>
+                <p class="core-feature">核心特征：经验丰富，战术执行力强</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-lightbulb"></i> 听力MAX，能预判你的预判</li>
+                    <li><i class="fas fa-snowflake"></i> 技能丢得贼刁钻，闪瞎你，烟闷死你，火烤焦你</li>
+                    <li><i class="fas fa-thumbs-up"></i> 神出鬼没，经常偷屁股，残局大师</li>
+                </ul>
+                <p class="classic-quote">经典语录："他肯定在这。"</p>
+            </div>
+
+            <div class="card c-card">
+                <div class="card-header">
+                    <span class="card-icon"><i class="fas fa-thumbs-up"></i></span>
+                    <h2 class="card-title">C级：靠谱哥/靠谱姐</h2>
+                </div>
+                <p class="quote">"队里的定海神针，不C也不坑"</p>
+                <p class="core-feature">核心特征：合格的队友，团队的底线</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-tachometer-alt"></i> 急停稳，预瞄准，能打赢该赢的架</li>
+                    <li><i class="fas fa-comment"></i> 会看小地图，会简单补防，技能不坑队友</li>
+                    <li><i class="fas fa-meh"></i> 不压力队友，默默打好自己的</li>
+                </ul>
+                <p class="classic-quote">经典语录："Nice！" "我的我的。"</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="card d-card">
+                <div class="card-header">
+                    <span class="card-icon"><i class="fas fa-sunglasses"></i></span>
+                    <h2 class="card-title">D级：黑铁战神</h2>
+                </div>
+                <p class="quote">"又菜又爱玩，我的游戏我做主"</p>
+                <p class="core-feature">核心特征：觉得自己很C，其实在梦游</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-sparkles"></i> 自信拉枪，然后被秒，永远不信邪</li>
+                    <li><i class="fas fa-gamepad"></i> 知道要急停，但停不住。会按技能键，但用来整活</li>
+                    <li><i class="fas fa-microphone"></i> 麦克风战神，"大残！！"（其实只打了50血）</li>
+                </ul>
+                <p class="classic-quote">经典语录："我差一枪！"</p>
+            </div>
+
+            <div class="card e-card">
+                <div class="card-header">
+                    <span class="card-icon"><i class="fas fa-seedling"></i></span>
+                    <h2 class="card-title">E级：人机宝宝</h2>
+                </div>
+                <p class="quote">"走路开枪，主打一个陪伴"</p>
+                <p class="core-feature">核心特征：身体里住着一个NPC</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-walking"></i> W键扣烂，走路开枪，射击全靠缘分</li>
+                    <li><i class="fas fa-paint-roller"></i> 经典换弹癌，技能永远喂给地板吃</li>
+                    <li><i class="fas fa-book"></i> 小地图？什么小地图？我屏幕边上还有东西？</li>
+                </ul>
+                <p class="classic-quote">经典语录："啊？我怎么死了？"</p>
+            </div>
+        </div>
+
+        <div class="special-section">
+            <h2 class="special-title">绝活联盟特色鉴定标准</h2>
+            <p class="sub-title">基于绝活联盟上千小时游戏经验总结的权威玩家评估体系</p>
+            
+            <div class="evaluation-grid">
+                <div class="eval-item">
+                    <div class="eval-icon"><i class="fas fa-brain"></i></div>
+                    <h3 class="eval-title">战术意识</h3>
+                    <p class="eval-desc">对游戏策略的理解深度和局势判断能力，包括地图控制、资源管理和时机把握</p>
+                </div>
+                
+                <div class="eval-item">
+                    <div class="eval-icon"><i class="fas fa-crosshairs"></i></div>
+                    <h3 class="eval-title">枪法精准度</h3>
+                    <p class="eval-desc">瞄准与射击能力评估，爆头率和命中率表现，包括预瞄定位和跟枪能力</p>
+                </div>
+            </div>
+            
+            <div class="single-eval">
+                <div class="eval-icon"><i class="fas fa-sync"></i></div>
+                <h3 class="eval-title">技能运用</h3>
+                <p class="eval-desc">特工技能使用效率和时机把握能力，包括技能组合与团队协同效果</p>
+            </div>
+            
+            <div class="evaluation-grid">
+                <div class="eval-item">
+                    <div class="eval-icon"><i class="fas fa-users"></i></div>
+                    <h3 class="eval-title">团队协作</h3>
+                    <p class="eval-desc">与队友配合的能力和信息沟通效率，包括资源共享和战术执行</p>
+                </div>
+                
+                <div class="eval-item">
+                    <div class="eval-icon"><i class="fas fa-chess-king"></i></div>
+                    <h3 class="eval-title">决策能力</h3>
+                    <p class="eval-desc">在高压环境下做出正确判断的能力，包括进攻和防守时的决策速度</p>
+                </div>
+            </div>
+            
+            <div class="single-eval">
+                <div class="eval-icon"><i class="fas fa-palette"></i></div>
+                <h3 class="eval-title">适应能力</h3>
+                <p class="eval-desc">根据对手策略调整自己打法的能力，包括角色切换和战术变化</p>
+            </div>
+        </div>
+
+        <div class="ob-section">
+            <h2 class="ob-title">OB观察小技巧</h2>
+            <div class="ob-grid">
+                <div class="ob-item">
+                    <div class="ob-icon"><i class="fas fa-running"></i></div>
+                    <h3 class="ob-title">移动方式</h3>
+                    <p class="ob-desc">观察他是W键焊死还是懂得利用掩体peek，移动是否有目的性</p>
+                </div>
+                
+                <div class="ob-item">
+                    <div class="ob-icon"><i class="fas fa-pencil-ruler"></i></div>
+                    <h3 class="ob-title">技能使用</h3>
+                    <p class="ob-desc">看技能是帮助团队还是害了团队，使用时机的把握</p>
+                </div>
+                
+                <div class="ob-item">
+                    <div class="ob-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3 class="ob-title">地图理解</h3>
+                    <p class="ob-desc">注意他是否看小地图，能否根据信息判断敌人位置</p>
+                </div>
+                
+                <div class="ob-item">
+                    <div class="ob-icon"><i class="fas fa-chess-rook"></i></div>
+                    <h3 class="ob-title">决策意识</h3>
+                    <p class="ob-desc">观察他的行动是否有明确目的，还是漫无目的游荡</p>
+                </div>
+            </div>
+            <p style="text-align: center; color: #cccccc; font-size: 14px; margin-top: 20px;">
+                随便盯一个人看两回合，重点看他的移动有没有目的、技能是不是在帮倒忙、打枪是靠运气还是真有东西
+            </p>
+        </div>
+
+        <div class="footer">
+            <h3 class="footer-title">绝活联盟审核组 荣誉出品</h3>
+            <p class="copyright">版权所有 © 2025 绝活联盟无畏契约玩家鉴定中心 | 最终解释权归绝活联盟所有</p>
+        </div>
     </div>
-    <!-- 用于导出的临时容器 -->
-    <div id="export-container" style="position: absolute; top: -9999px; left: -9999px;"></div>
-    <script>
-        // 全局变量
-        const qrCodeCache = {}; // 二维码缓存
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化当前时间
-            const now = new Date();
-            const nowString = now.toISOString().slice(0, 16);
-            document.getElementById('order-time').value = nowString;
-            // 更新打印时间显示
-            const printTimeElement = document.getElementById('preview-print-time');
-            printTimeElement.textContent = `打印时间: ${formatDateTime(now)}`;
-            // 模板选择
-            const templateOptions = document.querySelectorAll('.template-option');
-            templateOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    templateOptions.forEach(opt => opt.classList.remove('active'));
-                    this.classList.add('active');
-                    updateTemplate();
-                });
-            });
-            // 生成按钮事件
-            document.getElementById('generate-btn').addEventListener('click', generateLabel);
-            // 保存为图片按钮事件
-            document.getElementById('save-image-btn').addEventListener('click', saveAsImage);
-            // 保存为PDF按钮事件
-            document.getElementById('save-pdf-btn').addEventListener('click', saveAsPDF);
-            // 初始化生成一次标签
-            generateLabel();
-            // 监听产品名称选择变化
-            document.getElementById('product-name').addEventListener('change', function() {
-                const selectedValue = this.value;
-                const customInput = document.getElementById('product-custom-input');
-                if (selectedValue === '自定义') {
-                    customInput.style.display = 'block';
-                } else {
-                    customInput.style.display = 'none';
-                }
-            });
-            // 监听规格选择变化
-            document.getElementById('specification').addEventListener('change', function() {
-                const selectedValue = this.value;
-                const customInput = document.getElementById('specification-custom-input');
-                if (selectedValue === '其他') {
-                    customInput.style.display = 'block';
-                } else {
-                    customInput.style.display = 'none';
-                }
-            });
-        });
-        // 保存为图片
-        async function saveAsImage() {
-            const count = parseInt(document.getElementById('export-count').value) || 1;
-            const activeTemplate = document.querySelector('.template-option.active').dataset.template;
-            const templateElement = document.getElementById('label-template');
-            
-            // 创建一个临时容器来放置所有要导出的标签
-            const exportContainer = document.getElementById('export-container');
-            exportContainer.innerHTML = '';
-            exportContainer.style.display = 'block';
-            
-            // 设置临时容器的样式，使其与实际标签尺寸匹配
-            exportContainer.style.width = activeTemplate === '50-20' ? '250px' : '250px';
-            exportContainer.style.height = activeTemplate === '50-20' ? '100px' : '200px';
-            exportContainer.style.display = 'flex';
-            exportContainer.style.flexWrap = 'wrap';
-            exportContainer.style.gap = '10px';
-            
-            // 复制并添加多个标签到临时容器
-            for (let i = 0; i < count; i++) {
-                const clone = templateElement.cloneNode(true);
-                // 移除可能存在的id，避免重复
-                clone.id = '';
-                clone.querySelector('#preview-product').id = '';
-                clone.querySelector('#preview-spec').id = '';
-                clone.querySelector('#preview-remark').id = '';
-                clone.querySelector('#preview-order-time').id = '';
-                clone.querySelector('#preview-print-time').id = '';
-                clone.querySelector('#qr-code').id = '';
-                exportContainer.appendChild(clone);
-            }
-            
-            try {
-                showStatus('正在生成图片...', 'loading');
-                // 使用 html2canvas 将DOM元素转换为canvas
-                const canvas = await html2canvas(exportContainer, {
-                    backgroundColor: '#ffffff',
-                    scale: 3, // 提高分辨率
-                    useCORS: true, // 允许跨域资源
-                    logging: false
-                });
-                
-                // 将canvas转换为数据URL
-                const imageData = canvas.toDataURL('image/png');
-                // 创建下载链接
-                const link = document.createElement('a');
-                link.download = `二维码标签_${activeTemplate}_${formatDateTime(new Date()).replace(/:/g, '-')}.png`;
-                link.href = imageData;
-                link.click();
-                showStatus('图片保存成功！', 'success');
-            } catch (error) {
-                console.error('保存图片失败:', error);
-                showStatus('保存图片失败: ' + error.message, 'error');
-            } finally {
-                // 清理临时容器
-                exportContainer.innerHTML = '';
-                exportContainer.style.display = 'none';
-            }
-        }
-        // 保存为PDF
-        async function saveAsPDF() {
-            const { jsPDF } = window.jspdf;
-            const count = parseInt(document.getElementById('export-count').value) || 1;
-            const activeTemplate = document.querySelector('.template-option.active').dataset.template;
-            const templateElement = document.getElementById('label-template');
-            
-            // 创建一个临时容器来放置所有要导出的标签
-            const exportContainer = document.getElementById('export-container');
-            exportContainer.innerHTML = '';
-            exportContainer.style.display = 'block';
-            
-            // 计算PDF页面尺寸 (A4)
-            const A4_WIDTH = 210;
-            const A4_HEIGHT = 297;
-            // 计算标签在PDF中的尺寸 (mm)
-            const LABEL_WIDTH_MM = 50;
-            const LABEL_HEIGHT_MM = activeTemplate === '50-20' ? 20 : 40;
-            // 计算每行和每列的数量
-            const labelsPerRow = Math.floor(A4_WIDTH / LABEL_WIDTH_MM);
-            const labelsPerPage = Math.floor(A4_HEIGHT / LABEL_HEIGHT_MM) * labelsPerRow;
-            
-            // 设置临时容器的样式
-            exportContainer.style.width = activeTemplate === '50-20' ? '250px' : '250px';
-            exportContainer.style.height = activeTemplate === '50-20' ? '100px' : '200px';
-            exportContainer.style.display = 'flex';
-            exportContainer.style.flexWrap = 'wrap';
-            exportContainer.style.gap = '10px';
-            
-            try {
-                showStatus('正在生成PDF...', 'loading');
-                // 创建一个新的jsPDF实例
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-                
-                let currentPageLabels = 0;
-                let page = 1;
-                
-                // 逐页处理标签
-                for (let i = 0; i < count; i++) {
-                    // 如果当前页已满，添加新页
-                    if (currentPageLabels >= labelsPerPage && i > 0) {
-                        pdf.addPage();
-                        currentPageLabels = 0;
-                        page++;
-                    }
-                    
-                    // 清空临时容器
-                    exportContainer.innerHTML = '';
-                    // 添加单个标签到临时容器
-                    const clone = templateElement.cloneNode(true);
-                    clone.id = '';
-                    clone.querySelector('#preview-product').id = '';
-                    clone.querySelector('#preview-spec').id = '';
-                    clone.querySelector('#preview-remark').id = '';
-                    clone.querySelector('#preview-order-time').id = '';
-                    clone.querySelector('#preview-print-time').id = '';
-                    clone.querySelector('#qr-code').id = '';
-                    exportContainer.appendChild(clone);
-                    
-                    // 使用 html2canvas 将单个标签转换为canvas
-                    const canvas = await html2canvas(exportContainer, {
-                        backgroundColor: '#ffffff',
-                        scale: 2,
-                        useCORS: true,
-                        logging: false
-                    });
-                    
-                    // 将canvas转换为图像数据
-                    const imgData = canvas.toDataURL('image/png');
-                    
-                    // 计算当前标签在页面上的位置
-                    const row = Math.floor(currentPageLabels / labelsPerRow);
-                    const col = currentPageLabels % labelsPerRow;
-                    const x = col * LABEL_WIDTH_MM;
-                    const y = row * LABEL_HEIGHT_MM;
-                    
-                    // 将图像添加到PDF
-                    pdf.addImage(imgData, 'PNG', x, y, LABEL_WIDTH_MM, LABEL_HEIGHT_MM);
-                    
-                    currentPageLabels++;
-                }
-                
-                // 保存PDF文件
-                pdf.save(`二维码标签_${activeTemplate}_${formatDateTime(new Date()).replace(/:/g, '-')}.pdf`);
-                showStatus('PDF保存成功！', 'success');
-            } catch (error) {
-                console.error('保存PDF失败:', error);
-                showStatus('保存PDF失败: ' + error.message, 'error');
-            } finally {
-                // 清理临时容器
-                exportContainer.innerHTML = '';
-                exportContainer.style.display = 'none';
-            }
-        }
-        // 显示状态信息
-        function showStatus(message, type) {
-            const statusElement = document.getElementById('print-status');
-            statusElement.textContent = message;
-            statusElement.className = `print-status status-${type}`;
-            statusElement.style.display = 'block';
-            // 5秒后隐藏状态信息
-            if (type !== 'loading') {
-                setTimeout(() => {
-                    statusElement.style.display = 'none';
-                }, 5000);
-            }
-        }
-        function updateTemplate() {
-            const activeTemplate = document.querySelector('.template-option.active').dataset.template;
-            const labelTemplate = document.getElementById('label-template');
-            // 移除所有模板类
-            labelTemplate.classList.remove('label-50-40', 'label-50-20');
-            // 添加当前模板类
-            labelTemplate.classList.add(`label-${activeTemplate}`);
-            // 如果是50-20模板，简化显示内容
-            if (activeTemplate === '50-20') {
-                document.getElementById('remark-item').style.display = 'none';
-                // 调整内容区右边距，为二维码留出空间
-                const contentDiv = labelTemplate.querySelector('.label-content');
-                if (contentDiv) {
-                    contentDiv.style.marginRight = '70px';
-                }
-            } else {
-                document.getElementById('remark-item').style.display = 'flex';
-                // 恢复默认右边距
-                const contentDiv = labelTemplate.querySelector('.label-content');
-                if (contentDiv) {
-                    contentDiv.style.marginRight = '0';
-                }
-            }
-            // 重新生成标签以应用新样式
-            generateLabel();
-        }
-        function generateLabel() {
-            // 获取表单数据
-            const productName = document.getElementById('product-name').value || '未命名产品';
-            const specification = document.getElementById('specification').value || '无规格';
-            const orderTime = document.getElementById('order-time').value;
-            const remark = document.getElementById('remark').value || '无备注';
-            // 处理自定义产品名称
-            let finalProductName = productName;
-            if (productName === '自定义') {
-                const customProduct = document.getElementById('product-custom').value;
-                if (customProduct) {
-                    finalProductName = customProduct;
-                }
-            }
-            // 处理自定义规格
-            let finalSpecification = specification;
-            if (specification === '其他') {
-                const customSpec = document.getElementById('specification-custom').value;
-                if (customSpec) {
-                    finalSpecification = customSpec;
-                }
-            }
-            // 格式化时间显示
-            const orderDate = new Date(orderTime);
-            const orderTimeString = formatOrderTime(orderDate);
-            const printTime = new Date();
-            const printTimeString = formatDateTime(printTime);
-            // 更新预览
-            document.getElementById('preview-product').textContent = finalProductName;
-            document.getElementById('preview-spec').textContent = finalSpecification;
-            document.getElementById('preview-remark').textContent = remark;
-            document.getElementById('preview-order-time').textContent = orderTimeString;
-            document.getElementById('preview-print-time').textContent = `打印时间: ${printTimeString}`;
-            // 生成二维码数据
-            const qrData = {
-                productName: finalProductName,
-                specification: finalSpecification,
-                orderTime: orderTimeString,
-                printTime: printTimeString,
-                remark: remark
-            };
-            const qrDataString = JSON.stringify(qrData);
-            // 检查缓存
-            if (qrCodeCache[qrDataString]) {
-                displayQRCode(qrCodeCache[qrDataString]);
-                return;
-            }
-            // 使用API生成二维码
-            generateQRCode(qrDataString);
-        }
-        function displayQRCode(src) {
-            const qrImage = document.createElement('img');
-            qrImage.src = src;
-            qrImage.style.width = '100%';
-            qrImage.style.height = '100%';
-            qrImage.style.objectFit = 'contain';
-            qrImage.alt = '二维码';
-            const qrCodeElement = document.getElementById('qr-code');
-            qrCodeElement.innerHTML = '';
-            qrCodeElement.appendChild(qrImage);
-        }
-        function generateQRCode(text) {
-            // 显示加载状态
-            document.getElementById('qr-code').innerHTML = '<div class="loading">生成二维码中...</div>';
-            // 使用免费的二维码API
-            const encodedText = encodeURIComponent(text);
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodedText}`;
-            // 创建图片元素
-            const qrImage = document.createElement('img');
-            qrImage.src = qrUrl;
-            qrImage.style.width = '100%';
-            qrImage.style.height = '100%';
-            qrImage.style.objectFit = 'contain';
-            qrImage.alt = '二维码';
-            qrImage.onload = function() {
-                // 缓存结果
-                qrCodeCache[text] = qrImage.src;
-                // 显示二维码
-                displayQRCode(qrImage.src);
-            };
-            qrImage.onerror = function() {
-                document.getElementById('qr-code').innerHTML = '<div style="color:red;font-size:12px;">二维码生成失败</div>';
-            };
-        }
-        function syncCurrentTime() {
-            const now = new Date();
-            const nowString = now.toISOString().slice(0, 16);
-            document.getElementById('order-time').value = nowString;
-        }
-        function insertRemark(remark) {
-            const remarkInput = document.getElementById('remark');
-            const currentText = remarkInput.value;
-            remarkInput.value = currentText + remark + '，';
-            remarkInput.focus();
-        }
-        function formatOrderTime(date) {
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${month}-${day} ${hours}:${minutes}`;
-        }
-        function formatDateTime(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            const seconds = String(date.getSeconds()).padStart(2, '0');
-            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        }
-    </script>
 </body>
 </html>
