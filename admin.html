@@ -3,653 +3,651 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二维码信息查看 - 红姐私房</title>
+    <title>绝活联盟后台管理系统</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            font-family: 'Microsoft YaHei', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
+            background-color: #0a121e;
+            color: #ffffff;
+            line-height: 1.6;
             padding: 20px;
         }
         
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
-        }
-        
-        h1 {
-            color: #2c3e50;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-        }
-        
-        .content {
-            background: white;
-            border-radius: 15px;
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e93d5a;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .tab {
-            padding: 12px 20px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #7f8c8d;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .tab.active {
-            color: #3498db;
-            border-bottom: 3px solid #3498db;
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #e93d5a;
+            font-size: 24px;
+            font-weight: bold;
         }
         
         .form-group {
             margin-bottom: 20px;
         }
         
-        label {
+        .form-label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        input, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            color: #e93d5a;
+            font-weight: bold;
             font-size: 16px;
-            transition: border-color 0.3s;
         }
         
-        input:focus, textarea:focus {
-            border-color: #3498db;
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background-color: rgba(15, 25, 40, 0.8);
+            color: white;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
             outline: none;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            border-color: #e93d5a;
         }
         
-        textarea {
-            height: 120px;
-            resize: vertical;
-        }
-        
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        button {
-            padding: 14px 28px;
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #e93d5a;
+            color: white;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            background: #3498db;
-            color: white;
-            transition: all 0.3s;
-            flex: 1;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
         
-        button:hover {
-            background: #2980b9;
+        .login-btn:hover {
+            background-color: #d42a45;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
         }
         
-        .btn-secondary {
-            background: #95a5a6;
+        .admin-container {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
         
-        .btn-secondary:hover {
-            background: #7f8c8d;
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e93d5a;
         }
         
-        .scanner-container {
-            position: relative;
+        .admin-title {
+            color: #e93d5a;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background-color: #7f8fa6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background-color: #6a7a8c;
+        }
+        
+        .data-table {
             width: 100%;
-            height: 300px;
-            background: #000;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: rgba(15, 25, 40, 0.8);
             border-radius: 8px;
             overflow: hidden;
-            margin-bottom: 20px;
-            display: none;
         }
         
-        #scanner-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .data-table th, .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .scanner-overlay {
-            position: absolute;
+        .data-table th {
+            background-color: rgba(233, 61, 90, 0.2);
+            color: #e93d5a;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(233, 61, 90, 0.1);
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-btn {
+            background-color: #5cb85c;
+            color: white;
+        }
+        
+        .edit-btn:hover {
+            background-color: #4a9a4a;
+        }
+        
+        .delete-btn {
+            background-color: #d9534f;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c9302c;
+        }
+        
+        .edit-modal {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-        }
-        
-        .scanner-frame {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-        
-        .detected-qr-box {
-            position: absolute;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
         
-        .result {
-            margin-top: 30px;
+        .edit-form {
+            background-color: #0a121e;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #e93d5a;
+            position: relative;
+        }
+        
+        .edit-header {
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: #f8f9fa;
-            display: none;
-        }
-        
-        .result-header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            color: #2c3e50;
-        }
-        
-        .item {
-            margin-bottom: 15px;
+            border-bottom: 2px solid #e93d5a;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .label {
+        .edit-title {
+            color: #e93d5a;
+            font-size: 22px;
             font-weight: bold;
-            width: 100px;
-            color: #2c3e50;
         }
         
-        .value {
-            flex: 1;
-            color: #34495e;
+        .close-edit-btn {
+            background: none;
+            border: none;
+            color: #cccccc;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
         }
         
-        .error {
-            color: red;
-            margin-top: 15px;
-            text-align: center;
-            padding: 10px;
-            border-radius: 5px;
-            background: #ffeaea;
+        .close-edit-btn:hover {
+            color: #e93d5a;
         }
         
-        .success {
-            color: green;
-            margin-top: 15px;
-            text-align: center;
-            padding: 10px;
-            border-radius: 5px;
-            background: #eaffea;
+        .edit-body {
+            padding: 20px;
         }
         
-        .hidden {
-            display: none;
-        }
-        
-        .status-message {
-            text-align: center;
-            padding: 10px;
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
             margin-top: 10px;
-            border-radius: 5px;
         }
         
-        .library-status {
+        .save-btn:hover {
+            background-color: #4a9a4a;
+            transform: translateY(-2px);
+        }
+        
+        .no-data {
             text-align: center;
-            padding: 5px;
-            margin-top: 5px;
-            font-size: 14px;
-            color: #7f8c8d;
+            padding: 40px;
+            color: #cccccc;
+            font-size: 18px;
         }
         
+        .add-btn {
+            padding: 10px 20px;
+            background-color: #e93d5a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .add-btn:hover {
+            background-color: #d42a45;
+        }
+        
+        /* 响应式设计 */
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .content {
+            .login-container {
+                margin: 50px 15px;
                 padding: 20px;
             }
             
-            h1 {
-                font-size: 2rem;
+            .admin-container {
+                padding: 15px;
             }
             
-            .btn-group {
-                flex-direction: column;
+            .data-table th, .data-table td {
+                padding: 10px;
+                font-size: 14px;
             }
             
-            .scanner-container {
-                height: 250px;
-            }
-            
-            .scanner-frame {
-                width: 180px;
-                height: 180px;
+            .edit-form {
+                width: 95%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>二维码信息查看</h1>
-            <p class="subtitle">扫描二维码获取订单详情</p>
-        </header>
+    <!-- 登录页面 -->
+    <div class="login-container" id="loginContainer">
+        <h2 class="login-header">绝活联盟后台管理系统</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label" for="username">账号</label>
+                <input type="text" id="username" class="form-control" placeholder="请输入管理员账号" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="password">密码</label>
+                <input type="password" id="password" class="form-control" placeholder="请输入管理员密码" required>
+            </div>
+            
+            <button type="submit" class="login-btn">登录</button>
+        </form>
+    </div>
+
+    <!-- 后台管理页面 -->
+    <div class="admin-container" id="adminContainer">
+        <div class="admin-header">
+            <h2 class="admin-title">玩家数据管理</h2>
+            <button class="logout-btn" id="logoutBtn">退出登录</button>
+        </div>
         
-        <div class="content">
-            <div class="tabs">
-                <div class="tab active" data-tab="manual">手动输入</div>
-                <div class="tab" data-tab="scanner">扫码识别</div>
-            </div>
-            
-            <div id="manual-tab" class="tab-content">
-                <div class="form-group">
-                    <label for="qrcode">请输入二维码内容：</label>
-                    <textarea id="qrcode" placeholder="粘贴二维码内容..."></textarea>
-                </div>
-                
-                <div class="btn-group">
-                    <button id="decode-btn">解析二维码</button>
-                    <button id="clear-btn" class="btn-secondary">清空内容</button>
-                </div>
-            </div>
-            
-            <div id="scanner-tab" class="tab-content hidden">
-                <div class="scanner-container">
-                    <video id="scanner-video" playsinline></video>
-                    <div class="scanner-overlay">
-                        <div class="scanner-frame"></div>
-                        <div class="detected-qr-box" id="detected-qr-box"></div>
-                    </div>
-                </div>
-                
-                <div class="btn-group">
-                    <button id="start-camera">开始扫描</button>
-                    <button id="stop-camera" class="btn-secondary">停止扫描</button>
-                </div>
-                
-                <div id="scanner-status" class="status-message">点击"开始扫描"按钮启动摄像头</div>
-                <div id="library-status" class="library-status">QR码识别功能已就绪</div>
-            </div>
-            
-            <div id="result" class="result">
-                <div class="result-header">
-                    <h2>订单详情</h2>
-                </div>
-                <div class="item">
-                    <div class="label">产品:</div>
-                    <div class="value" id="product">-</div>
-                </div>
-                <div class="item">
-                    <div class="label">规格:</div>
-                    <div class="value" id="specification">-</div>
-                </div>
-                <div class="item">
-                    <div class="label">下单时间:</div>
-                    <div class="value" id="order-time">-</div>
-                </div>
-                <div class="item">
-                    <div class="label">打印时间:</div>
-                    <div class="value" id="print-time">-</div>
-                </div>
-                <div class="item">
-                    <div class="label">备注:</div>
-                    <div class="value" id="remark">-</div>
-                </div>
-            </div>
-            
-            <div id="message"></div>
+        <div style="margin-bottom: 20px; text-align: right;">
+            <button class="add-btn" id="addPlayerBtn">添加玩家</button>
+        </div>
+        
+        <table class="data-table" id="playersTable">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>玩家ID</th>
+                    <th>段位</th>
+                    <th>等级</th>
+                    <th>擅长特工</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="playersTableBody">
+                <!-- 数据将通过JavaScript动态填充 -->
+            </tbody>
+        </table>
+        
+        <div id="noDataMessage" class="no-data">
+            暂无玩家数据
         </div>
     </div>
 
-    <!-- 重要：引入真正的jsQR库 -->
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-    
+    <!-- 编辑弹窗 -->
+    <div class="edit-modal" id="editModal">
+        <div class="edit-form">
+            <div class="edit-header">
+                <h2 class="edit-title">编辑玩家信息</h2>
+                <button class="close-edit-btn" id="closeEditModalBtn">&times;</button>
+            </div>
+            <div class="edit-body">
+                <form id="editForm">
+                    <input type="hidden" id="editId">
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="editPlayerId">玩家ID</label>
+                        <input type="text" id="editPlayerId" class="form-control" placeholder="请输入玩家游戏ID" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="editPlayerRank">段位</label>
+                        <input type="text" id="editPlayerRank" class="form-control" placeholder="请输入当前段位">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="editPlayerLevel">等级</label>
+                        <select id="editPlayerLevel" class="form-control" required>
+                            <option value="">请选择等级</option>
+                            <option value="S">S级：职业候选</option>
+                            <option value="A">A级：通天代</option>
+                            <option value="B">B级：专业老手</option>
+                            <option value="C">C级：靠谱哥/靠谱姐</option>
+                            <option value="D">D级：黑铁战神</option>
+                            <option value="E">E级：人机宝宝</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">擅长特工（可多选）</label>
+                        <div id="editAgentCheckboxes">
+                            <!-- 特工复选框将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="editPlayerStrengths">优点</label>
+                        <textarea id="editPlayerStrengths" class="form-control" rows="3" placeholder="请输入玩家的优点"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="editPlayerWeaknesses">弱点</label>
+                        <textarea id="editPlayerWeaknesses" class="form-control" rows="3" placeholder="请输入玩家的弱点"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="editPlayerNotes">备注</label>
+                        <textarea id="editPlayerNotes" class="form-control" rows="3" placeholder="请输入其他备注信息"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="save-btn">保存修改</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 获取所有DOM元素
-            const video = document.getElementById('scanner-video');
-            const startButton = document.getElementById('start-camera');
-            const stopButton = document.getElementById('stop-camera');
-            const decodeButton = document.getElementById('decode-btn');
-            const clearButton = document.getElementById('clear-btn');
-            const qrcodeTextarea = document.getElementById('qrcode');
-            const statusDiv = document.getElementById('scanner-status');
-            const libraryStatusDiv = document.getElementById('library-status');
+        // 默认账号密码
+        const ADMIN_USERNAME = 'admin';
+        const ADMIN_PASSWORD = 'juehuolianmeng2025';
+        
+        // 获取DOM元素
+        const loginContainer = document.getElementById('loginContainer');
+        const adminContainer = document.getElementById('adminContainer');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const playersTableBody = document.getElementById('playersTableBody');
+        const noDataMessage = document.getElementById('noDataMessage');
+        const addPlayerBtn = document.getElementById('addPlayerBtn');
+        const editModal = document.getElementById('editModal');
+        const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+        const editForm = document.getElementById('editForm');
+        
+        // 玩家数据数组（模拟数据库）
+        let playersData = JSON.parse(localStorage.getItem('playersData')) || [];
+        
+        // 登录表单提交
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            let isScanning = false;
-            let stream = null;
-            let scanInterval = null;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             
-            // 创建canvas用于处理图像
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d', { 
-                willReadFrequently: true  // 根据HTML规范优化getImageData性能
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                // 登录成功
+                loginContainer.style.display = 'none';
+                adminContainer.style.display = 'block';
+                renderPlayersTable();
+            } else {
+                alert('账号或密码错误！');
+            }
+        });
+        
+        // 退出登录
+        logoutBtn.addEventListener('click', function() {
+            adminContainer.style.display = 'none';
+            loginContainer.style.display = 'block';
+            document.getElementById('loginForm').reset();
+        });
+        
+        // 渲染玩家数据表格
+        function renderPlayersTable() {
+            if (playersData.length === 0) {
+                playersTableBody.innerHTML = '';
+                noDataMessage.style.display = 'block';
+                return;
+            }
+            
+            noDataMessage.style.display = 'none';
+            let html = '';
+            
+            playersData.forEach((player, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${player.playerId}</td>
+                        <td>${player.playerRank || '未填写'}</td>
+                        <td>${player.playerLevel}</td>
+                        <td>${player.selectedAgents && player.selectedAgents.length > 0 ? player.selectedAgents.join('、') : '未选择'}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editPlayer(${player.id})">编辑</button>
+                            <button class="action-btn delete-btn" onclick="deletePlayer(${player.id})">删除</button>
+                        </td>
+                    </tr>
+                `;
             });
             
-            // Tab切换功能
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
+            playersTableBody.innerHTML = html;
+        }
+        
+        // 添加玩家按钮
+        addPlayerBtn.addEventListener('click', function() {
+            // 清空表单
+            document.getElementById('editId').value = '';
+            document.getElementById('editForm').reset();
             
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    // 移除所有活动状态
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabContents.forEach(tc => tc.classList.add('hidden'));
-                    
-                    // 添加当前活动状态
-                    tab.classList.add('active');
-                    const tabId = tab.getAttribute('data-tab');
-                    document.getElementById(`${tabId}-tab`).classList.remove('hidden');
-                    
-                    // 切换到扫描标签时显示状态
-                    if (tabId === 'scanner') {
-                        showScannerStatus('点击"开始扫描"启动摄像头', 'success');
+            // 生成特工复选框
+            generateAgentCheckboxes();
+            
+            // 显示编辑弹窗
+            editModal.style.display = 'flex';
+        });
+        
+        // 关闭编辑弹窗
+        closeEditModalBtn.addEventListener('click', function() {
+            editModal.style.display = 'none';
+        });
+        
+        // 点击遮罩层关闭弹窗
+        editModal.addEventListener('click', function(e) {
+            if (e.target === editModal) {
+                editModal.style.display = 'none';
+            }
+        });
+        
+        // 生成特工复选框
+        function generateAgentCheckboxes() {
+            const editAgentCheckboxes = document.getElementById('editAgentCheckboxes');
+            const agents = [
+                '婕风（Jett）', '雷兹（Raze）', '不死鸟（Phoenix）', '芮娜（Reyna）', '夜露（Yoru）',
+                '霓虹（Neon）', '蝰蛇（Viper）', '幽影（Omen）', '炼狱（Brimstone）', '星礈（Astra）',
+                '海神（Skye）', '零（Cypher）', '奇乐（Killjoy）', '贤者（Sage）', '铁臂（Breach）',
+                '猎枭（Sova）', 'KAY/O', '盖可（Gekko）', '斯凯（Skye）', '维斯（Vyse）',
+                '壹决（Tejo）', '尚勃勒（Chamber）', '黑梦（Fade）', '幻棱（Harbor）'
+            ];
+            
+            let html = '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">';
+            
+            agents.forEach(agent => {
+                const id = 'edit_' + agent.replace(/[（）()]/g, '_').replace(/\s+/g, '_');
+                html += `
+                    <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                        <input type="checkbox" id="${id}" name="edit_agents" value="${agent}" style="margin-right: 8px; width: 18px; height: 18px; accent-color: #e93d5a;">
+                        <label for="${id}" style="font-size: 14px; color: #cccccc;">${agent}</label>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            editAgentCheckboxes.innerHTML = html;
+        }
+        
+        // 编辑玩家
+        window.editPlayer = function(id) {
+            const player = playersData.find(p => p.id === id);
+            if (!player) return;
+            
+            // 填充表单数据
+            document.getElementById('editId').value = player.id;
+            document.getElementById('editPlayerId').value = player.playerId;
+            document.getElementById('editPlayerRank').value = player.playerRank || '';
+            document.getElementById('editPlayerLevel').value = player.playerLevel;
+            document.getElementById('editPlayerStrengths').value = player.playerStrengths || '';
+            document.getElementById('editPlayerWeaknesses').value = player.playerWeaknesses || '';
+            document.getElementById('editPlayerNotes').value = player.playerNotes || '';
+            
+            // 生成特工复选框
+            generateAgentCheckboxes();
+            
+            // 选中已选择的特工
+            if (player.selectedAgents && player.selectedAgents.length > 0) {
+                const checkboxes = document.querySelectorAll('input[name="edit_agents"]');
+                checkboxes.forEach(checkbox => {
+                    if (player.selectedAgents.includes(checkbox.value)) {
+                        checkbox.checked = true;
                     }
                 });
-            });
+            }
             
-            // 手动解析按钮事件
-            decodeButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                decodeQRCode();
-            });
+            // 显示编辑弹窗
+            editModal.style.display = 'flex';
+        }
+        
+        // 删除玩家
+        window.deletePlayer = function(id) {
+            if (confirm('确定要删除该玩家数据吗？')) {
+                playersData = playersData.filter(player => player.id !== id);
+                localStorage.setItem('playersData', JSON.stringify(playersData));
+                renderPlayersTable();
+            }
+        }
+        
+        // 编辑表单提交
+        editForm.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // 清空按钮事件
-            clearButton.addEventListener('click', function() {
-                qrcodeTextarea.value = '';
-                document.getElementById('result').style.display = 'none';
-                document.getElementById('message').innerHTML = '';
-            });
+            const id = document.getElementById('editId').value;
+            const playerId = document.getElementById('editPlayerId').value;
+            const playerRank = document.getElementById('editPlayerRank').value;
+            const playerLevel = document.getElementById('editPlayerLevel').value;
             
-            // 回车键触发解析
-            qrcodeTextarea.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    decodeQRCode();
+            // 获取选中的特工
+            const agentCheckboxes = document.querySelectorAll('input[name="edit_agents"]:checked');
+            const selectedAgents = Array.from(agentCheckboxes).map(cb => cb.value);
+            
+            const playerStrengths = document.getElementById('editPlayerStrengths').value;
+            const playerWeaknesses = document.getElementById('editPlayerWeaknesses').value;
+            const playerNotes = document.getElementById('editPlayerNotes').value;
+            
+            // 验证必填字段
+            if (!playerId || !playerLevel) {
+                alert('玩家ID和等级为必填项！');
+                return;
+            }
+            
+            if (id) {
+                // 编辑现有玩家
+                const index = playersData.findIndex(player => player.id === parseInt(id));
+                if (index !== -1) {
+                    playersData[index] = {
+                        id: parseInt(id),
+                        playerId,
+                        playerRank,
+                        playerLevel,
+                        selectedAgents,
+                        playerStrengths,
+                        playerWeaknesses,
+                        playerNotes,
+                        updatedAt: new Date().toISOString()
+                    };
                 }
-            });
-            
-            // 摄像头相关事件监听
-            startButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                startScanner();
-            });
-            
-            stopButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                stopScanner();
-            });
-            
-            // 页面卸载时停止摄像头
-            window.addEventListener('beforeunload', function() {
-                stopScanner();
-            });
-            
-            // 修复后的摄像头访问和QR码扫描
-            function startScanner() {
-                if (isScanning) {
-                    return;
-                }
-                
-                // 显示扫描容器
-                document.querySelector('.scanner-container').style.display = 'block';
-                showScannerStatus('请求摄像头权限...', 'success');
-                
-                // 使用更灵活的约束条件
-                const constraints = {
-                    video: {
-                        facingMode: "environment",  // 优先使用后置摄像头
-                        width: { min: 640, ideal: 1280, max: 1920 },
-                        height: { min: 480, ideal: 720, max: 1080 }
-                    }
+            } else {
+                // 添加新玩家
+                const newPlayer = {
+                    id: playersData.length > 0 ? Math.max(...playersData.map(p => p.id)) + 1 : 1,
+                    playerId,
+                    playerRank,
+                    playerLevel,
+                    selectedAgents,
+                    playerStrengths,
+                    playerWeaknesses,
+                    playerNotes,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
                 };
-                
-                // 请求摄像头权限
-                navigator.mediaDevices.getUserMedia(constraints)
-                    .then(function(mediaStream) {
-                        stream = mediaStream;
-                        video.srcObject = stream;
-                        
-                        // 确保视频加载完成后再开始扫描
-                        video.onloadedmetadata = function() {
-                            video.play();
-                            
-                            // 设置canvas尺寸与视频相同
-                            canvas.width = video.videoWidth || 640;
-                            canvas.height = video.videoHeight || 480;
-                            
-                            // 等待视频完全开始播放再启动扫描
-                            video.onplaying = function() {
-                                isScanning = true;
-                                showScannerStatus('摄像头已启动，将二维码对准扫描框', 'success');
-                                
-                                // 使用requestAnimationFrame而不是setInterval以获得更好的性能
-                                function scanFrame() {
-                                    if (!isScanning) return;
-                                    
-                                    try {
-                                        // 绘制视频帧到canvas
-                                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                        
-                                        // 尝试解码QR码 - 使用真正的jsQR库
-                                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                                        const code = jsQR(imageData.data, imageData.width, imageData.height);
-                                        
-                                        if (code) {
-                                            console.log('识别成功:', code.data);
-                                            document.getElementById('qrcode').value = code.data;
-                                            decodeQRCode();
-                                            stopScanner();
-                                            showScannerStatus('二维码识别成功！', 'success');
-                                        } else {
-                                            // 继续扫描
-                                            requestAnimationFrame(scanFrame);
-                                        }
-                                    } catch (e) {
-                                        console.error('扫描错误:', e);
-                                        // 继续扫描
-                                        requestAnimationFrame(scanFrame);
-                                    }
-                                }
-                                
-                                // 开始扫描循环
-                                requestAnimationFrame(scanFrame);
-                            };
-                        };
-                    })
-                    .catch(function(err) {
-                        console.error('无法访问摄像头:', err);
-                        
-                        // 处理OverconstrainedError - 尝试简化约束
-                        if (err.name === 'OverconstrainedError' || err.name === 'NotSupportedError' || err.name === 'ConstraintNotSatisfiedError') {
-                            showScannerStatus('尝试简化摄像头设置...', 'success');
-                            
-                            // 使用最基本的约束
-                            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                                .then(function(mediaStream) {
-                                    stream = mediaStream;
-                                    video.srcObject = stream;
-                                    
-                                    video.onloadedmetadata = function() {
-                                        video.play();
-                                        
-                                        canvas.width = video.videoWidth || 640;
-                                        canvas.height = video.videoHeight || 480;
-                                        
-                                        video.onplaying = function() {
-                                            isScanning = true;
-                                            showScannerStatus('摄像头已启动（简化设置）', 'success');
-                                            
-                                            function scanFrame() {
-                                                if (!isScanning) return;
-                                                
-                                                try {
-                                                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                                                    const code = jsQR(imageData.data, imageData.width, imageData.height);
-                                                    
-                                                    if (code) {
-                                                        document.getElementById('qrcode').value = code.data;
-                                                        decodeQRCode();
-                                                        stopScanner();
-                                                        showScannerStatus('二维码识别成功！', 'success');
-                                                    } else {
-                                                        requestAnimationFrame(scanFrame);
-                                                    }
-                                                } catch (e) {
-                                                    console.error('扫描错误:', e);
-                                                    requestAnimationFrame(scanFrame);
-                                                }
-                                            }
-                                            
-                                            requestAnimationFrame(scanFrame);
-                                        };
-                                    };
-                                })
-                                .catch(function(err) {
-                                    console.error('简化设置访问失败:', err);
-                                    showScannerStatus(`摄像头错误: ${err.message}`, 'error');
-                                    document.querySelector('.scanner-container').style.display = 'none';
-                                });
-                        } else {
-                            showScannerStatus(`摄像头错误: ${err.message}`, 'error');
-                            document.querySelector('.scanner-container').style.display = 'none';
-                        }
-                    });
+                playersData.push(newPlayer);
             }
             
-            function stopScanner() {
-                if (!isScanning) {
-                    return;
-                }
-                
-                isScanning = false;
-                
-                // 停止所有视频轨道
-                if (stream) {
-                    const tracks = stream.getTracks();
-                    tracks.forEach(track => track.stop());
-                    stream = null;
-                }
-                
-                // 重置视频元素
-                video.srcObject = null;
-                
-                document.querySelector('.scanner-container').style.display = 'none';
-                showScannerStatus('扫描已停止', 'success');
-            }
+            // 保存到本地存储
+            localStorage.setItem('playersData', JSON.stringify(playersData));
             
-            function decodeQRCode() {
-                const qrcodeInput = qrcodeTextarea.value.trim();
-                const resultDiv = document.getElementById('result');
-                const messageDiv = document.getElementById('message');
-                
-                if (!qrcodeInput) {
-                    showMessage('请输入二维码内容', 'error');
-                    resultDiv.style.display = 'none';
-                    return;
-                }
-                
-                try {
-                    // 尝试解析JSON数据
-                    let data;
-                    try {
-                        data = JSON.parse(qrcodeInput);
-                    } catch (e) {
-                        // 如果不是JSON，尝试作为普通文本处理
-                        data = {
-                            productName: qrcodeInput,
-                            specification: 'N/A',
-                            orderTime: new Date().toLocaleString(),
-                            printTime: new Date().toLocaleString(),
-                            remark: '非JSON格式内容'
-                        };
-                    }
-                    
-                    // 显示结果
-                    document.getElementById('product').textContent = data.productName || qrcodeInput;
-                    document.getElementById('specification').textContent = data.specification || '-';
-                    document.getElementById('order-time').textContent = data.orderTime || '-';
-                    document.getElementById('print-time').textContent = data.printTime || '-';
-                    document.getElementById('remark').textContent = data.remark || '-';
-                    
-                    resultDiv.style.display = 'block';
-                    showMessage('', ''); // 清空消息
-                } catch (e) {
-                    showMessage('二维码内容格式错误，请检查输入: ' + e.message, 'error');
-                    resultDiv.style.display = 'none';
-                }
-            }
+            // 重新渲染表格
+            renderPlayersTable();
             
-            function showMessage(text, type) {
-                const messageDiv = document.getElementById('message');
-                messageDiv.textContent = text;
-                messageDiv.className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
-            }
+            // 关闭弹窗
+            editModal.style.display = 'none';
             
-            function showScannerStatus(text, type) {
-                if (statusDiv) {
-                    statusDiv.textContent = text;
-                    statusDiv.className = 'status-message ' + 
-                        (type === 'error' ? 'error' : 
-                         type === 'success' ? 'success' : '');
-                }
-            }
-            
-            // 初始化完成
-            console.log("页面初始化完成，所有功能已准备就绪");
-            libraryStatusDiv.textContent = 'QR码识别功能已就绪';
-            libraryStatusDiv.style.color = 'green';
-            
-            // 检查是否在移动设备上
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                console.log("检测到移动设备，优化扫描设置");
-                // 可以在这里添加移动设备特定的优化
+            alert(id ? '玩家信息更新成功！' : '玩家信息添加成功！');
+        });
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 如果之前已经登录过，可以直接显示后台页面
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                loginContainer.style.display = 'none';
+                adminContainer.style.display = 'block';
+                renderPlayersTable();
             }
         });
     </script>
