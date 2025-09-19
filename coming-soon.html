@@ -1,1 +1,116 @@
-
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>敬请期待 - 绝活联盟</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0a121e;
+            color: #ffffff;
+            font-family: 'Microsoft YaHei', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .coming-soon-container {
+            max-width: 800px;
+            text-align: center;
+        }
+        .logo-img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .title {
+            font-size: 2.5rem;
+            color: #e93d5a;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .btn-back {
+            background-color: #e93d5a;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        .btn-back:hover {
+            background-color: #d42a45;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(233, 57, 89, 0.4);
+        }
+        .countdown {
+            margin: 30px 0;
+            font-size: 1.5rem;
+            color: #cccccc;
+        }
+        .social-icons {
+            margin-top: 30px;
+        }
+        .social-icons a {
+            color: #cccccc;
+            font-size: 2rem;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+        .social-icons a:hover {
+            color: #e93d5a;
+        }
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .btn-back {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="coming-soon-container">
+        <img src="https://hongjsf.cyou/%E9%A6%96%E9%A1%B5-%E9%BB%91-LOGO.jpg" alt="绝活联盟 LOGO" class="logo-img">
+        <h1 class="title">此功能正在全力开发中</h1>
+        <p class="subtitle">我们正在为这个分区打造最棒的体验！<br>请稍后再来，或返回官网探索其他精彩内容。</p>
+        <div class="countdown">
+            <i class="fas fa-clock"></i> 敬请期待...
+        </div>
+        <a href="index.html" class="btn-back">
+            <i class="fas fa-arrow-left"></i> 返回官网
+        </a>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-qq"></i></a>
+            <a href="#"><i class="fab fa-weixin"></i></a>
+            <a href="#"><i class="fab fa-bilibili"></i></a>
+        </div>
+    </div>
+</body>
+</html>
