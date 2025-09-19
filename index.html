@@ -1352,24 +1352,6 @@
             playerForm.reset();
         });
         
-        // 打开微信小程序
-        openWechatBtn.addEventListener('click', function() {
-            // 尝试跳转到微信小程序
-            const wechatUrl = "weixin://dl/business/?t=f5e3Ven0TbZ2AzF";
-            window.location.href = wechatUrl;
-            
-            // 如果在微信浏览器中，尝试使用微信JS-SDK
-            if (typeof WeixinJSBridge !== 'undefined') {
-                WeixinJSBridge.invoke('openWXApp', {
-                    'userName': 'gh_',
-                    'path': 'pages/index/index'
-                });
-            } else {
-                // 如果不在微信中，提示用户
-                alert('请在微信中打开此页面以跳转到小程序');
-            }
-        });
-        
         // 按ESC键关闭弹窗
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
@@ -1384,6 +1366,29 @@
                 }
             }
         });
+        
+        // 小程序跳转逻辑
+        openWechatBtn.addEventListener('click', function() {
+            // 检查是否在微信环境中
+            if (isInWeChat()) {
+                // 在微信中，使用JavaScript SDK
+                try {
+                    // 使用微信JS-SDK进行跳转
+                    window.location.href = "https://support.weixin.qq.com/deeplink/noaccess#wechat_redirect";
+                } catch (error) {
+                    alert('无法跳转到小程序，请确保您在微信中打开此页面！');
+                }
+            } else {
+                // 不在微信中，显示提示
+                alert('请在微信中打开此页面以跳转到小程序');
+            }
+        });
+        
+        // 检查是否在微信环境中
+        function isInWeChat() {
+            var ua = navigator.userAgent.toLowerCase();
+            return ua.indexOf('micromessenger') !== -1;
+        }
     </script>
 </body>
 </html>
