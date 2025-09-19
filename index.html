@@ -33,6 +33,30 @@
             margin-bottom: 20px;
             padding: 15px 0;
             border-bottom: 2px solid #e93d5a;
+            position: relative;
+        }
+        
+        /* 添加按钮样式 */
+        .add-player-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #e93d5a;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .add-player-btn:hover {
+            background-color: #d42a45;
+            transform: translateY(-2px);
         }
         
         h1 {
@@ -347,6 +371,207 @@
             font-size: 12px;
         }
         
+        /* 玩家信息录入弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal {
+            background-color: #0a121e;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #e93d5a;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 2px solid #e93d5a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            color: #e93d5a;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: #cccccc;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: #e93d5a;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e93d5a;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background-color: rgba(15, 25, 40, 0.8);
+            color: white;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #e93d5a;
+        }
+        
+        /* 多选特工样式 */
+        .agent-checkbox-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .agent-checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .agent-checkbox input[type="checkbox"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            accent-color: #e93d5a;
+        }
+        
+        .agent-checkbox label {
+            font-size: 14px;
+            color: #cccccc;
+        }
+        
+        /* 提交按钮样式 */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #e93d5a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #d42a45;
+            transform: translateY(-2px);
+        }
+        
+        /* 成功提示样式 */
+        .success-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #0a121e;
+            border-radius: 12px;
+            padding: 30px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #5cb85c;
+            z-index: 1001;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .success-title {
+            color: #5cb85c;
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .success-message {
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .success-subtext {
+            color: #cccccc;
+            font-size: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .success-btn {
+            padding: 12px 25px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .success-btn:hover {
+            background-color: #4a9a4a;
+        }
+        
         /* 小屏幕优化 - 480px以下 */
         @media (max-width: 480px) {
             h1 {
@@ -400,6 +625,17 @@
             .copyright {
                 font-size: 11px;
             }
+            
+            .add-player-btn {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .agent-checkbox-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         /* 电脑端样式 - 768px以上 */
@@ -418,6 +654,14 @@
             header {
                 margin-bottom: 30px;
                 padding: 20px 0;
+            }
+            
+            .add-player-btn {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                padding: 10px 20px;
+                font-size: 16px;
             }
             
             h1 {
@@ -626,6 +870,19 @@
             .copyright {
                 font-size: 14px;
             }
+            
+            /* 电脑端弹窗样式 */
+            .modal {
+                max-width: 600px;
+            }
+            
+            .agent-checkbox-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .form-control {
+                font-size: 16px;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -635,6 +892,9 @@
         <header>
             <h1>绝活联盟无畏契约玩家等级鉴定手册</h1>
             <p class="subtitle">SABCDE分级系统 | S为最强，E为最弱 | 主观OB判断标准</p>
+            <button class="add-player-btn" id="openModalBtn">
+                <i class="fas fa-plus"></i> 添加玩家
+            </button>
         </header>
 
         <div class="rating-container">
@@ -829,5 +1089,248 @@
             <p class="copyright">版权所有 © 2025 绝活联盟无畏契约玩家鉴定中心 | 最终解释权归绝活联盟所有</p>
         </div>
     </div>
+
+    <!-- 玩家信息录入弹窗 -->
+    <div class="modal-overlay" id="playerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">添加玩家信息</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="playerForm">
+                    <div class="form-group">
+                        <label class="form-label" for="playerId">玩家ID</label>
+                        <input type="text" id="playerId" class="form-control" placeholder="请输入玩家游戏ID" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="playerRank">段位</label>
+                        <input type="text" id="playerRank" class="form-control" placeholder="请输入当前段位">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="playerLevel">等级</label>
+                        <select id="playerLevel" class="form-control" required>
+                            <option value="">请选择等级</option>
+                            <option value="S">S级：职业候选</option>
+                            <option value="A">A级：通天代</option>
+                            <option value="B">B级：专业老手</option>
+                            <option value="C">C级：靠谱哥/靠谱姐</option>
+                            <option value="D">D级：黑铁战神</option>
+                            <option value="E">E级：人机宝宝</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">擅长特工（可多选）</label>
+                        <div class="agent-checkbox-container">
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_jett" name="agents" value="婕风（Jett）">
+                                <label for="agent_jett">婕风（Jett）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_raze" name="agents" value="雷兹（Raze）">
+                                <label for="agent_raze">雷兹（Raze）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_phoenix" name="agents" value="不死鸟（Phoenix）">
+                                <label for="agent_phoenix">不死鸟（Phoenix）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_reyna" name="agents" value="芮娜（Reyna）">
+                                <label for="agent_reyna">芮娜（Reyna）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_yoru" name="agents" value="夜露（Yoru）">
+                                <label for="agent_yoru">夜露（Yoru）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_neon" name="agents" value="霓虹（Neon）">
+                                <label for="agent_neon">霓虹（Neon）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_viper" name="agents" value="蝰蛇（Viper）">
+                                <label for="agent_viper">蝰蛇（Viper）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_omen" name="agents" value="幽影（Omen）">
+                                <label for="agent_omen">幽影（Omen）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_brimstone" name="agents" value="炼狱（Brimstone）">
+                                <label for="agent_brimstone">炼狱（Brimstone）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_astra" name="agents" value="星礈（Astra）">
+                                <label for="agent_astra">星礈（Astra）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_skye" name="agents" value="海神（Skye）">
+                                <label for="agent_skye">海神（Skye）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_cypher" name="agents" value="零（Cypher）">
+                                <label for="agent_cypher">零（Cypher）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_killjoy" name="agents" value="奇乐（Killjoy）">
+                                <label for="agent_killjoy">奇乐（Killjoy）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_sage" name="agents" value="贤者（Sage）">
+                                <label for="agent_sage">贤者（Sage）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_breach" name="agents" value="铁臂（Breach）">
+                                <label for="agent_breach">铁臂（Breach）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_sova" name="agents" value="猎枭（Sova）">
+                                <label for="agent_sova">猎枭（Sova）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_kayo" name="agents" value="KAY/O">
+                                <label for="agent_kayo">KAY/O</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_gekko" name="agents" value="盖可（Gekko）">
+                                <label for="agent_gekko">盖可（Gekko）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_skye2" name="agents" value="斯凯（Skye）">
+                                <label for="agent_skye2">斯凯（Skye）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_vyse" name="agents" value="维斯（Vyse）">
+                                <label for="agent_vyse">维斯（Vyse）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_tejo" name="agents" value="壹决（Tejo）">
+                                <label for="agent_tejo">壹决（Tejo）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_chamber" name="agents" value="尚勃勒（Chamber）">
+                                <label for="agent_chamber">尚勃勒（Chamber）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_fade" name="agents" value="黑梦（Fade）">
+                                <label for="agent_fade">黑梦（Fade）</label>
+                            </div>
+                            <div class="agent-checkbox">
+                                <input type="checkbox" id="agent_harbor" name="agents" value="幻棱（Harbor）">
+                                <label for="agent_harbor">幻棱（Harbor）</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="playerStrengths">优点</label>
+                        <textarea id="playerStrengths" class="form-control" rows="3" placeholder="请输入玩家的优点"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="playerWeaknesses">弱点</label>
+                        <textarea id="playerWeaknesses" class="form-control" rows="3" placeholder="请输入玩家的弱点"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="playerNotes">备注</label>
+                        <textarea id="playerNotes" class="form-control" rows="3" placeholder="请输入其他备注信息"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">提交信息</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 成功提示弹窗 -->
+    <div class="modal-overlay" id="successModal" style="display: none;">
+        <div class="success-modal">
+            <h2 class="success-title">提交成功！</h2>
+            <p class="success-message">玩家信息已保存</p>
+            <p class="success-subtext">（已保存本地，云端保存失败，原因：无储存）</p>
+            <button class="success-btn" id="closeSuccessBtn">确定</button>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+        const playerModal = document.getElementById('playerModal');
+        const successModal = document.getElementById('successModal');
+        const playerForm = document.getElementById('playerForm');
+        
+        // 打开玩家信息录入弹窗
+        openModalBtn.addEventListener('click', function() {
+            playerModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        });
+        
+        // 关闭玩家信息录入弹窗
+        closeModalBtn.addEventListener('click', function() {
+            playerModal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // 恢复背景滚动
+        });
+        
+        // 点击遮罩层关闭弹窗
+        playerModal.addEventListener('click', function(e) {
+            if (e.target === playerModal) {
+                playerModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // 关闭成功提示弹窗
+        closeSuccessBtn.addEventListener('click', function() {
+            successModal.style.display = 'none';
+            playerModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        // 提交表单
+        playerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const playerId = document.getElementById('playerId').value;
+            const playerRank = document.getElementById('playerRank').value;
+            const playerLevel = document.getElementById('playerLevel').value;
+            
+            // 获取选中的特工
+            const agentCheckboxes = document.querySelectorAll('input[name="agents"]:checked');
+            const selectedAgents = Array.from(agentCheckboxes).map(cb => cb.value);
+            
+            const playerStrengths = document.getElementById('playerStrengths').value;
+            const playerWeaknesses = document.getElementById('playerWeaknesses').value;
+            const playerNotes = document.getElementById('playerNotes').value;
+            
+            // 这里可以添加数据验证
+            
+            // 显示成功提示
+            successModal.style.display = 'flex';
+            
+            // 重置表单（可选）
+            // playerForm.reset();
+        });
+        
+        // 按ESC键关闭弹窗
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (playerModal.style.display === 'flex') {
+                    playerModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+                if (successModal.style.display === 'flex') {
+                    successModal.style.display = 'none';
+                    playerModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
