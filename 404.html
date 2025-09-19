@@ -1,1 +1,120 @@
-
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面未找到 - 404 - 绝活联盟</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0a121e;
+            color: #ffffff;
+            font-family: 'Microsoft YaHei', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .error-container {
+            max-width: 800px;
+            text-align: center;
+        }
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            color: #e93d5a;
+            margin: 0;
+            line-height: 1;
+        }
+        .error-message {
+            font-size: 2rem;
+            color: #cccccc;
+            margin: 20px 0;
+        }
+        .error-desc {
+            font-size: 1.2rem;
+            color: #999;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .btn-home {
+            background-color: #e93d5a;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 10px;
+        }
+        .btn-home:hover {
+            background-color: #d42a45;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(233, 57, 89, 0.4);
+        }
+        .btn-back {
+            background-color: transparent;
+            color: #cccccc;
+            border: 2px solid #cccccc;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 10px;
+        }
+        .btn-back:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #e93d5a;
+            border-color: #e93d5a;
+        }
+        .funny-quote {
+            margin: 30px 0;
+            font-style: italic;
+            color: #7f8fa6;
+            font-size: 1.1rem;
+        }
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 6rem;
+            }
+            .error-message {
+                font-size: 1.5rem;
+            }
+            .btn-home, .btn-back {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-message">页面未找到</h2>
+        <p class="error-desc">您要找的页面可能已被移除、更名，或者暂时不可用。<br>别担心，这在绝活联盟的地盘上时有发生！</p>
+        <div class="funny-quote">
+            <i class="fas fa-frown"></i> “不是你的枪法问题，是地图加载错了！”
+        </div>
+        <a href="index.html" class="btn-home">
+            <i class="fas fa-home"></i> 返回首页
+        </a>
+        <a href="javascript:history.back()" class="btn-back">
+            <i class="fas fa-arrow-left"></i> 返回上一页
+        </a>
+    </div>
+</body>
+</html>
