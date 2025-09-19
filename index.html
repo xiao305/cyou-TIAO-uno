@@ -52,10 +52,35 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            z-index: 10;
         }
         
         .add-player-btn:hover {
             background-color: #d42a45;
+            transform: translateY(-2px);
+        }
+        
+        /* 小程序按钮样式 */
+        .wechat-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: #07c160;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+        }
+        
+        .wechat-btn:hover {
+            background-color: #06a852;
             transform: translateY(-2px);
         }
         
@@ -626,9 +651,8 @@
                 font-size: 11px;
             }
             
-            .add-player-btn {
+            .add-player-btn, .wechat-btn {
                 top: 10px;
-                right: 10px;
                 padding: 6px 12px;
                 font-size: 12px;
             }
@@ -656,12 +680,19 @@
                 padding: 20px 0;
             }
             
-            .add-player-btn {
+            .add-player-btn, .wechat-btn {
                 position: absolute;
                 top: 20px;
-                right: 20px;
                 padding: 10px 20px;
                 font-size: 16px;
+            }
+            
+            .wechat-btn {
+                left: 20px;
+            }
+            
+            .add-player-btn {
+                right: 20px;
             }
             
             h1 {
@@ -892,6 +923,9 @@
         <header>
             <h1>绝活联盟无畏契约玩家等级鉴定手册</h1>
             <p class="subtitle">SABCDE分级系统 | S为最强，E为最弱 | 主观OB判断标准</p>
+            <button class="wechat-btn" id="openWechatBtn">
+                <i class="fab fa-weixin"></i> 数据收集
+            </button>
             <button class="add-player-btn" id="openModalBtn">
                 <i class="fas fa-plus"></i> 添加玩家
             </button>
@@ -1263,6 +1297,7 @@
         const playerModal = document.getElementById('playerModal');
         const successModal = document.getElementById('successModal');
         const playerForm = document.getElementById('playerForm');
+        const openWechatBtn = document.getElementById('openWechatBtn');
         
         // 打开玩家信息录入弹窗
         openModalBtn.addEventListener('click', function() {
@@ -1313,8 +1348,26 @@
             // 显示成功提示
             successModal.style.display = 'flex';
             
-            // 重置表单（可选）
-            // playerForm.reset();
+            // 重置表单
+            playerForm.reset();
+        });
+        
+        // 打开微信小程序
+        openWechatBtn.addEventListener('click', function() {
+            // 尝试跳转到微信小程序
+            const wechatUrl = "weixin://dl/business/?t=f5e3Ven0TbZ2AzF";
+            window.location.href = wechatUrl;
+            
+            // 如果在微信浏览器中，尝试使用微信JS-SDK
+            if (typeof WeixinJSBridge !== 'undefined') {
+                WeixinJSBridge.invoke('openWXApp', {
+                    'userName': 'gh_',
+                    'path': 'pages/index/index'
+                });
+            } else {
+                // 如果不在微信中，提示用户
+                alert('请在微信中打开此页面以跳转到小程序');
+            }
         });
         
         // 按ESC键关闭弹窗
