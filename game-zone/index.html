@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏分区 | 绝活联盟</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0a121e;
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        .container-custom {
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* 导航栏样式 */
+        .navbar-custom {
+            background-color: rgba(10, 18, 30, 0.95);
+            border-bottom: 2px solid #e93d5a;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #e93d5a !important;
+        }
+        .nav-link {
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #e93d5a !important;
+        }
+        /* 页面标题 */
+        .page-header {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px;
+        }
+        .page-title {
+            color: #e93d5a;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+        .page-subtitle {
+            color: #cccccc;
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        /* 分类区域 */
+        .category-section {
+            margin-bottom: 60px;
+        }
+        .category-title {
+            color: #e93d5a;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e93d5a;
+        }
+        /* 游戏网格 */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .game-card {
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: #e93d5a;
+        }
+        .game-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 3px solid #e93d5a;
+        }
+        .game-content {
+            padding: 25px;
+            text-align: center;
+        }
+        .game-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e93d5a;
+            margin-bottom: 15px;
+        }
+        .game-desc {
+            color: #cccccc;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        .btn-game {
+            background-color: #e93d5a;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-game:hover {
+            background-color: #d42a45;
+            transform: scale(1.05);
+        }
+        /* 页脚 */
+        .footer-custom {
+            text-align: center;
+            margin-top: 60px;
+            padding: 25px;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            border: 2px solid rgba(233, 57, 89, 0.3);
+        }
+        .footer-title-custom {
+            color: #e93d5a;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .copyright-custom {
+            color: #cccccc;
+            font-size: 14px;
+        }
+        /* 面包屑导航 */
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        .breadcrumb-item a {
+            color: #e93d5a;
+            text-decoration: none;
+        }
+        .breadcrumb-item.active {
+            color: #cccccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container container-custom">
+        <!-- 导航栏 -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html"><i class="fas fa-shield-alt"></i> 绝活联盟</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="game-zone/index.html">游戏分区</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.html">关于我们</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="join.html">如何加入</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 面包屑导航 -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">首页</a></li>
+                <li class="breadcrumb-item active">游戏分区</li>
+            </ol>
+        </nav>
+
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <h1 class="page-title">游戏分区</h1>
+            <p class="page-subtitle">选择您感兴趣的游戏，加入对应的绝活联盟社区，体验纯粹、绿色、友好的游戏环境</p>
+        </div>
+
+        <!-- 端游分区 -->
+        <section class="category-section">
+            <h2 class="category-title"><i class="fas fa-desktop"></i> 端游专区</h2>
+            <div class="games-grid">
+                <!-- 无畏契约 -->
+                <a href="game-zone/pc/valorant/index.html" class="game-card">
+                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="无畏契约" class="game-img">
+                    <div class="game-content">
+                        <h3 class="game-name">无畏契约</h3>
+                        <p class="game-desc">SABCDE分级系统，主观OB判断标准，快速鉴定队友水平。</p>
+                        <button class="btn-game">进入专区</button>
+                    </div>
+                </a>
+                <!-- CS2 -->
+                <a href="game-zone/pc/cs2/index.html" class="game-card">
+                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="CS2" class="game-img">
+                    <div class="game-content">
+                        <h3 class="game-name">CS2</h3>
+                        <p class="game-desc">专属的玩家鉴定与社区活动即将上线，敬请期待！</p>
+                        <button class="btn-game">进入专区</button>
+                    </div>
+                </a>
+                <!-- 永劫无间 -->
+                <a href="game-zone/pc/naraka/index.html" class="game-card">
+                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="永劫无间" class="game-img">
+                    <div class="game-content">
+                        <h3 class="game-name">永劫无间</h3>
+                        <p class="game-desc">武学流派鉴定与连招评级手册，即将震撼发布！</p>
+                        <button class="btn-game">进入专区</button>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 手游分区 -->
+        <section class="category-section">
+            <h2 class="category-title"><i class="fas fa-mobile-alt"></i> 手游专区</h2>
+            <div class="games-grid">
+                <!-- 王者荣耀 -->
+                <a href="game-zone/mobile/honor-of-kings/index.html" class="game-card">
+                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="王者荣耀" class="game-img">
+                    <div class="game-content">
+                        <h3 class="game-name">王者荣耀</h3>
+                        <p class="game-desc">英雄熟练度评级系统，段位保护机制，正在开发中！</p>
+                        <button class="btn-game">进入专区</button>
+                    </div>
+                </a>
+                <!-- 和平精英 -->
+                <a href="game-zone/mobile/pubg-mobile/index.html" class="game-card">
+                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="和平精英" class="game-img">
+                    <div class="game-content">
+                        <h3 class="game-name">和平精英</h3>
+                        <p class="game-desc">战术配合评级与枪法鉴定系统，即将上线！</p>
+                        <button class="btn-game">进入专区</button>
+                    </div>
+                </a>
+                <!-- 原神 -->
+                <a href="game-zone/mobile/genshin-impact/index.html" class="game-card">
+                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="原神" class="game-img">
+                    <div class="game-content">
+                        <h3 class="game-name">原神</h3>
+                        <p class="game-desc">元素反应精通与角色培养指南，筹备中！</p>
+                        <button class="btn-game">进入专区</button>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer-custom">
+            <h3 class="footer-title-custom">绝活联盟审核组 荣誉出品</h3>
+            <p class="copyright-custom">版权所有 © 2025 绝活联盟 | 最终解释权归绝活联盟所有</p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
