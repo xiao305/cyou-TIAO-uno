@@ -473,7 +473,8 @@
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#"><i class="fas fa-shield-alt"></i> 绝活联盟</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
@@ -624,19 +625,25 @@
     <script>
         // 修复导航栏折叠功能
         document.addEventListener('DOMContentLoaded', function() {
-            // 确保导航栏切换功能正常
+            // 获取导航栏元素
             const navbarToggler = document.querySelector('.navbar-toggler');
-            const navbarNav = document.querySelector('.navbar-collapse');
+            const navbarCollapse = document.querySelector('.navbar-collapse');
             
-            // 修复折叠按钮功能
-            if (navbarToggler && navbarNav) {
-                navbarToggler.addEventListener('click', function() {
-                    // 切换显示/隐藏
-                    navbarNav.classList.toggle('show');
-                    
-                    // 更新aria-expanded属性
-                    const isExpanded = navbarToggler.getAttribute('aria-expanded') === 'true';
-                    navbarToggler.setAttribute('aria-expanded', !isExpanded);
+            // 修复折叠按钮功能 - 使用Bootstrap原生方法
+            if (navbarToggler && navbarCollapse) {
+                // 移除之前可能存在的任何手动事件监听器
+                navbarToggler.removeEventListener('click', () => {});
+                
+                // 添加点击外部区域关闭菜单的功能
+                document.addEventListener('click', function(event) {
+                    const isClickInsideNavbar = event.target.closest('.navbar');
+                    if (!isClickInsideNavbar && window.innerWidth < 992) {
+                        // 如果点击了导航栏外部，且是移动视图，则关闭菜单
+                        const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                            toggle: false
+                        });
+                        bsCollapse.hide();
+                    }
                 });
             }
             
@@ -644,8 +651,10 @@
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', function() {
                     if (window.innerWidth < 992) {
-                        navbarNav.classList.remove('show');
-                        navbarToggler.setAttribute('aria-expanded', 'false');
+                        const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                            toggle: false
+                        });
+                        bsCollapse.hide();
                     }
                 });
             });
