@@ -375,6 +375,18 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
         }
+        /* 电脑端一行显示3个游戏卡片 */
+        @media (min-width: 992px) {
+            .games-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        /* 手机端一行显示1个游戏卡片 */
+        @media (max-width: 991px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
         .game-card {
             background-color: rgba(20, 30, 48, 0.9);
             border-radius: 15px;
@@ -428,6 +440,66 @@
             background-color: #d42a45;
             transform: scale(1.05);
             text-decoration: none !important; /* 移除悬停下划线 */
+        }
+        /* 指引卡片样式 - 占据3个卡片位置 */
+        .guide-card {
+            grid-column: span 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #e93d5a 0%, #d42a45 100%);
+            text-align: center;
+            padding: 40px 20px;
+        }
+        @media (min-width: 992px) {
+            .guide-card {
+                grid-column: span 3;
+                flex-direction: row;
+                text-align: left;
+                padding: 60px 40px;
+            }
+        }
+        .guide-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        @media (min-width: 992px) {
+            .guide-icon {
+                font-size: 5rem;
+                margin-bottom: 0;
+                margin-right: 30px;
+            }
+        }
+        .guide-content {
+            max-width: 600px;
+        }
+        .guide-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: white;
+            font-weight: bold;
+        }
+        .guide-text {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .btn-guide {
+            background-color: white;
+            color: #e93d5a;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        .btn-guide:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         /* 保留原有的页脚样式 */
         .footer-custom {
@@ -543,7 +615,7 @@
                         <button class="btn-game">立即查看</button>
                     </div>
                 </a>
-                <!-- 预留分区1 -->
+                <!-- CS2 -->
                 <a href="coming-soon.html" class="game-card fade-in delay-1">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="CS2" class="game-img">
                     <div class="game-content">
@@ -552,7 +624,7 @@
                         <button class="btn-game">敬请期待</button>
                     </div>
                 </a>
-                <!-- 预留分区2 -->
+                <!-- APEX英雄 -->
                 <a href="coming-soon.html" class="game-card fade-in delay-2">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="APEX英雄" class="game-img">
                     <div class="game-content">
@@ -561,13 +633,15 @@
                         <button class="btn-game">敬请期待</button>
                     </div>
                 </a>
-                <!-- 预留分区3 -->
-                <a href="coming-soon.html" class="game-card fade-in delay-3">
-                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="永劫无间" class="game-img">
-                    <div class="game-content">
-                        <h3 class="game-name">永劫无间</h3>
-                        <p class="game-desc">武学流派鉴定与连招评级手册，即将震撼发布！</p>
-                        <button class="btn-game">敬请期待</button>
+                <!-- 指引卡片 - 占据3个位置 -->
+                <a href="game-zone/index.html" class="game-card guide-card fade-in delay-3">
+                    <div class="guide-icon">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="guide-content">
+                        <h3 class="guide-title">探索更多游戏分区</h3>
+                        <p class="guide-text">我们持续扩展更多游戏分区，为您提供专属的绝活联盟社区环境</p>
+                        <button class="btn-guide">查看所有游戏</button>
                     </div>
                 </a>
             </div>
