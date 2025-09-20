@@ -24,18 +24,19 @@
             box-sizing: border-box;
         }
         .coming-soon-container {
-            max-width: 600px;
+            max-width: 800px;
             text-align: center;
         }
         .logo-img {
-            width: 250px;           /* 缩小到 250px，更紧凑 */
+            width: 250px;         /* 调整为更小的尺寸 */
             max-width: 100%;
             height: auto;
             margin-bottom: 30px;
             border-radius: 10px;
+            /* 删除了阴影效果 */
+            /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); */
             border: none !important;
             object-fit: contain;
-            /* 删除了 box-shadow 阴影 */
         }
         .title {
             font-size: 2.5rem;
@@ -95,7 +96,7 @@
                 font-size: 1rem;
             }
             .logo-img {
-                width: 200px; /* 移动端进一步缩小 */
+                width: 200px;  /* 移动端进一步缩小 */
             }
         }
     </style>
