@@ -28,30 +28,72 @@
                 padding: 20px;
             }
         }
-        /* 新增：导航栏样式 */
+        /* 修复导航栏样式 */
         .navbar-custom {
-            background-color: rgba(10, 18, 30, 0.9);
+            background-color: rgba(10, 18, 30, 0.95) !important;
             border-bottom: 2px solid #e93d5a;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
+            padding: 0.5rem 1rem;
         }
         .navbar-brand {
             font-weight: bold;
             font-size: 1.5rem;
             color: #e93d5a !important;
+            display: flex;
+            align-items: center;
+        }
+        .navbar-brand i {
+            margin-right: 10px;
         }
         .nav-link {
             color: white !important;
             transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            font-size: 1.1rem;
+            position: relative;
         }
         .nav-link:hover {
             color: #e93d5a !important;
         }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: #e93d5a;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        .nav-link.active {
+            color: #e93d5a !important;
+        }
+        .nav-link.active::after {
+            width: 80%;
+        }
+        /* 确保导航栏在中等及以上屏幕水平显示 */
+        @media (min-width: 992px) {
+            .navbar-nav {
+                display: flex;
+                flex-direction: row !important;
+            }
+            .navbar-collapse {
+                display: flex !important;
+                flex-basis: auto;
+                flex-grow: 0;
+            }
+        }
         /* 新增：英雄区域样式 */
         .hero-section {
-            background-image: url('https://hongjsf.cyou/assets/images/LOGO-1.jpg'); /* 使用您视频中的宣传图作为背景 */
+            background: linear-gradient(rgba(10, 18, 30, 0.8), rgba(10, 18, 30, 0.8)), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');
             background-size: cover;
             background-position: center;
             height: 80vh;
@@ -61,15 +103,9 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-        }
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1;
+            margin-top: 0;
+            border-radius: 10px;
+            margin-bottom: 2rem;
         }
         .hero-content {
             position: relative;
@@ -79,12 +115,18 @@
             padding: 20px;
         }
         .hero-title {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            font-weight: 700;
+        }
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
         }
         .hero-subtitle {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin-bottom: 30px;
             text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
         }
@@ -96,22 +138,28 @@
             font-size: 1.1rem;
             border-radius: 50px;
             transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(233, 61, 90, 0.4);
         }
         .btn-hero:hover {
             background-color: #d42a45;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(233, 61, 90, 0.6);
         }
         /* 新增：特色区域样式 */
         .feature-section {
             padding: 60px 0;
             background-color: rgba(15, 25, 40, 0.8);
             border-top: 2px solid #e93d5a;
+            border-radius: 10px;
+            margin-bottom: 2rem;
         }
         .feature-title {
             text-align: center;
             margin-bottom: 40px;
             color: #e93d5a;
             font-size: 2.5rem;
+            font-weight: 700;
         }
         .feature-grid {
             display: grid;
@@ -119,18 +167,18 @@
             gap: 30px;
         }
         .feature-card {
-            background-color: rgba(15, 25, 40, 0.8);
+            background-color: rgba(20, 30, 48, 0.9);
             border-radius: 10px;
-            padding: 25px;
+            padding: 30px;
             border: 2px solid transparent;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             text-align: center;
             cursor: pointer;
         }
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             border-color: #e93d5a;
         }
         .feature-icon {
@@ -142,6 +190,7 @@
             font-size: 1.5rem;
             margin-bottom: 15px;
             color: #e93d5a;
+            font-weight: 600;
         }
         .feature-text {
             color: #cccccc;
@@ -152,20 +201,29 @@
             padding: 60px 0;
             background-color: rgba(15, 25, 40, 0.8);
             border-top: 2px solid #e93d5a;
+            border-radius: 10px;
+            margin-bottom: 2rem;
         }
         .mission-title {
             text-align: center;
             margin-bottom: 40px;
             color: #e93d5a;
             font-size: 2.5rem;
+            font-weight: 700;
         }
         .mission-item {
             margin-bottom: 40px;
-            padding: 20px;
-            background-color: rgba(15, 25, 40, 0.8);
+            padding: 30px;
+            background-color: rgba(20, 30, 48, 0.9);
             border-radius: 10px;
             border: 2px solid rgba(233, 57, 89, 0.3);
             position: relative;
+            transition: all 0.3s ease;
+        }
+        .mission-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border-color: #e93d5a;
         }
         .mission-icon {
             font-size: 3rem;
@@ -176,6 +234,7 @@
             font-size: 1.8rem;
             margin-bottom: 15px;
             color: #e93d5a;
+            font-weight: 600;
         }
         .mission-body {
             color: #cccccc;
@@ -186,12 +245,15 @@
             padding: 60px 0;
             background-color: rgba(15, 25, 40, 0.8);
             border-top: 2px solid #e93d5a;
+            border-radius: 10px;
+            margin-bottom: 2rem;
         }
         .join-title {
             text-align: center;
             margin-bottom: 40px;
             color: #e93d5a;
             font-size: 2.5rem;
+            font-weight: 700;
         }
         .join-instructions {
             text-align: center;
@@ -204,18 +266,22 @@
             border-radius: 10px;
             margin: 20px 0;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid #e93d5a;
         }
         /* 新增：游戏分区入口区域 */
         .games-section {
             padding: 80px 0;
             background-color: rgba(15, 25, 40, 0.8);
             border-top: 2px solid #e93d5a;
+            border-radius: 10px;
+            margin-bottom: 2rem;
         }
         .games-title {
             text-align: center;
             margin-bottom: 50px;
             color: #e93d5a;
             font-size: 2.8rem;
+            font-weight: 700;
         }
         .games-grid {
             display: grid;
@@ -223,17 +289,19 @@
             gap: 30px;
         }
         .game-card {
-            background-color: rgba(15, 25, 40, 0.8);
+            background-color: rgba(20, 30, 48, 0.9);
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             text-decoration: none;
             color: inherit;
+            border: 2px solid transparent;
         }
         .game-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: #e93d5a;
         }
         .game-img {
             width: 100%;
@@ -273,22 +341,15 @@
         .footer-custom {
             text-align: center;
             margin-top: 30px;
-            padding: 15px;
+            padding: 25px;
             background-color: rgba(15, 25, 40, 0.8);
-            border-radius: 8px;
+            border-radius: 10px;
             border: 2px solid rgba(233, 57, 89, 0.3);
-        }
-        @media (min-width: 768px) {
-            .footer-custom {
-                margin-top: 40px;
-                padding: 20px;
-                border-radius: 10px;
-            }
         }
         .footer-title-custom {
             color: #e93d5a;
-            font-size: 16px;
-            margin-bottom: 8px;
+            font-size: 18px;
+            margin-bottom: 10px;
             position: relative;
             display: inline-block;
         }
@@ -296,49 +357,39 @@
             content: "☰";
             margin-right: 8px;
         }
-        @media (min-width: 768px) {
-            .footer-title-custom {
-                font-size: 18px;
-                margin-bottom: 10px;
-            }
-        }
-        @media (max-width: 480px) {
-            .footer-title-custom {
-                font-size: 14px;
-            }
-        }
         .copyright-custom {
             color: #cccccc;
-            font-size: 12px;
+            font-size: 14px;
         }
-        @media (min-width: 768px) {
-            .copyright-custom {
-                font-size: 14px;
-            }
+        /* 添加部分动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        @media (max-width: 480px) {
-            .copyright-custom {
-                font-size: 11px;
-            }
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
         }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
     </style>
 </head>
 <body>
     <div class="container container-custom">
-        <!-- 导航栏 -->
-        <nav class="navbar navbar-expand-md navbar-dark navbar-custom">
+        <!-- 导航栏 - 修复版本 -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
             <div class="container-fluid">
-                <a class="navbar-brand" href="index.html"><i class="fas fa-shield-alt"></i> 绝活联盟</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <a class="navbar-brand" href="#"><i class="fas fa-shield-alt"></i> 绝活联盟</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link active" href="#home">首页</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#about">关于我们</a>
+                            <a class="nav-link" href="#features">社区特色</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#games">游戏分区</a>
@@ -355,8 +406,7 @@
         </nav>
 
         <!-- 英雄区域 -->
-        <section id="home" class="hero-section">
-            <div class="hero-overlay"></div>
+        <section id="home" class="hero-section fade-in">
             <div class="hero-content">
                 <h1 class="hero-title">绝活联盟</h1>
                 <p class="hero-subtitle">纯粹、绿色、友好的游戏环境，我们共同的电竞理想国</p>
@@ -368,20 +418,20 @@
         <section id="features" class="feature-section">
             <h2 class="feature-title">为什么选择绝活联盟？</h2>
             <div class="feature-grid">
-                <div class="feature-card">
+                <div class="feature-card fade-in delay-1">
                     <div class="feature-icon"><i class="fas fa-bolt"></i></div>
                     <h3 class="feature-heading">公平竞技</h3>
-                    <p class="feature-text">通过精准的分区匹配和严格的段位保护，确保每位玩家都能在与自己水平相符的环境中享受竞技乐趣，告别“炸鱼”和“被炸鱼”的烦恼。</p>
+                    <p class="feature-text">通过精准的分区匹配和严格的段位保护，确保每位玩家都能在与自己水平相符的环境中享受竞技乐趣，告别"炸鱼"和"被炸鱼"的烦恼。</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card fade-in delay-2">
                     <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
                     <h3 class="feature-heading">杜绝外挂</h3>
-                    <p class="feature-text">建立最严苛的审查与反作弊机制，辅以玩家监督体系，誓将科技“阴霾”彻底驱逐，让每一场比赛都源于汗水与实力。</p>
+                    <p class="feature-text">建立最严苛的审查与反作弊机制，辅以玩家监督体系，誓将科技"阴霾"彻底驱逐，让每一场比赛都源于汗水与实力。</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card fade-in delay-3">
                     <div class="feature-icon"><i class="fas fa-handshake"></i></div>
                     <h3 class="feature-heading">友好尊重</h3>
-                    <p class="feature-text">倡导“竞技有风度，交流有温度”，通过完善的社区公约和高效的举报反馈机制，共同维护一个积极、友善、乐于分享的游戏环境。</p>
+                    <p class="feature-text">倡导"竞技有风度，交流有温度"，通过完善的社区公约和高效的举报反馈机制，共同维护一个积极、友善、乐于分享的游戏环境。</p>
                 </div>
             </div>
         </section>
@@ -391,8 +441,8 @@
             <h2 class="games-title">游戏分区</h2>
             <div class="games-grid">
                 <!-- 无畏契约分区 -->
-                <a href="manual.html" class="game-card">
-                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="无畏契约" class="game-img">
+                <a href="manual.html" class="game-card fade-in">
+                    <img src="https://images.unsplash.com/photo-1560253023-3ec5d502959f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1674&q=80" alt="无畏契约" class="game-img">
                     <div class="game-content">
                         <h3 class="game-name">无畏契约</h3>
                         <p class="game-desc">SABCDE分级系统，主观OB判断标准，快速鉴定队友水平。</p>
@@ -400,8 +450,8 @@
                     </div>
                 </a>
                 <!-- 预留分区1 -->
-                <a href="coming-soon.html" class="game-card">
-                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="CS2" class="game-img">
+                <a href="coming-soon.html" class="game-card fade-in delay-1">
+                    <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1752&q=80" alt="CS2" class="game-img">
                     <div class="game-content">
                         <h3 class="game-name">CS2</h3>
                         <p class="game-desc">专属的玩家鉴定与社区活动即将上线，敬请期待！</p>
@@ -409,8 +459,8 @@
                     </div>
                 </a>
                 <!-- 预留分区2 -->
-                <a href="coming-soon.html" class="game-card">
-                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="APEX英雄" class="game-img">
+                <a href="coming-soon.html" class="game-card fade-in delay-2">
+                    <img src="https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1684&q=80" alt="APEX英雄" class="game-img">
                     <div class="game-content">
                         <h3 class="game-name">APEX英雄</h3>
                         <p class="game-desc">战术小队评级与英雄专精系统，正在火速开发中！</p>
@@ -418,8 +468,8 @@
                     </div>
                 </a>
                 <!-- 预留分区3 -->
-                <a href="coming-soon.html" class="game-card">
-                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="永劫无间" class="game-img">
+                <a href="coming-soon.html" class="game-card fade-in delay-3">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="永劫无间" class="game-img">
                     <div class="game-content">
                         <h3 class="game-name">永劫无间</h3>
                         <p class="game-desc">武学流派鉴定与连招评级手册，即将震撼发布！</p>
@@ -435,24 +485,24 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="mission-item">
+                        <div class="mission-item fade-in">
                             <div class="mission-icon"><i class="fas fa-ban"></i></div>
                             <h3 class="mission-header">一、无外挂：零容忍！</h3>
-                            <p class="mission-body">我们建立最严苛的审查与反作弊机制，辅以玩家监督体系，誓将科技“阴霾”彻底驱逐。在这里，每一场胜利都源于汗水与实力！</p>
+                            <p class="mission-body">我们建立最严苛的审查与反作弊机制，辅以玩家监督体系，誓将科技"阴霾"彻底驱逐。在这里，每一场胜利都源于汗水与实力！</p>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="mission-item">
+                        <div class="mission-item fade-in delay-1">
                             <div class="mission-icon"><i class="fas fa-balance-scale"></i></div>
                             <h3 class="mission-header">二、无炸鱼：公平至上！</h3>
                             <p class="mission-body">通过精准的分区匹配、严格的段位保护和匿名举报核查，我们为不同水平的玩家筑起保护墙。新手能安心成长，高手能酣畅对决，每个人都找到属于自己的竞技舞台！</p>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="mission-item">
+                        <div class="mission-item fade-in delay-2">
                             <div class="mission-icon"><i class="fas fa-star"></i></div>
                             <h3 class="mission-header">三、无压力低素质：尊重为本！</h3>
-                            <p class="mission-body">我们倡导“竞技有风度，交流有温度”。完善的社区公约、高效的举报反馈机制及积极的氛围引导，将共同维护一个积极、友善、乐于分享的环境。喷子、挂机、消极比赛？这里没有它们的生存土壤。</p>
+                            <p class="mission-body">我们倡导"竞技有风度，交流有温度"。完善的社区公约、高效的举报反馈机制及积极的氛围引导，将共同维护一个积极、友善、乐于分享的环境。喷子、挂机、消极比赛？这里没有它们的生存土壤。</p>
                         </div>
                     </div>
                 </div>
@@ -464,8 +514,10 @@
             <h2 class="join-title">如何加入绝活联盟？</h2>
             <div class="container">
                 <p class="join-instructions">只需简单几步，即可加入我们，开启纯净的游戏之旅：</p>
-                <img src="https://hongjsf.cyou/assets/images/qq-search-guide.jpg" alt="企鹅频道搜索截图" class="join-img">
-                <p class="join-instructions">1. 打开企鹅（QQ）应用<br>2. 进入“频道”功能<br>3. 在搜索框中输入“绝活联盟”<br>4. 点击进入并申请加入</p>
+                <div class="text-center">
+                    <img src="https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="加入指南" class="join-img">
+                </div>
+                <p class="join-instructions">1. 打开企鹅（QQ）应用<br>2. 进入"频道"功能<br>3. 在搜索框中输入"绝活联盟"<br>4. 点击进入并申请加入</p>
             </div>
         </section>
 
@@ -478,10 +530,67 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 添加一些简单的JavaScript确保导航栏功能正常
+        document.addEventListener('DOMContentLoaded', function() {
+            // 确保导航栏切换功能正常
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarNav = document.querySelector('.navbar-collapse');
+            
+            if (navbarToggler && navbarNav) {
+                navbarToggler.addEventListener('click', function() {
+                    navbarNav.classList.toggle('show');
+                });
+            }
+            
+            // 平滑滚动到锚点
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    if (this.getAttribute('href') === '#') return;
+                    
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        // 先关闭导航菜单（如果是移动视图）
+                        if (window.innerWidth < 992) {
+                            navbarNav.classList.remove('show');
+                        }
+                        
+                        // 滚动到目标位置
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // 添加滚动检测，高亮当前部分
+            window.addEventListener('scroll', function() {
+                const sections = document.querySelectorAll('section');
+                const navLinks = document.querySelectorAll('.nav-link');
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (pageYOffset >= (sectionTop - 100)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
-
-
-    /* 版本号v.1.0 */
-
-
