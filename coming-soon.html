@@ -23,34 +23,40 @@
             padding: 20px;
             box-sizing: border-box;
         }
+
         .coming-soon-container {
-            max-width: 600px; /* 从800px缩小，更紧凑 */
+            max-width: 700px; /* 控制整体内容宽度，避免图片被撑开 */
             text-align: center;
-            padding: 20px;
+            padding: 0 20px;
         }
+
         .logo-img {
-            width: 320px;       /* 显式控制宽度，避免过大 */
-            max-width: 100%;    /* 移动端自适应 */
-            height: auto;       /* 保持比例 */
-            margin: 0 auto 40px; /* 居中 + 下边距 */
+            width: 300px;           /* 固定宽度，精准控制大小 */
+            height: auto;           /* 自动保持宽高比 */
+            margin-bottom: 40px;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border: none !important;
-            object-fit: contain;
-            display: block;     /* 避免行内元素间隙问题 */
+            object-fit: contain;    /* 确保不裁剪、完整显示 */
+            display: block;         /* 防止行内元素间隙影响对齐 */
+            margin-left: auto;
+            margin-right: auto;     /* 居中对齐 */
         }
+
         .title {
             font-size: 2.5rem;
             color: #e93d5a;
             margin-bottom: 20px;
             font-weight: bold;
         }
+
         .subtitle {
             font-size: 1.2rem;
             color: #cccccc;
             margin-bottom: 40px;
             line-height: 1.6;
         }
+
         .btn-back {
             background-color: #e93d5a;
             color: white;
@@ -63,28 +69,34 @@
             transition: all 0.3s ease;
             display: inline-block;
         }
+
         .btn-back:hover {
             background-color: #d42a45;
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(233, 57, 89, 0.4);
         }
+
         .countdown {
             margin: 30px 0;
             font-size: 1.5rem;
             color: #cccccc;
         }
+
         .social-icons {
             margin-top: 30px;
         }
+
         .social-icons a {
             color: #cccccc;
             font-size: 2rem;
             margin: 0 15px;
             transition: color 0.3s ease;
         }
+
         .social-icons a:hover {
             color: #e93d5a;
         }
+
         @media (max-width: 768px) {
             .title {
                 font-size: 2rem;
@@ -97,14 +109,13 @@
                 font-size: 1rem;
             }
             .logo-img {
-                width: 260px; /* 移动端更小一点 */
+                width: 200px; /* 移动端缩小 logo */
             }
         }
     </style>
 </head>
 <body>
     <div class="coming-soon-container">
-        <!-- 图片URL无空格（你确认过） -->
         <img src="https://hongjsf.cyou/assets/images/LOGO-Transparent%20white.png" alt="绝活联盟 LOGO" class="logo-img">
         <h1 class="title">此功能正在全力开发中</h1>
         <p class="subtitle">我们正在为这个分区打造最棒的体验！<br>请稍后再来，或返回官网探索其他精彩内容。</p>
