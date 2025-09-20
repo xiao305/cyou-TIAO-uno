@@ -28,7 +28,7 @@
                 padding: 20px;
             }
         }
-        /* 修复导航栏样式 - 解决下划线问题 */
+        /* 修复导航栏样式 - 移除小圆点和短线 */
         .navbar-custom {
             background-color: rgba(10, 18, 30, 0.95) !important;
             border-bottom: 2px solid #e93d5a;
@@ -49,6 +49,13 @@
         .navbar-brand i {
             margin-right: 10px;
         }
+        .navbar-nav {
+            list-style: none; /* 移除列表项的小圆点 */
+            padding-left: 0; /* 移除内边距 */
+        }
+        .nav-item {
+            margin: 0; /* 移除默认外边距 */
+        }
         .nav-link {
             color: white !important;
             transition: all 0.3s ease;
@@ -64,6 +71,10 @@
         .nav-link.active {
             color: #e93d5a !important;
             text-decoration: none !important; /* 移除活动状态下划线 */
+        }
+        /* 移除导航栏中的分隔线 */
+        .navbar-nav .nav-item::before {
+            display: none !important;
         }
         /* 确保导航栏在中等及以上屏幕水平显示 */
         @media (min-width: 992px) {
@@ -92,10 +103,20 @@
         .btn:hover, .btn-hero:hover, .btn-game:hover {
             text-decoration: none !important; /* 移除按钮悬停下划线 */
         }
-        /* 新增：英雄区域样式 */
+        /* 修复导航栏折叠按钮功能 */
+        .navbar-toggler {
+            border: none;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        .navbar-toggler:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        /* 新增：英雄区域样式 - 使用电竞背景图 */
         .hero-section {
             background: linear-gradient(rgba(10, 18, 30, 0.8), rgba(10, 18, 30, 0.8)), 
-                        url('https://hongjsf.cyou/assets/images/LOGO-1.jpg');
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');
             background-size: cover;
             background-position: center;
             height: 80vh;
@@ -205,7 +226,7 @@
             color: #cccccc;
             font-size: 1.1rem;
         }
-        /* 新增：社区宗旨区域样式 */
+        /* 新增：社区宗旨区域样式 - 流程图样式 */
         .mission-section {
             padding: 60px 0;
             background-color: rgba(15, 25, 40, 0.8);
@@ -221,6 +242,19 @@
             font-weight: 700;
             text-decoration: none !important; /* 移除标题下划线 */
         }
+        .mission-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        @media (min-width: 992px) {
+            .mission-flow {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: stretch;
+            }
+        }
         .mission-item {
             margin-bottom: 40px;
             padding: 30px;
@@ -229,6 +263,15 @@
             border: 2px solid rgba(233, 57, 89, 0.3);
             position: relative;
             transition: all 0.3s ease;
+            width: 100%;
+            max-width: 350px;
+            z-index: 2;
+        }
+        @media (min-width: 992px) {
+            .mission-item {
+                width: 30%;
+                margin-bottom: 0;
+            }
         }
         .mission-item:hover {
             transform: translateY(-3px);
@@ -239,6 +282,7 @@
             font-size: 3rem;
             color: #e93d5a;
             margin-bottom: 15px;
+            text-align: center;
         }
         .mission-header {
             font-size: 1.8rem;
@@ -246,10 +290,39 @@
             color: #e93d5a;
             font-weight: 600;
             text-decoration: none !important; /* 移除标题下划线 */
+            text-align: center;
         }
         .mission-body {
             color: #cccccc;
             font-size: 1.1rem;
+            text-align: center;
+        }
+        /* 流程图连接线 - 只在桌面视图显示 */
+        @media (min-width: 992px) {
+            .mission-connector {
+                position: absolute;
+                top: 50%;
+                left: 30%;
+                right: 30%;
+                height: 2px;
+                background: linear-gradient(to right, transparent, #e93d5a, transparent);
+                z-index: 1;
+            }
+            .mission-connector::before,
+            .mission-connector::after {
+                content: "➤";
+                position: absolute;
+                top: -10px;
+                color: #e93d5a;
+                font-size: 1.5rem;
+            }
+            .mission-connector::before {
+                left: -5px;
+            }
+            .mission-connector::after {
+                right: -5px;
+                transform: rotate(180deg);
+            }
         }
         /* 新增：如何加入区域样式 */
         .join-section {
@@ -499,32 +572,30 @@
             </div>
         </section>
 
-        <!-- 社区宗旨区域 -->
+        <!-- 社区宗旨区域 - 修改为流程图样式 -->
         <section id="mission" class="mission-section">
             <h2 class="mission-title">我们的行动纲领</h2>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="mission-item fade-in">
-                            <div class="mission-icon"><i class="fas fa-ban"></i></div>
-                            <h3 class="mission-header">一、无外挂：零容忍！</h3>
-                            <p class="mission-body">我们建立最严苛的审查与反作弊机制，辅以玩家监督体系，誓将科技"阴霾"彻底驱逐。在这里，每一场胜利都源于汗水与实力！</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mission-item fade-in delay-1">
-                            <div class="mission-icon"><i class="fas fa-balance-scale"></i></div>
-                            <h3 class="mission-header">二、无炸鱼：公平至上！</h3>
-                            <p class="mission-body">通过精准的分区匹配、严格的段位保护和匿名举报核查，我们为不同水平的玩家筑起保护墙。新手能安心成长，高手能酣畅对决，每个人都找到属于自己的竞技舞台！</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mission-item fade-in delay-2">
-                            <div class="mission-icon"><i class="fas fa-star"></i></div>
-                            <h3 class="mission-header">三、无压力低素质：尊重为本！</h3>
-                            <p class="mission-body">我们倡导"竞技有风度，交流有温度"。完善的社区公约、高效的举报反馈机制及积极的氛围引导，将共同维护一个积极、友善、乐于分享的环境。喷子、挂机、消极比赛？这里没有它们的生存土壤。</p>
-                        </div>
-                    </div>
+            <div class="mission-flow">
+                <div class="mission-item fade-in">
+                    <div class="mission-icon"><i class="fas fa-ban"></i></div>
+                    <h3 class="mission-header">一、无外挂：零容忍！</h3>
+                    <p class="mission-body">我们建立最严苛的审查与反作弊机制，辅以玩家监督体系，誓将科技"阴霾"彻底驱逐。在这里，每一场胜利都源于汗水与实力！</p>
+                </div>
+                
+                <div class="mission-connector"></div>
+                
+                <div class="mission-item fade-in delay-1">
+                    <div class="mission-icon"><i class="fas fa-balance-scale"></i></div>
+                    <h3 class="mission-header">二、无炸鱼：公平至上！</h3>
+                    <p class="mission-body">通过精准的分区匹配、严格的段位保护和匿名举报核查，我们为不同水平的玩家筑起保护墙。新手能安心成长，高手能酣畅对决，每个人都找到属于自己的竞技舞台！</p>
+                </div>
+                
+                <div class="mission-connector"></div>
+                
+                <div class="mission-item fade-in delay-2">
+                    <div class="mission-icon"><i class="fas fa-star"></i></div>
+                    <h3 class="mission-header">三、无压力低素质：尊重为本！</h3>
+                    <p class="mission-body">我们倡导"竞技有风度，交流有温度"。完善的社区公约、高效的举报反馈机制及积极的氛围引导，将共同维护一个积极、友善、乐于分享的环境。喷子、挂机、消极比赛？这里没有它们的生存土壤。</p>
                 </div>
             </div>
         </section>
@@ -551,17 +622,33 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // 添加一些简单的JavaScript确保导航栏功能正常
+        // 修复导航栏折叠功能
         document.addEventListener('DOMContentLoaded', function() {
             // 确保导航栏切换功能正常
             const navbarToggler = document.querySelector('.navbar-toggler');
             const navbarNav = document.querySelector('.navbar-collapse');
             
+            // 修复折叠按钮功能
             if (navbarToggler && navbarNav) {
                 navbarToggler.addEventListener('click', function() {
+                    // 切换显示/隐藏
                     navbarNav.classList.toggle('show');
+                    
+                    // 更新aria-expanded属性
+                    const isExpanded = navbarToggler.getAttribute('aria-expanded') === 'true';
+                    navbarToggler.setAttribute('aria-expanded', !isExpanded);
                 });
             }
+            
+            // 点击导航链接后关闭菜单（移动设备）
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 992) {
+                        navbarNav.classList.remove('show');
+                        navbarToggler.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            });
             
             // 平滑滚动到锚点
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -574,11 +661,6 @@
                     const targetElement = document.querySelector(targetId);
                     
                     if (targetElement) {
-                        // 先关闭导航菜单（如果是移动视图）
-                        if (window.innerWidth < 992) {
-                            navbarNav.classList.remove('show');
-                        }
-                        
                         // 滚动到目标位置
                         window.scrollTo({
                             top: targetElement.offsetTop - 80,
