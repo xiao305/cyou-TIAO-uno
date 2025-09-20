@@ -24,19 +24,20 @@
             box-sizing: border-box;
         }
         .coming-soon-container {
-            max-width: 800px;
+            max-width: 600px; /* 从800px缩小，更紧凑 */
             text-align: center;
+            padding: 20px;
         }
         .logo-img {
-            max-width: 600px; /* 控制最大宽度 */  
-            height: auto;     /* 保持宽高比 */
-            margin-bottom: 40px;
+            width: 320px;       /* 显式控制宽度，避免过大 */
+            max-width: 100%;    /* 移动端自适应 */
+            height: auto;       /* 保持比例 */
+            margin: 0 auto 40px; /* 居中 + 下边距 */
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* 保留阴影，增加立体感 */
-            /* 关键：移除任何可能的边框 */
-            border: none !important;   
-            /* 防止图片被裁剪 */
-            object-fit: contain; /* 完整显示，不被裁剪 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: none !important;
+            object-fit: contain;
+            display: block;     /* 避免行内元素间隙问题 */
         }
         .title {
             font-size: 2.5rem;
@@ -95,12 +96,15 @@
                 padding: 12px 30px;
                 font-size: 1rem;
             }
+            .logo-img {
+                width: 260px; /* 移动端更小一点 */
+            }
         }
     </style>
 </head>
 <body>
     <div class="coming-soon-container">
-        <!-- 修复：移除URL末尾的空格 -->
+        <!-- 图片URL无空格（你确认过） -->
         <img src="https://hongjsf.cyou/assets/images/LOGO-Transparent%20white.png" alt="绝活联盟 LOGO" class="logo-img">
         <h1 class="title">此功能正在全力开发中</h1>
         <p class="subtitle">我们正在为这个分区打造最棒的体验！<br>请稍后再来，或返回官网探索其他精彩内容。</p>
