@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无畏契约专区 | 绝活联盟</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 基础样式 */
+        body {
+            background-color: #0a121e;
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        .container-custom {
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 导航栏样式 */
+        .navbar-custom {
+            background-color: rgba(10, 18, 30, 0.95);
+            border-bottom: 2px solid #e93d5a;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #e93d5a !important;
+        }
+        .nav-link {
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #e93d5a !important;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            background-color: transparent;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+        .breadcrumb-item a {
+            color: #e93d5a;
+            text-decoration: none;
+        }
+        .breadcrumb-item.active {
+            color: #cccccc;
+        }
+        
+        /* 英雄区域 */
+        .hero-section {
+            background: linear-gradient(rgba(10, 18, 30, 0.8), rgba(10, 18, 30, 0.8)), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 0;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            max-width: 800px;
+            padding: 20px;
+        }
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            font-weight: 700;
+        }
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+        }
+        
+        /* 内容分区 */
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #e93d5a;
+            font-size: 2.5rem;
+            font-weight: 700;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e93d5a;
+        }
+        .content-section {
+            padding: 60px 0;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        /* 功能卡片 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .feature-card {
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: #e93d5a;
+            text-decoration: none;
+            color: inherit;
+        }
+        .feature-icon {
+            font-size: 4rem;
+            color: #e93d5a;
+            margin-bottom: 20px;
+        }
+        .feature-heading {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #e93d5a;
+            font-weight: 600;
+        }
+        .feature-text {
+            color: #cccccc;
+            font-size: 1.1rem;
+        }
+        
+        /* 特工/英雄展示 */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .agent-card {
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .agent-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid #e93d5a;
+        }
+        .agent-content {
+            padding: 20px;
+        }
+        .agent-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e93d5a;
+            margin-bottom: 10px;
+        }
+        .agent-role {
+            display: inline-block;
+            background-color: #e93d5a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .agent-desc {
+            color: #cccccc;
+            font-size: 1rem;
+        }
+        
+        /* 社区资源区域 */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .resource-card {
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid #e93d5a;
+        }
+        .resource-icon {
+            font-size: 3.5rem;
+            color: #e93d5a;
+            margin-bottom: 20px;
+        }
+        .resource-title {
+            font-size: 1.5rem;
+            color: #e93d5a;
+            margin-bottom: 15px;
+        }
+        .resource-desc {
+            color: #cccccc;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        .btn-resource {
+            background-color: #e93d5a;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-resource:hover {
+            background-color: #d42a45;
+            transform: scale(1.05);
+        }
+        
+        /* 页脚 */
+        .footer-custom {
+            text-align: center;
+            margin-top: 60px;
+            padding: 25px;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            border: 2px solid rgba(233, 57, 89, 0.3);
+        }
+        .footer-title-custom {
+            color: #e93d5a;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .copyright-custom {
+            color: #cccccc;
+            font-size: 14px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container container-custom">
+        <!-- 导航栏 -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="https://hongjsf.cyou/index.html"><i class="fas fa-shield-alt"></i> 绝活联盟</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/index.html">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/game-zone/index.html">游戏分区</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="https://hongjsf.cyou/game-zone/pc/valorant/index.html">无畏契约</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/about.html">关于我们</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/join.html">如何加入</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 面包屑导航 -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/index.html">首页</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/index.html">游戏分区</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/pc/index.html">端游专区</a></li>
+                <li class="breadcrumb-item active">无畏契约</li>
+            </ol>
+        </nav>
+
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">无畏契约专区</h1>
+                <p class="hero-subtitle">探索战术射击游戏的极致体验，加入绝活联盟的无畏契约社区</p>
+            </div>
+        </section>
+
+        <!-- 主要功能区 -->
+        <section class="content-section">
+            <h2 class="section-title">主要功能</h2>
+            <div class="feature-grid">
+                <a href="https://hongjsf.cyou/game-zone/pc/valorant/manual.html" class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-book"></i></div>
+                    <h3 class="feature-heading">玩家等级鉴定手册</h3>
+                    <p class="feature-text">了解SABCDE分级系统，掌握主观OB判断标准，快速鉴定队友水平。</p>
+                </a>
+                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents.html" class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-user-ninja"></i></div>
+                    <h3 class="feature-heading">特工指南</h3>
+                    <p class="feature-text">深入了解每位特工的技能、定位和最佳战术搭配。</p>
+                </a>
+                <a href="https://hongjsf.cyou/game-zone/pc/valorant/maps.html" class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-map"></i></div>
+                    <h3 class="feature-heading">地图策略</h3>
+                    <p class="feature-text">掌握各地图的关键点位、进攻路线和防守策略。</p>
+                </a>
+                <a href="https://hongjsf.cyou/game-zone/pc/valorant/tactics.html" class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chess"></i></div>
+                    <h3 class="feature-heading">战术解析</h3>
+                    <p class="feature-text">学习高级战术和团队配合技巧，提升竞技水平。</p>
+                </a>
+                <a href="https://hongjsf.cyou/game-zone/pc/valorant/weapons.html" class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-gun"></i></div>
+                    <h3 class="feature-heading">武器库</h3>
+                    <p class="feature-text">了解各种武器的特性、伤害数据和最佳使用场景。</p>
+                </a>
+                <a href="https://hongjsf.cyou/game-zone/pc/valorant/community.html" class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3 class="feature-heading">社区资源</h3>
+                    <p class="feature-text">加入讨论、寻找队友、参与社区活动和比赛。</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- 游戏特色区域 -->
+        <section class="content-section">
+            <h2 class="section-title">游戏特色</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-crosshairs"></i></div>
+                        <h3 class="feature-heading">精准射击</h3>
+                        <p class="feature-text">体验高度竞技的射击机制，每一发子弹都至关重要，考验你的瞄准技巧和反应速度。</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-magic"></i></div>
+                        <h3 class="feature-heading">独特技能</h3>
+                        <p class="feature-text">每位特工拥有独特技能组合，创造无限战术可能性，团队配合至关重要。</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-trophy"></i></div>
+                        <h3 class="feature-heading">竞技排名</h3>
+                        <p class="feature-text">从铁牌到辐能战魂，挑战自我，提升排名，证明你的实力。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 特工/英雄展示 -->
+        <section class="content-section">
+            <h2 class="section-title">热门特工</h2>
+            <div class="agent-grid">
+                <div class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="杰特" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">杰特</h3>
+                        <span class="agent-role">决斗者</span>
+                        <p class="agent-desc">韩国籍特工，拥有高机动性和敏捷性，擅长快速切入战场和迅速撤离。</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="菲尼克斯" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">菲尼克斯</h3>
+                        <span class="agent-role">决斗者</span>
+                        <p class="agent-desc">英国籍特工，能够操控火焰治疗自己或伤害敌人，拥有自我复活的能力。</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Sage" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">Sage</h3>
+                        <span class="agent-role">守卫</span>
+                        <p class="agent-desc">中国籍特工，能够治疗队友和复活倒下的同伴，擅长防守和控制战场。</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Cypher" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">Cypher</h3>
+                        <span class="agent-role">哨卫</span>
+                        <p class="agent-desc">摩洛哥籍特工，情报专家，能够布置陷阱和监控设备获取敌方信息。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 社区资源 -->
+        <section class="content-section">
+            <h2 class="section-title">社区资源</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-users"></i></div>
+                    <h3 class="resource-title">寻找队友</h3>
+                    <p class="resource-desc">加入我们的Discord社区，找到水平相当的队友，组队提升排名。</p>
+                    <button class="btn-resource">加入社区</button>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h3 class="resource-title">教学资源</h3>
+                    <p class="resource-desc">访问我们的教学库，学习高级技巧、地图策略和特工深度解析。</p>
+                    <button class="btn-resource">查看教程</button>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <h3 class="resource-title">赛事活动</h3>
+                    <p class="resource-desc">参与社区举办的比赛和活动，赢取奖励并提升你的竞技水平。</p>
+                    <button class="btn-resource">查看赛事</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer-custom">
+            <h3 class="footer-title-custom">绝活联盟审核组 荣誉出品</h3>
+            <p class="copyright-custom">版权所有 © 2025 绝活联盟 | 最终解释权归绝活联盟所有</p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
