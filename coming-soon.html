@@ -27,20 +27,14 @@
             max-width: 800px;
             text-align: center;
         }
-        /* ======== 修复：优化LOGO图片显示 ======== */
         .logo-img {
-            width: 100%;
-            max-width: 600px; /* 控制最大宽度 */
-            height: auto;     /* 保持原始宽高比 */
+            max-width: 600px;
+            height: auto;
             margin-bottom: 40px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* 保留阴影，增加立体感 */
-            /* 关键：移除任何可能的边框 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border: none !important;
-            /* 防止图片被裁剪 */
-            object-fit: contain; /* 完整显示，不被裁剪 */
         }
-        /* ======== 其他样式不变 ======== */
         .title {
             font-size: 2.5rem;
             color: #e93d5a;
@@ -103,7 +97,7 @@
 </head>
 <body>
     <div class="coming-soon-container">
-        <!-- 修复：移除URL末尾的空格，并确保路径正确 -->
+        <!-- 修复：移除URL末尾的空格 -->
         <img src="https://hongjsf.cyou/assets/images/LOGO-Transparent%20white.png" alt="绝活联盟 LOGO" class="logo-img">
         <h1 class="title">此功能正在全力开发中</h1>
         <p class="subtitle">我们正在为这个分区打造最棒的体验！<br>请稍后再来，或返回官网探索其他精彩内容。</p>
