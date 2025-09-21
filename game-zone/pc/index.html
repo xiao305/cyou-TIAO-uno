@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>端游专区 - 绝活联盟</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0a121e;
+            color: #ffffff;
+            font-family: 'Microsoft YaHei', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container-custom {
+            max-width: 800px;
+            text-align: center;
+            padding: 30px;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            border: 2px solid #e93d5a;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        .logo-img {
+            width: 250px;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+        .page-title {
+            font-size: 2.8rem;
+            color: #e93d5a;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .message {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .countdown {
+            font-size: 1.5rem;
+            color: #e93d5a;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+        .btn-jump {
+            background-color: #e93d5a;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .btn-jump:hover {
+            background-color: #d42a45;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(233, 57, 89, 0.4);
+        }
+        .breadcrumb {
+            background-color: transparent;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .breadcrumb-item a {
+            color: #e93d5a;
+            text-decoration: none;
+        }
+        .breadcrumb-item.active {
+            color: #cccccc;
+        }
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2.2rem;
+            }
+            .message {
+                font-size: 1rem;
+            }
+            .btn-jump {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            .logo-img {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 面包屑导航 -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="https://hongjsf.cyou/index.html">首页</a></li>
+            <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/index.html">游戏分区</a></li>
+            <li class="breadcrumb-item active">端游专区</li>
+        </ol>
+    </nav>
+
+    <div class="container-custom">
+        <img src="https://hongjsf.cyou/assets/images/LOGO-Transparent%20white.png" alt="绝活联盟 LOGO" class="logo-img">
+        <h1 class="page-title">端游专区</h1>
+        <p class="message">端游专区内容已整合到游戏分区页面，您将在 <span id="countdown">10</span> 秒后自动跳转到游戏分区页面。</p>
+        
+        <div class="countdown">
+            <i class="fas fa-clock"></i> 自动跳转倒计时: <span id="timer">10</span> 秒
+        </div>
+        
+        <a href="https://hongjsf.cyou/game-zone/index.html" class="btn-jump">
+            <i class="fas fa-forward"></i> 立即跳转
+        </a>
+    </div>
+
+    <script>
+        // 倒计时和自动跳转功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const timerElement = document.getElementById('timer');
+            const countdownElement = document.getElementById('countdown');
+            let seconds = 10;
+            
+            const countdown = setInterval(function() {
+                seconds--;
+                timerElement.textContent = seconds;
+                countdownElement.textContent = seconds;
+                
+                if (seconds <= 0) {
+                    clearInterval(countdown);
+                    window.location.href = 'https://hongjsf.cyou/game-zone/index.html';
+                }
+            }, 1000);
+            
+            // 点击立即跳转按钮
+            document.querySelector('.btn-jump').addEventListener('click', function(e) {
+                e.preventDefault();
+                clearInterval(countdown);
+                window.location.href = 'https://hongjsf.cyou/game-zone';
+            });
+        });
+    </script>
+</body>
+</html>
