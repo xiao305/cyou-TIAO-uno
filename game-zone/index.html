@@ -158,6 +158,18 @@
         .breadcrumb-item.active {
             color: #cccccc;
         }
+
+        /* 新增：建设中卡片样式 */
+        .construction-card {
+            background: linear-gradient(135deg, rgba(30, 40, 60, 0.9), rgba(15, 25, 40, 0.9));
+            border: 2px dashed #e93d5a;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(233, 61, 90, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(233, 61, 90, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(233, 61, 90, 0); }
+        }
     </style>
 </head>
 <body>
@@ -240,31 +252,13 @@
         <section class="category-section">
             <h2 class="category-title"><i class="fas fa-mobile-alt"></i> 手游专区</h2>
             <div class="games-grid">
-                <!-- 王者荣耀 -->
-                <a href="mobile/honor-of-kings/index.html" class="game-card">
-                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="王者荣耀" class="game-img">
+                <!-- 引导卡片：替代原有的三个游戏 -->
+                <a href="mobile/index.html" class="game-card construction-card">
+                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="手游专区建设中" class="game-img">
                     <div class="game-content">
-                        <h3 class="game-name">王者荣耀</h3>
-                        <p class="game-desc">英雄熟练度评级系统，段位保护机制，正在开发中！</p>
-                        <button class="btn-game">进入专区</button>
-                    </div>
-                </a>
-                <!-- 和平精英 -->
-                <a href="game-zone/mobile/pubg-mobile/index.html" class="game-card">
-                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="和平精英" class="game-img">
-                    <div class="game-content">
-                        <h3 class="game-name">和平精英</h3>
-                        <p class="game-desc">战术配合评级与枪法鉴定系统，即将上线！</p>
-                        <button class="btn-game">进入专区</button>
-                    </div>
-                </a>
-                <!-- 原神 -->
-                <a href="game-zone/mobile/genshin-impact/index.html" class="game-card">
-                    <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="原神" class="game-img">
-                    <div class="game-content">
-                        <h3 class="game-name">原神</h3>
-                        <p class="game-desc">元素反应精通与角色培养指南，筹备中！</p>
-                        <button class="btn-game">进入专区</button>
+                        <h3 class="game-name">手游专区</h3>
+                        <p class="game-desc">英雄熟练度评级、战术配合系统等正在火热开发中！</p>
+                        <button class="btn-game">抢先了解</button>
                     </div>
                 </a>
             </div>
