@@ -3,178 +3,509 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>无畏契约特工指南 - 绝活联盟</title>
+    <title>特工指南 | 无畏契约专区 | 绝活联盟</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* 基础样式 */
         body {
             background-color: #0a121e;
             color: #ffffff;
+            line-height: 1.6;
+            padding: 0;
+            overflow-x: hidden;
             font-family: 'Microsoft YaHei', sans-serif;
+        }
+        .container-custom {
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 导航栏样式 */
+        .navbar-custom {
+            background-color: rgba(10, 18, 30, 0.95);
+            border-bottom: 2px solid #e93d5a;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #e93d5a !important;
+        }
+        .nav-link {
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #e93d5a !important;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            background-color: transparent;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+        .breadcrumb-item a {
+            color: #e93d5a;
+            text-decoration: none;
+        }
+        .breadcrumb-item.active {
+            color: #cccccc;
+        }
+        
+        /* 英雄区域 */
+        .hero-section {
+            background: linear-gradient(rgba(10, 18, 30, 0.8), rgba(10, 18, 30, 0.8)), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 40vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            margin: 0;
             text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .game-title {
-            font-size: 4rem;
-            color: #e93d5a;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 15px rgba(233, 61, 90, 0.5);
-        }
-        .coming-soon-container {
-            max-width: 800px;
-            text-align: center;
-        }
-        .logo-img {
-            width: 250px;
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 0;
             border-radius: 10px;
-            object-fit: contain;
+            margin-bottom: 2rem;
         }
-        .title {
-            font-size: 2.5rem;
-            color: #e93d5a;
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            max-width: 800px;
+            padding: 20px;
+        }
+        .hero-title {
+            font-size: 3.5rem;
             margin-bottom: 20px;
-            font-weight: bold;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            font-weight: 700;
         }
-        .subtitle {
-            font-size: 1.2rem;
-            color: #cccccc;
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+        .hero-subtitle {
+            font-size: 1.3rem;
             margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
         }
-        .btn-custom {
+        
+        /* 内容分区 */
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #e93d5a;
+            font-size: 2.5rem;
+            font-weight: 700;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e93d5a;
+        }
+        .content-section {
+            padding: 60px 0;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        /* 特工/英雄展示 */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .agent-card {
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid #e93d5a;
+        }
+        .agent-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid #e93d5a;
+        }
+        .agent-content {
+            padding: 20px;
+        }
+        .agent-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e93d5a;
+            margin-bottom: 10px;
+        }
+        .agent-role {
+            display: inline-block;
             background-color: #e93d5a;
             color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1rem;
-            border-radius: 50px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .agent-desc {
+            color: #cccccc;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        .btn-details {
+            background-color: transparent;
+            color: #e93d5a;
+            border: 1px solid #e93d5a;
+            padding: 8px 15px;
+            border-radius: 20px;
             font-weight: bold;
-            text-decoration: none;
             transition: all 0.3s ease;
+            text-decoration: none;
             display: inline-block;
-            min-width: 180px;
+            width: 100%;
             text-align: center;
         }
-        .btn-custom:hover {
-            background-color: #d42a45;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(233, 57, 89, 0.4);
+        .btn-details:hover {
+            background-color: #e93d5a;
+            color: white;
+            transform: scale(1.05);
+            text-decoration: none;
         }
-        .btn-back {
-            background-color: #2c3e50;
+        
+        /* 页脚 */
+        .footer-custom {
+            text-align: center;
+            margin-top: 60px;
+            padding: 25px;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            border: 2px solid rgba(233, 57, 89, 0.3);
         }
-        .btn-back:hover {
-            background-color: #1a252f;
-        }
-        .countdown {
-            margin: 30px 0;
-            font-size: 1.5rem;
-            color: #cccccc;
-        }
-        .social-icons {
-            margin-top: 30px;
-        }
-        .social-icons a {
-            color: #cccccc;
-            font-size: 2rem;
-            margin: 0 15px;
-            transition: color 0.3s ease;
-        }
-        .social-icons a:hover {
+        .footer-title-custom {
             color: #e93d5a;
+            font-size: 18px;
+            margin-bottom: 10px;
         }
+        .copyright-custom {
+            color: #cccccc;
+            font-size: 14px;
+        }
+        
+        /* 响应式调整 */
         @media (max-width: 768px) {
-            .game-title {
-                font-size: 2.8rem;
+            .hero-title {
+                font-size: 2.5rem;
             }
-            .title {
+            .section-title {
                 font-size: 2rem;
-            }
-            .subtitle {
-                font-size: 1rem;
-            }
-            .btn-custom {
-                padding: 12px 30px;
-                font-size: 1rem;
-                min-width: 160px;
-            }
-            .logo-img {
-                width: 200px;
-            }
-            .button-container {
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 新增的游戏专区标题 -->
-    <h1 class="game-title">无畏契约特工指南专区</h1>
-    
-    <div class="coming-soon-container">
-        <img src="https://hongjsf.cyou/assets/images/LOGO-Transparent%20white.png" alt="绝活联盟 LOGO" class="logo-img">
-        <h1 class="title">此功能正在全力开发中</h1>
-        <p class="subtitle">我们正在为无畏契约特工指南专区打造最棒的体验！<br>请稍后再来，或返回探索其他精彩内容。</p>
-        
-        <div class="countdown">
-            <i class="fas fa-clock"></i> 敬请期待...
-        </div>
-        
-        <!-- 按钮容器 -->
-        <div class="button-container">
-            <a href="javascript:history.back()" class="btn-custom btn-back">
-                <i class="fas fa-arrow-left"></i> 返回上一页
-            </a>
-            <a href="https://hongjsf.cyou/index.html" class="btn-custom">
-                <i class="fas fa-home"></i> 返回首页
-            </a>
-        </div>
-        
-        <div class="social-icons">
-            <a href="#"><i class="fab fa-qq"></i></a>
-            <a href="#"><i class="fab fa-weixin"></i></a>
-            <a href="#"><i class="fab fa-bilibili"></i></a>
-        </div>
+    <div class="container container-custom">
+        <!-- 导航栏 -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="https://hongjsf.cyou/index.html"><i class="fas fa-shield-alt"></i> 绝活联盟</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/index.html">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/game-zone/index.html">游戏分区</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/game-zone/pc/valorant/index.html">无畏契约</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="https://hongjsf.cyou/game-zone/pc/valorant/agents.html">特工指南</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/about.html">关于我们</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 面包屑导航 -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/index.html">首页</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/index.html">游戏分区</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/pc/valorant/index.html">无畏契约</a></li>
+                <li class="breadcrumb-item active">特工指南</li>
+            </ol>
+        </nav>
+
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">特工指南</h1>
+                <p class="hero-subtitle">深入了解每一位特工的技能、定位和战术，成为战场上的主宰者</p>
+            </div>
+        </section>
+
+        <!-- 特工列表 -->
+        <section class="content-section">
+            <h2 class="section-title">全部特工</h2>
+            <div class="agent-grid">
+                <!-- 婕风（Jett） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="婕风（Jett）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">婕风（Jett）</h3>
+                        <span class="agent-role">决斗者</span>
+                        <p class="agent-desc">韩国籍特工，拥有高机动性和敏捷性，擅长快速切入战场和迅速撤离。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 雷兹（Raze） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="雷兹（Raze）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">雷兹（Raze）</h3>
+                        <span class="agent-role">决斗者</span>
+                        <p class="agent-desc">巴西籍特工，爆破专家，擅长使用爆炸物清理区域和造成大量伤害。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 不死鸟（Phoenix） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="不死鸟（Phoenix）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">不死鸟（Phoenix）</h3>
+                        <span class="agent-role">决斗者</span>
+                        <p class="agent-desc">英国籍特工，能够操控火焰治疗自己或伤害敌人，拥有自我复活的能力。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 芮娜（Reyna） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="芮娜（Reyna）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">芮娜（Reyna）</h3>
+                        <span class="agent-role">决斗者</span>
+                        <p class="agent-desc">墨西哥籍特工，通过吸收灵魂强化自身，是孤狼作战的高手。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 夜露（Yoru） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="夜露（Yoru）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">夜露（Yoru）</h3>
+                        <span class="agent-role">决斗者</span>
+                        <p class="agent-desc">日本籍特工，掌握维度裂隙，能神出鬼没地穿梭于战场。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 霓虹（Neon） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="霓虹（Neon）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">霓虹（Neon）</h3>
+                        <span class="agent-role">决斗者</span>
+                        <p class="agent-desc">菲律宾籍特工，驾驭着闪电的力量，以超高速度和电能冲击敌人。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 蝰蛇（Viper） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="蝰蛇（Viper）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">蝰蛇（Viper）</h3>
+                        <span class="agent-role">控场者</span>
+                        <p class="agent-desc">美国籍特工，化学武器专家，能部署毒幕封锁区域，掌控战场节奏。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 幽影（Omen） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="幽影（Omen）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">幽影（Omen）</h3>
+                        <span class="agent-role">控场者</span>
+                        <p class="agent-desc">神秘特工，能投掷暗影球和进行短距离传送，擅长扰乱敌方阵型。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 炼狱（Brimstone） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="炼狱（Brimstone）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">炼狱（Brimstone）</h3>
+                        <span class="agent-role">控场者</span>
+                        <p class="agent-desc">美国籍特工，战术指挥官，能从空中投掷燃烧弹和烟雾弹支援队友。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 星礈（Astra） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="星礈（Astra）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">星礈（Astra）</h3>
+                        <span class="agent-role">控场者</span>
+                        <p class="agent-desc">加纳籍特工，能从星界维度召唤星体，创造烟幕、震荡波或重力井。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 海神（Skye） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="海神（Skye）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">海神（Skye）</h3>
+                        <span class="agent-role">先锋</span>
+                        <p class="agent-desc">澳大利亚籍特工，能召唤动物伙伴侦查、治疗队友或致盲敌人。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 零（Cypher） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="零（Cypher）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">零（Cypher）</h3>
+                        <span class="agent-role">哨卫</span>
+                        <p class="agent-desc">摩洛哥籍特工，情报专家，能够布置陷阱和监控设备获取敌方信息。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 奇乐（Killjoy） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="奇乐（Killjoy）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">奇乐（Killjoy）</h3>
+                        <span class="agent-role">哨卫</span>
+                        <p class="agent-desc">德国籍特工，机械天才，能部署炮台、警报机器人和纳米蜂群封锁区域。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 贤者（Sage） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="贤者（Sage）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">贤者（Sage）</h3>
+                        <span class="agent-role">哨卫</span>
+                        <p class="agent-desc">中国籍特工，能够治疗队友和复活倒下的同伴，擅长防守和控制战场 [[1]].</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 铁臂（Breach） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="铁臂（Breach）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">铁臂（Breach）</h3>
+                        <span class="agent-role">先锋</span>
+                        <p class="agent-desc">瑞典籍特工，使用震撼性武器强行突破防线，为队友创造进攻机会。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 猎枭（Sova） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="猎枭（Sova）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">猎枭（Sova）</h3>
+                        <span class="agent-role">先锋</span>
+                        <p class="agent-desc">俄罗斯籍特工，侦察专家，能发射侦查箭矢揭示敌人位置并进行精准打击。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- KAY/O -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="KAY/O" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">KAY/O</h3>
+                        <span class="agent-role">先锋</span>
+                        <p class="agent-desc">来自未来的战斗机器人，能投掷抑制器压制敌人技能并造成范围伤害 [[7]].</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 盖可（Gekko） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="盖可（Gekko）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">盖可（Gekko）</h3>
+                        <span class="agent-role">先锋</span>
+                        <p class="agent-desc">美国籍特工，能指挥一群奇特的生物伙伴进行侦查、眩晕和治疗。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 维斯（Vyse） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="维斯（Vyse）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">维斯（Vyse）</h3>
+                        <span class="agent-role">控场者</span>
+                        <p class="agent-desc">新晋控场者，拥有操控荆棘和藤蔓封锁战场、控制敌人的能力。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 壹决（Tejo） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="壹决（Tejo）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">壹决（Tejo）</h3>
+                        <span class="agent-role">决斗者</span>
+                        <p class="agent-desc">充满力量的决斗者，擅长使用爆炸性的近战攻击和范围技能压制敌人。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 尚勃勒（Chamber） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="尚勃勒（Chamber）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">尚勃勒（Chamber）</h3>
+                        <span class="agent-role">哨卫</span>
+                        <p class="agent-desc">法国籍特工，武器专家，能部署陷阱并瞬间传送至预设位置。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 黑梦（Fade） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="黑梦（Fade）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">黑梦（Fade）</h3>
+                        <span class="agent-role">先锋</span>
+                        <p class="agent-desc">土耳其籍特工，能释放噩梦能量追踪并揭示敌人，造成恐惧效果。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+                <!-- 幻棱（Harbor） -->
+                <a href="#" class="agent-card">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="幻棱（Harbor）" class="agent-img">
+                    <div class="agent-content">
+                        <h3 class="agent-name">幻棱（Harbor）</h3>
+                        <span class="agent-role">控场者</span>
+                        <p class="agent-desc">印度籍特工，掌控水之力量，能制造水盾、水墙和激流控制战场。</p>
+                        <a href="#" class="btn-details">查看详情</a>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer-custom">
+            <h3 class="footer-title-custom">绝活联盟审核组 荣誉出品</h3>
+            <p class="copyright-custom">版权所有 © 2025 绝活联盟 | 最终解释权归绝活联盟所有</p>
+        </footer>
     </div>
 
-    <script>
-        // 检查是否有上一页历史，如果没有则禁用返回按钮
-        document.addEventListener('DOMContentLoaded', function() {
-            const backButton = document.querySelector('.btn-back');
-            
-            // 如果没有历史记录，使返回按钮看起来不可用
-            if (window.history.length <= 1) {
-                backButton.style.opacity = '0.6';
-                backButton.style.cursor = 'not-allowed';
-                backButton.onclick = function(e) {
-                    e.preventDefault();
-                };
-            }
-        });
-    </script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
