@@ -125,9 +125,7 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            /* 添加这个属性，让卡片本身在悬停时移动，避免内容抖动 */
+            /* 将动画作用于整个卡片容器，但内部内容不参与动画 */
             transform: translateY(0);
         }
         .agent-card:hover {
@@ -141,8 +139,11 @@
             object-fit: cover;
             border-bottom: 3px solid #e93d5a;
         }
-        .agent-content {
+        .agent-info {
             padding: 20px;
+            /* 确保信息内容不会因为父元素的transform而改变位置 */
+            position: relative;
+            z-index: 1;
         }
         .agent-name {
             font-size: 1.5rem;
@@ -245,12 +246,12 @@
             </div>
         </nav>
 
-        <!-- 面包屑导航 -->
+        <!-- 面包屑导航 - 已增加“端游分区” -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="https://hongjsf.cyou/index.html">首页</a></li>
                 <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/index.html">游戏分区</a></li>
-                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/pc/valorant/index.html">无畏契约</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/pc/valorant/index.html">端游分区</a></li>
                 <li class="breadcrumb-item active">特工指南</li>
             </ol>
         </nav>
@@ -268,235 +269,235 @@
             <h2 class="section-title">全部特工</h2>
             <div class="agent-grid">
                 <!-- 婕风（Jett） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/jett.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="婕风（Jett）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">婕风（Jett）</h3>
                         <span class="agent-role">决斗者</span>
                         <p class="agent-desc">韩国籍特工，拥有高机动性和敏捷性，擅长快速切入战场和迅速撤离。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/jett.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 雷兹（Raze） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/raze.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="雷兹（Raze）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">雷兹（Raze）</h3>
                         <span class="agent-role">决斗者</span>
                         <p class="agent-desc">巴西籍特工，爆破专家，擅长使用爆炸物清理区域和造成大量伤害。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/raze.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 不死鸟（Phoenix） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/phoenix.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="不死鸟（Phoenix）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">不死鸟（Phoenix）</h3>
                         <span class="agent-role">决斗者</span>
                         <p class="agent-desc">英国籍特工，能够操控火焰治疗自己或伤害敌人，拥有自我复活的能力。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/phoenix.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 芮娜（Reyna） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/reyna.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="芮娜（Reyna）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">芮娜（Reyna）</h3>
                         <span class="agent-role">决斗者</span>
                         <p class="agent-desc">墨西哥籍特工，通过吸收灵魂强化自身，是孤狼作战的高手。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/reyna.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 夜露（Yoru） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/yoru.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="夜露（Yoru）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">夜露（Yoru）</h3>
                         <span class="agent-role">决斗者</span>
                         <p class="agent-desc">日本籍特工，掌握维度裂隙，能神出鬼没地穿梭于战场。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/yoru.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 霓虹（Neon） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/neon.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="霓虹（Neon）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">霓虹（Neon）</h3>
                         <span class="agent-role">决斗者</span>
                         <p class="agent-desc">菲律宾籍特工，驾驭着闪电的力量，以超高速度和电能冲击敌人。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/neon.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 蝰蛇（Viper） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/viper.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="蝰蛇（Viper）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">蝰蛇（Viper）</h3>
                         <span class="agent-role">控场者</span>
                         <p class="agent-desc">美国籍特工，化学武器专家，能部署毒幕封锁区域，掌控战场节奏。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/viper.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 幽影（Omen） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/omen.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="幽影（Omen）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">幽影（Omen）</h3>
                         <span class="agent-role">控场者</span>
                         <p class="agent-desc">神秘特工，能投掷暗影球和进行短距离传送，擅长扰乱敌方阵型。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/omen.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 炼狱（Brimstone） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/brimstone.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="炼狱（Brimstone）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">炼狱（Brimstone）</h3>
                         <span class="agent-role">控场者</span>
                         <p class="agent-desc">美国籍特工，战术指挥官，能从空中投掷燃烧弹和烟雾弹支援队友。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/brimstone.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 星礈（Astra） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/astra.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="星礈（Astra）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">星礈（Astra）</h3>
                         <span class="agent-role">控场者</span>
                         <p class="agent-desc">加纳籍特工，能从星界维度召唤星体，创造烟幕、震荡波或重力井。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/astra.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 海神（Skye） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/skye.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="海神（Skye）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">海神（Skye）</h3>
                         <span class="agent-role">先锋</span>
                         <p class="agent-desc">澳大利亚籍特工，能召唤动物伙伴侦查、治疗队友或致盲敌人。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/skye.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 零（Cypher） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/cypher.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="零（Cypher）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">零（Cypher）</h3>
                         <span class="agent-role">哨卫</span>
                         <p class="agent-desc">摩洛哥籍特工，情报专家，能够布置陷阱和监控设备获取敌方信息。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/cypher.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 奇乐（Killjoy） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/killjoy.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="奇乐（Killjoy）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">奇乐（Killjoy）</h3>
                         <span class="agent-role">哨卫</span>
                         <p class="agent-desc">德国籍特工，机械天才，能部署炮台、警报机器人和纳米蜂群封锁区域。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/killjoy.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 贤者（Sage） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/sage.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="贤者（Sage）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">贤者（Sage）</h3>
                         <span class="agent-role">哨卫</span>
                         <p class="agent-desc">中国籍特工，能够治疗队友和复活倒下的同伴，擅长防守和控制战场。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/sage.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 铁臂（Breach） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/breach.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="铁臂（Breach）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">铁臂（Breach）</h3>
                         <span class="agent-role">先锋</span>
                         <p class="agent-desc">瑞典籍特工，使用震撼性武器强行突破防线，为队友创造进攻机会。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/breach.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 猎枭（Sova） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/sova.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="猎枭（Sova）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">猎枭（Sova）</h3>
                         <span class="agent-role">先锋</span>
                         <p class="agent-desc">俄罗斯籍特工，侦察专家，能发射侦查箭矢揭示敌人位置并进行精准打击。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/sova.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- KAY/O -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/kayo.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="KAY/O" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">KAY/O</h3>
                         <span class="agent-role">先锋</span>
                         <p class="agent-desc">来自未来的战斗机器人，能投掷抑制器压制敌人技能并造成范围伤害。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/kayo.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 盖可（Gekko） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/gekko.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="盖可（Gekko）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">盖可（Gekko）</h3>
                         <span class="agent-role">先锋</span>
                         <p class="agent-desc">美国籍特工，能指挥一群奇特的生物伙伴进行侦查、眩晕和治疗。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/gekko.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 维斯（Vyse） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/vyse.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="维斯（Vyse）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">维斯（Vyse）</h3>
                         <span class="agent-role">控场者</span>
                         <p class="agent-desc">新晋控场者，拥有操控荆棘和藤蔓封锁战场、控制敌人的能力。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/vyse.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 壹决（Tejo） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/tejo.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="壹决（Tejo）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">壹决（Tejo）</h3>
                         <span class="agent-role">决斗者</span>
                         <p class="agent-desc">充满力量的决斗者，擅长使用爆炸性的近战攻击和范围技能压制敌人。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/tejo.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 尚勃勒（Chamber） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/chamber.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="尚勃勒（Chamber）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">尚勃勒（Chamber）</h3>
                         <span class="agent-role">哨卫</span>
                         <p class="agent-desc">法国籍特工，武器专家，能部署陷阱并瞬间传送至预设位置。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/chamber.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 黑梦（Fade） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/fade.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="黑梦（Fade）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">黑梦（Fade）</h3>
                         <span class="agent-role">先锋</span>
                         <p class="agent-desc">土耳其籍特工，能释放噩梦能量追踪并揭示敌人，造成恐惧效果。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/fade.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
                 <!-- 幻棱（Harbor） -->
-                <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/harbor.html" class="agent-card">
+                <div class="agent-card">
                     <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="幻棱（Harbor）" class="agent-img">
-                    <div class="agent-content">
+                    <div class="agent-info">
                         <h3 class="agent-name">幻棱（Harbor）</h3>
                         <span class="agent-role">控场者</span>
                         <p class="agent-desc">印度籍特工，掌控水之力量，能制造水盾、水墙和激流控制战场。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/harbor.html" class="btn-details">查看详情</a>
                     </div>
-                </a>
+                </div>
             </div>
         </section>
 
