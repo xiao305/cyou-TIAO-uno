@@ -23,29 +23,38 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        
         /* 导航栏样式 */
         .navbar-custom {
-            background-color: rgba(10, 18, 30, 0.95);
+            background-color: rgba(10, 18, 30, 0.95) !important;
             border-bottom: 2px solid #e93d5a;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
+            padding: 0.5rem 1rem;
         }
         .navbar-brand {
             font-weight: bold;
             font-size: 1.8rem;
             color: #e93d5a !important;
+            display: flex;
+            align-items: center;
+            text-decoration: none !important;
+        }
+        .navbar-brand i {
+            margin-right: 10px;
         }
         .nav-link {
             color: white !important;
             transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            font-size: 1.1rem;
+            text-decoration: none !important;
         }
-        .nav-link:hover {
+        .nav-link:hover, .nav-link.active {
             color: #e93d5a !important;
+            text-decoration: none !important;
         }
-        
         /* 面包屑导航 */
         .breadcrumb {
             background-color: transparent;
@@ -59,7 +68,6 @@
         .breadcrumb-item.active {
             color: #cccccc;
         }
-        
         /* 英雄区域 */
         .hero-section {
             background: linear-gradient(rgba(10, 18, 30, 0.8), rgba(10, 18, 30, 0.8)), 
@@ -95,7 +103,6 @@
             margin-bottom: 30px;
             text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
         }
-        
         /* 内容分区 */
         .section-title {
             text-align: center;
@@ -112,7 +119,6 @@
             border-radius: 10px;
             margin-bottom: 2rem;
         }
-        
         /* 功能卡片 */
         .feature-grid {
             display: grid;
@@ -153,7 +159,6 @@
             color: #cccccc;
             font-size: 1.1rem;
         }
-        
         /* 特工/英雄展示 */
         .agent-grid {
             display: grid;
@@ -199,7 +204,6 @@
             color: #cccccc;
             font-size: 1rem;
         }
-        
         /* 社区资源区域 */
         .resource-grid {
             display: grid;
@@ -246,7 +250,6 @@
             background-color: #d42a45;
             transform: scale(1.05);
         }
-        
         /* 页脚 */
         .footer-custom {
             text-align: center;
@@ -260,12 +263,18 @@
             color: #e93d5a;
             font-size: 18px;
             margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+            text-decoration: none !important;
+        }
+        .footer-title-custom::before {
+            content: "☰";
+            margin-right: 8px;
         }
         .copyright-custom {
             color: #cccccc;
             font-size: 14px;
         }
-        
         /* 响应式调整 */
         @media (max-width: 768px) {
             .hero-title {
@@ -283,7 +292,8 @@
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
             <div class="container-fluid">
                 <a class="navbar-brand" href="https://hongjsf.cyou/index.html"><i class="fas fa-shield-alt"></i> 绝活联盟</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
@@ -301,7 +311,7 @@
                             <a class="nav-link" href="https://hongjsf.cyou/about.html">关于我们</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="https://hongjsf.cyou/join.html">如何加入</a>
+                            <a class="nav-link" href="https://hongjsf.cyou/#join">如何加入</a>
                         </li>
                     </ul>
                 </div>
@@ -396,34 +406,34 @@
             <h2 class="section-title">热门特工</h2>
             <div class="agent-grid">
                 <div class="agent-card">
-                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="杰特" class="agent-img">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="捷风（Jett）" class="agent-img">
                     <div class="agent-content">
                         <h3 class="agent-name">捷风（Jett）</h3>
-                        <span class="agent-role">决斗</span>  <span class="agent-role">捷提</span>
+                        <span class="agent-role">决斗</span>
                         <p class="agent-desc">韩国籍特工，拥有高机动性和敏捷性，擅长快速切入战场和迅速撤离。</p>
                     </div>
                 </div>
                 <div class="agent-card">
-                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="菲尼克斯" class="agent-img">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="不死鸟（Phoenix）" class="agent-img">
                     <div class="agent-content">
                         <h3 class="agent-name">不死鸟（Phoenix）</h3>
-                        <span class="agent-role">决斗</span>  <span class="agent-role">火男</span>
+                        <span class="agent-role">决斗</span>
                         <p class="agent-desc">英国籍特工，能操控火焰并拥有自愈能力，擅长在前线持续作战并为团队创造进攻空间。</p>
                     </div>
                 </div>
                 <div class="agent-card">
-                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Sage" class="agent-img">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="贤者（Sage）" class="agent-img">
                     <div class="agent-content">
                         <h3 class="agent-name">贤者（Sage）</h3>
-                        <span class="agent-role">哨卫</span>  <span class="agent-role">奶妈</span>
+                        <span class="agent-role">哨卫</span>
                         <p class="agent-desc">中国籍特工，擅长使用冰墙和治疗法术，为团队提供强大的防守支援与续航能力。</p>
                     </div>
                 </div>
                 <div class="agent-card">
-                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Cypher" class="agent-img">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="零（Cypher）" class="agent-img">
                     <div class="agent-content">
                         <h3 class="agent-name">零（Cypher）</h3>
-                        <span class="agent-role">哨卫</span>  <span class="agent-role">保安</span>
+                        <span class="agent-role">哨卫</span>
                         <p class="agent-desc">摩洛哥籍特工，情报专家，擅长布置陷阱与监控摄像头，牢牢掌控战场信息并封锁敌方行动路线。</p>
                     </div>
                 </div>
@@ -464,5 +474,38 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ✅ 静默预加载特工指南图片 -->
+    <script>
+        (function() {
+            // 所有特工指南页中用到的图片（去重）
+            const urls = [
+                "https://hongjsf.cyou/assets/images/valorant-agents/breach-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/jett-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/raze-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/omen-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/brimstone-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/phoenix-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/sage-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/sova-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/viper-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/cypher-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/reyna-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/killjoy-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/skye-1.jpg",
+                "https://hongjsf.cyou/assets/images/LOGO-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/harbor-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/gekko-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/deadlock-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/iso-1.jpg"
+            ];
+            const unique = [...new Set(urls)];
+            unique.forEach(url => {
+                const img = new Image();
+                img.src = url; // 浏览器自动缓存
+            });
+            console.log("✅ 已预加载 " + unique.length + " 张特工图片");
+        })();
+    </script>
 </body>
 </html>
