@@ -9,42 +9,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ========== 预加载屏 ========== */
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #0a121e;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: white;
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .loader-icon {
-            font-size: 4rem;
-            color: #e93d5a;
-            margin-bottom: 20px;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .loader-text {
-            font-size: 1.2rem;
-            color: #cccccc;
-            margin-top: 10px;
-        }
-
-        /* ========== 主内容样式 ========== */
+        /* 基础样式 */
         body {
             background-color: #0a121e;
             color: #ffffff;
@@ -58,118 +23,140 @@
             max-width: 1200px;
             margin: 0 auto;
         }
+
+        /* === 新增：加载页样式 === */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a121e;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loader-title {
+            font-size: 2.5rem;
+            color: #e93d5a;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        .loader-progress-bar {
+            width: 80%;
+            max-width: 500px;
+            height: 20px;
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .loader-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #e93d5a, #ff6b81);
+            transition: width 0.3s ease;
+        }
+        .loader-percent {
+            font-size: 1.2rem;
+            color: #cccccc;
+        }
+
+        /* 隐藏主内容直到加载完成 */
+        .main-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .main-content.loaded {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 原有样式保持不变 */
         .navbar-custom {
-            background-color: rgba(10, 18, 30, 0.95) !important;
+            background-color: rgba(10, 18, 30, 0.95);
             border-bottom: 2px solid #e93d5a;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
-            padding: 0.5rem 1rem;
         }
         .navbar-brand {
             font-weight: bold;
             font-size: 1.8rem;
             color: #e93d5a !important;
-            display: flex;
-            align-items: center;
-            text-decoration: none !important;
         }
         .nav-link {
             color: white !important;
-            text-decoration: none !important;
             transition: all 0.3s ease;
-            padding: 0.5rem 1rem !important;
-            font-size: 1.1rem;
         }
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover {
             color: #e93d5a !important;
         }
         .breadcrumb {
-            background: transparent;
+            background-color: transparent;
             padding: 15px 0;
+            margin-bottom: 20px;
         }
         .breadcrumb-item a {
             color: #e93d5a;
             text-decoration: none;
         }
+        .breadcrumb-item.active {
+            color: #cccccc;
+        }
         .hero-section {
-            background: linear-gradient(rgba(10,18,30,0.8), rgba(10,18,30,0.8)), 
+            background: linear-gradient(rgba(10, 18, 30, 0.8), rgba(10, 18, 30, 0.8)), 
                         url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');
             background-size: cover;
+            background-position: center;
             height: 40vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 0;
             border-radius: 10px;
             margin-bottom: 2rem;
         }
-        .agent-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-        }
-        .agent-card {
-            background: rgba(20,30,48,0.9);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
-        .agent-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 2px solid #e93d5a;
-        }
-        .agent-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 3px solid #e93d5a;
-        }
-        .agent-info {
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            max-width: 800px;
             padding: 20px;
         }
-        .agent-name {
-            font-size: 1.5rem;
-            color: #e93d5a;
-            margin-bottom: 10px;
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            font-weight: 700;
         }
-        .agent-role {
-            display: inline-block;
-            background: #e93d5a;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
         }
-        .btn-details {
-            display: inline-block;
-            width: 100%;
+        .section-title {
             text-align: center;
-            background: transparent;
+            margin-bottom: 40px;
             color: #e93d5a;
-            border: 1px solid #e93d5a;
-            padding: 8px 15px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            font-size: 2.5rem;
+            font-weight: 700;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e93d5a;
         }
-        .btn-details:hover {
-            background: #e93d5a;
-            color: white;
-            transform: scale(1.05);
-        }
-        .footer-custom {
-            text-align: center;
-            margin-top: 60px;
-            padding: 25px;
-            background: rgba(15,25,40,0.8);
+        .content-section {
+            padding: 60px 0;
+            background-color: rgba(15, 25, 40, 0.8);
             border-radius: 10px;
-            border: 2px solid rgba(233,57,89,0.3);
+            margin-bottom: 2rem;
         }
         .filter-container {
             display: flex;
@@ -193,18 +180,113 @@
             color: white;
             transform: scale(1.05);
         }
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .agent-card {
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid #e93d5a;
+        }
+        .agent-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid #e93d5a;
+        }
+        .agent-info {
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .agent-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e93d5a;
+            margin-bottom: 10px;
+        }
+        .agent-role {
+            display: inline-block;
+            background-color: #e93d5a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .agent-desc {
+            color: #cccccc;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        .btn-details {
+            background-color: transparent;
+            color: #e93d5a;
+            border: 1px solid #e93d5a;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+        .btn-details:hover {
+            background-color: #e93d5a;
+            color: white;
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+        .footer-custom {
+            text-align: center;
+            margin-top: 60px;
+            padding: 25px;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            border: 2px solid rgba(233, 57, 89, 0.3);
+        }
+        .footer-title-custom {
+            color: #e93d5a;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .copyright-custom {
+            color: #cccccc;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- 预加载屏 -->
-    <div id="preloader">
-        <div class="loader-icon">
-            <i class="fas fa-user-ninja"></i>
+    <!-- 加载页 -->
+    <div class="loader-overlay" id="loader">
+        <div class="loader-title">正在加载特工数据...</div>
+        <div class="loader-progress-bar">
+            <div class="loader-progress-fill" id="progressFill"></div>
         </div>
-        <div class="loader-text">正在加载特工档案... <span id="progress">0%</span></div>
+        <div class="loader-percent" id="progressPercent">0%</div>
     </div>
 
-    <div id="main-content" style="display: none;">
+    <!-- 主内容（初始隐藏） -->
+    <div class="main-content" id="mainContent">
         <div class="container container-custom">
             <!-- 导航栏 -->
             <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
@@ -215,16 +297,25 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link" href="https://hongjsf.cyou/index.html">首页</a></li>
-                            <li class="nav-item"><a class="nav-link" href="https://hongjsf.cyou/game-zone/index.html">游戏分区</a></li>
-                            <li class="nav-item"><a class="nav-link" href="https://hongjsf.cyou/game-zone/pc/valorant/index.html">无畏契约</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="https://hongjsf.cyou/game-zone/pc/valorant/agents">特工指南</a></li>
-                            <li class="nav-item"><a class="nav-link" href="https://hongjsf.cyou/about.html">关于我们</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://hongjsf.cyou/index.html">首页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://hongjsf.cyou/game-zone/index.html">游戏分区</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://hongjsf.cyou/game-zone/pc/valorant/index.html">无畏契约</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="https://hongjsf.cyou/game-zone/pc/valorant/agents">特工指南</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://hongjsf.cyou/about.html">关于我们</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </nav>
-
             <!-- 面包屑导航 -->
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -235,7 +326,6 @@
                     <li class="breadcrumb-item active">特工指南</li>
                 </ol>
             </nav>
-
             <!-- 英雄区域 -->
             <section class="hero-section">
                 <div class="hero-content">
@@ -243,7 +333,6 @@
                     <p class="hero-subtitle">深入了解每一位特工的技能、定位和战术，成为战场上的主宰者</p>
                 </div>
             </section>
-
             <!-- 特工列表 -->
             <section class="content-section">
                 <h2 class="section-title">全部特工</h2>
@@ -254,9 +343,8 @@
                     <button class="filter-btn" data-filter="initiator">先锋</button>
                     <button class="filter-btn" data-filter="sentinel">哨卫</button>
                 </div>
-
                 <div class="agent-grid">
-                    <!-- 所有 agent-card 保持原样，仅清理 src 空格 -->
+                    <!-- 铁臂（Breach） -->
                     <div class="agent-card" data-category="initiator">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/breach-1.jpg" alt="铁臂（Breach）" class="agent-img">
                         <div class="agent-info">
@@ -266,6 +354,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/breach.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 捷风（Jett） -->
                     <div class="agent-card" data-category="duelist">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/jett-1.jpg" alt="捷风（Jett）" class="agent-img">
                         <div class="agent-info">
@@ -275,6 +364,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/jett.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 雷兹（Raze） -->
                     <div class="agent-card" data-category="duelist">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/raze-1.jpg" alt="雷兹（Raze）" class="agent-img">
                         <div class="agent-info">
@@ -284,6 +374,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/raze.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 幽影（Omen） -->
                     <div class="agent-card" data-category="controller">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/omen-1.jpg" alt="幽影（Omen）" class="agent-img">
                         <div class="agent-info">
@@ -293,6 +384,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/omen.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 炼狱（Brimstone） -->
                     <div class="agent-card" data-category="controller">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/brimstone-1.jpg" alt="炼狱（Brimstone）" class="agent-img">
                         <div class="agent-info">
@@ -302,6 +394,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/brimstone.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 不死鸟（Phoenix） -->
                     <div class="agent-card" data-category="duelist">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/phoenix-1.jpg" alt="不死鸟（Phoenix）" class="agent-img">
                         <div class="agent-info">
@@ -311,6 +404,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/phoenix.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 贤者（Sage） -->
                     <div class="agent-card" data-category="sentinel">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/sage-1.jpg" alt="贤者（Sage）" class="agent-img">
                         <div class="agent-info">
@@ -320,6 +414,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/sage.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 猎枭（Sova） -->
                     <div class="agent-card" data-category="sentinel">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/sova-1.jpg" alt="猎枭（Sova）" class="agent-img">
                         <div class="agent-info">
@@ -329,6 +424,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/sova.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 蝰蛇（Viper） -->
                     <div class="agent-card" data-category="controller">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/viper-1.jpg" alt="蝰蛇（Viper）" class="agent-img">
                         <div class="agent-info">
@@ -338,6 +434,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/viper.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 零（Cypher） -->
                     <div class="agent-card" data-category="sentinel">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/cypher-1.jpg" alt="零（Cypher）" class="agent-img">
                         <div class="agent-info">
@@ -347,6 +444,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/cypher.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 芮娜（Reyna） -->
                     <div class="agent-card" data-category="duelist">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/reyna-1.jpg" alt="芮娜（Reyna）" class="agent-img">
                         <div class="agent-info">
@@ -356,6 +454,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/reyna.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 奇乐（Killjoy） -->
                     <div class="agent-card" data-category="sentinel">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/killjoy-1.jpg" alt="奇乐（Killjoy）" class="agent-img">
                         <div class="agent-info">
@@ -365,6 +464,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/killjoy.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 斯凯（Skye） -->
                     <div class="agent-card" data-category="initiator">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/skye-1.jpg" alt="斯凯（Skye）" class="agent-img">
                         <div class="agent-info">
@@ -374,6 +474,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/skye.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 夜露（Yoru） -->
                     <div class="agent-card" data-category="duelist">
                         <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="夜露（Yoru）" class="agent-img">
                         <div class="agent-info">
@@ -383,6 +484,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/yoru.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 星礈（Astra） -->
                     <div class="agent-card" data-category="controller">
                         <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="星礈（Astra）" class="agent-img">
                         <div class="agent-info">
@@ -392,6 +494,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/astra.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- KAY/O -->
                     <div class="agent-card" data-category="initiator">
                         <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="KAY/O" class="agent-img">
                         <div class="agent-info">
@@ -401,6 +504,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/kayo.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 尚勃勒（Chamber） -->
                     <div class="agent-card" data-category="sentinel">
                         <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="尚勃勒（Chamber）" class="agent-img">
                         <div class="agent-info">
@@ -410,6 +514,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/chamber.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 霓虹（Neon） -->
                     <div class="agent-card" data-category="duelist">
                         <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="霓虹（Neon）" class="agent-img">
                         <div class="agent-info">
@@ -419,6 +524,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/neon.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 黑梦（Fade） -->
                     <div class="agent-card" data-category="initiator">
                         <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="黑梦（Fade）" class="agent-img">
                         <div class="agent-info">
@@ -428,6 +534,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/fade.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 海神（Harbor） -->
                     <div class="agent-card" data-category="controller">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/harbor-1.jpg" alt="海神（Harbor）" class="agent-img">
                         <div class="agent-info">
@@ -437,6 +544,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/harbor.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 盖可（Gekko） -->
                     <div class="agent-card" data-category="initiator">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/gekko-1.jpg" alt="盖可（Gekko）" class="agent-img">
                         <div class="agent-info">
@@ -446,6 +554,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/gekko.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 钢索（Deadlock） -->
                     <div class="agent-card" data-category="sentinel">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/deadlock-1.jpg" alt="钢索（Deadlock）" class="agent-img">
                         <div class="agent-info">
@@ -455,6 +564,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/deadlock.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 壹决（Iso） -->
                     <div class="agent-card" data-category="duelist">
                         <img src="https://hongjsf.cyou/assets/images/valorant-agents/iso-1.jpg" alt="壹决（Iso）" class="agent-img">
                         <div class="agent-info">
@@ -464,6 +574,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/iso.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 暮蝶（Clove） -->
                     <div class="agent-card" data-category="controller">
                         <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="暮蝶（Clove）" class="agent-img">
                         <div class="agent-info">
@@ -473,6 +584,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/clove.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 维斯（Vyse） -->
                     <div class="agent-card" data-category="sentinel">
                         <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="维斯（Vyse）" class="agent-img">
                         <div class="agent-info">
@@ -482,6 +594,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/vyse.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 钛狐（Tejo） -->
                     <div class="agent-card" data-category="initiator">
                         <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="钛狐（Tejo）" class="agent-img">
                         <div class="agent-info">
@@ -491,6 +604,7 @@
                             <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/tejo.html" class="btn-details">查看详情</a>
                         </div>
                     </div>
+                    <!-- 幻棱（Waylay） -->
                     <div class="agent-card" data-category="initiator">
                         <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="幻棱（Waylay）" class="agent-img">
                         <div class="agent-info">
@@ -502,7 +616,6 @@
                     </div>
                 </div>
             </section>
-
             <!-- 页脚 -->
             <footer class="footer-custom">
                 <h3 class="footer-title-custom">绝活联盟审核组 荣誉出品</h3>
@@ -511,60 +624,72 @@
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 图片加载 + 进度控制 -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const preloader = document.getElementById('preloader');
-            const mainContent = document.getElementById('main-content');
-            const progressText = document.getElementById('progress');
+            const loader = document.getElementById('loader');
+            const mainContent = document.getElementById('mainContent');
+            const progressFill = document.getElementById('progressFill');
+            const progressPercent = document.getElementById('progressPercent');
 
-            const imgs = document.querySelectorAll('#main-content img');
-            const srcs = Array.from(imgs).map(img => img.src.trim()).filter(Boolean);
-            const total = srcs.length;
-            let loaded = 0;
+            // 收集所有真实图片（排除 LOGO-1.jpg）
+            const realImageUrls = [
+                "https://hongjsf.cyou/assets/images/valorant-agents/breach-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/jett-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/raze-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/omen-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/brimstone-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/phoenix-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/sage-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/sova-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/viper-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/cypher-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/reyna-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/killjoy-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/skye-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/harbor-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/gekko-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/deadlock-1.jpg",
+                "https://hongjsf.cyou/assets/images/valorant-agents/iso-1.jpg"
+            ];
 
-            if (total === 0) {
-                showMain();
-                return;
-            }
+            let loadedCount = 0;
+            const totalCount = realImageUrls.length;
 
-            function update() {
-                const p = Math.min(100, Math.floor((loaded / total) * 100));
-                progressText.textContent = p + '%';
-                if (loaded >= total) showMain();
-            }
+            const loadImage = (src) => {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        loadedCount++;
+                        const percent = Math.min(Math.round((loadedCount / totalCount) * 100), 100);
+                        progressFill.style.width = percent + '%';
+                        progressPercent.textContent = percent + '%';
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        loadedCount++;
+                        const percent = Math.min(Math.round((loadedCount / totalCount) * 100), 100);
+                        progressFill.style.width = percent + '%';
+                        progressPercent.textContent = percent + '%';
+                        resolve(); // 即使失败也继续
+                    };
+                    img.src = src;
+                });
+            };
 
-            function showMain() {
-                preloader.style.opacity = '0';
+            // 开始加载
+            Promise.all(realImageUrls.map(loadImage)).then(() => {
+                // 当加载 ≥ 90% 或全部完成时，隐藏加载页
                 setTimeout(() => {
-                    preloader.style.display = 'none';
-                    mainContent.style.display = 'block';
-                    initFilters();
-                }, 500);
-            }
-
-            srcs.forEach(src => {
-                const img = new Image();
-                img.onload = img.onerror = () => {
-                    loaded++;
-                    update();
-                };
-                img.src = src;
+                    loader.style.opacity = '0';
+                    loader.style.visibility = 'hidden';
+                    mainContent.classList.add('loaded');
+                }, 300); // 小延迟让动画更平滑
             });
         });
-
-        function initFilters() {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    const f = this.dataset.filter;
-                    document.querySelectorAll('.agent-card').forEach(card => {
-                        card.style.display = (f === 'all' || card.dataset.category === f) ? 'block' : 'none';
-                    });
-                });
-            });
-        }
     </script>
 </body>
 </html>
