@@ -229,6 +229,14 @@
                 font-size: 2rem;
             }
         }
+
+        /* 新增：角色定位图标样式 */
+        .role-icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -283,11 +291,21 @@
             <h2 class="section-title">全部特工</h2>
             <!-- 筛选按钮 -->
             <div class="filter-container">
-                <button class="filter-btn active" data-filter="all">全部</button>
-                <button class="filter-btn" data-filter="duelist">决斗</button>
-                <button class="filter-btn" data-filter="controller">控场</button>
-                <button class="filter-btn" data-filter="initiator">先锋</button>
-                <button class="filter-btn" data-filter="sentinel">哨卫</button>
+                <button class="filter-btn active" data-filter="all">
+                    <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleInitiator.svg" alt="全部" class="role-icon"> 全部
+                </button>
+                <button class="filter-btn" data-filter="duelist">
+                    <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleDuelist.svg" alt="决斗" class="role-icon"> 决斗
+                </button>
+                <button class="filter-btn" data-filter="controller">
+                    <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleController.svg" alt="控场" class="role-icon"> 控场
+                </button>
+                <button class="filter-btn" data-filter="initiator">
+                    <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleInitiator.svg" alt="先锋" class="role-icon"> 先锋
+                </button>
+                <button class="filter-btn" data-filter="sentinel">
+                    <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleSentinel.svg" alt="哨卫" class="role-icon"> 哨卫
+                </button>
             </div>
             <div class="agent-grid">
                 <!-- 铁臂（Breach） -->
@@ -298,7 +316,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">铁臂（Breach）</h3>
-                        <span class="agent-role">先锋</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleInitiator.svg" alt="先锋" class="role-icon"> 先锋
+                        </span>
                         <p class="agent-desc">瑞典籍特工，使用震撼性武器强行突破防线，为队友创造进攻机会。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/breach.html" class="btn-details">查看详情</a>
                     </div>
@@ -311,7 +331,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">捷风（Jett）</h3>
-                        <span class="agent-role">决斗(一突)</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleDuelist.svg" alt="决斗" class="role-icon"> 决斗(一突)
+                        </span>
                         <p class="agent-desc">韩国籍特工，拥有高机动性和敏捷性，擅长快速切入战场和迅速撤离。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/jett.html" class="btn-details">查看详情</a>
                     </div>
@@ -324,7 +346,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">雷兹（Raze）</h3>
-                        <span class="agent-role">决斗(一突)</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleDuelist.svg" alt="决斗" class="role-icon"> 决斗(一突)
+                        </span>
                         <p class="agent-desc">巴西籍特工，爆破专家，擅长使用爆炸物清理区域和造成大量伤害。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/raze.html" class="btn-details">查看详情</a>
                     </div>
@@ -337,7 +361,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">幽影（Omen）</h3>
-                        <span class="agent-role">控场</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleController.svg" alt="控场" class="role-icon"> 控场
+                        </span>
                         <p class="agent-desc">神秘特工，能投掷暗影球和进行短距离传送，擅长扰乱敌方阵型。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/omen.html" class="btn-details">查看详情</a>
                     </div>
@@ -350,7 +376,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">炼狱（Brimstone）</h3>
-                        <span class="agent-role">控场</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleController.svg" alt="控场" class="role-icon"> 控场
+                        </span>
                         <p class="agent-desc">美国籍特工，擅长部署燃烧弹和空袭区域，为团队提供强大的火力压制与区域封锁能力。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/brimstone.html" class="btn-details">查看详情</a>
                     </div>
@@ -363,7 +391,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">不死鸟（Phoenix）</h3>
-                        <span class="agent-role">决斗(二突)</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleDuelist.svg" alt="决斗" class="role-icon"> 决斗(二突)
+                        </span>
                         <p class="agent-desc">英国籍特工，能操控火焰并拥有自愈能力，擅长在前线持续作战并为团队创造进攻空间。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/phoenix.html" class="btn-details">查看详情</a>
                     </div>
@@ -376,7 +406,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">贤者（Sage）</h3>
-                        <span class="agent-role">哨卫</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleSentinel.svg" alt="哨卫" class="role-icon"> 哨卫
+                        </span>
                         <p class="agent-desc">中国籍特工，擅长使用冰墙和治疗法术，为团队提供强大的防守支援与续航能力。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/sage.html" class="btn-details">查看详情</a>
                     </div>
@@ -389,7 +421,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">猎枭（Sova）</h3>
-                        <span class="agent-role">哨卫</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleSentinel.svg" alt="哨卫" class="role-icon"> 哨卫
+                        </span>
                         <p class="agent-desc">俄罗斯籍特工，擅长使用侦察箭和无人机精准定位敌人，为团队提供关键情报与远程火力压制。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/sova.html" class="btn-details">查看详情</a>
                     </div>
@@ -402,7 +436,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">蝰蛇（Viper）</h3>
-                        <span class="agent-role">控场</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleController.svg" alt="控场" class="role-icon"> 控场
+                        </span>
                         <p class="agent-desc">美国籍特工，化学武器专家，擅长部署毒雾和酸池封锁区域，持续削弱敌方战斗力。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/viper.html" class="btn-details">查看详情</a>
                     </div>
@@ -415,7 +451,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">零（Cypher）</h3>
-                        <span class="agent-role">哨卫</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleSentinel.svg" alt="哨卫" class="role-icon"> 哨卫
+                        </span>
                         <p class="agent-desc">摩洛哥籍特工，情报专家，擅长布置陷阱与监控摄像头，牢牢掌控战场信息并封锁敌方行动路线。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/cypher.html" class="btn-details">查看详情</a>
                     </div>
@@ -428,7 +466,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">芮娜（Reyna）</h3>
-                        <span class="agent-role">决斗(一突)</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleDuelist.svg" alt="决斗" class="role-icon"> 决斗(一突)
+                        </span>
                         <p class="agent-desc">墨西哥籍特工，嗜血战士，擅长通过击杀敌人吸收灵魂恢复状态，实现高风险高回报的激进作战风格。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/reyna.html" class="btn-details">查看详情</a>
                     </div>
@@ -441,7 +481,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">奇乐（Killjoy）</h3>
-                        <span class="agent-role">哨卫</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleSentinel.svg" alt="哨卫" class="role-icon"> 哨卫
+                        </span>
                         <p class="agent-desc">德国籍特工，机械天才，擅长部署炮台、纳米蜂群和封锁装置，构建坚固的自动化防御阵地。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/killjoy.html" class="btn-details">查看详情</a>
                     </div>
@@ -454,7 +496,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">斯凯（Skye）</h3>
-                        <span class="agent-role">先锋</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleInitiator.svg" alt="先锋" class="role-icon"> 先锋
+                        </span>
                         <p class="agent-desc">澳大利亚籍特工，自然之力的驾驭者，擅长召唤动物伙伴侦察与治疗队友，同时用闪光致盲敌人打开进攻通路。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/skye.html" class="btn-details">查看详情</a>
                     </div>
@@ -467,7 +511,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">夜露（Yoru）</h3>
-                        <span class="agent-role">决斗(二突)</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleDuelist.svg" alt="决斗" class="role-icon"> 决斗(二突)
+                        </span>
                         <p class="agent-desc">日本籍特工，擅长利用维度裂隙进行隐秘移动与假身诱敌，以出其不意的战术扰乱并刺杀敌方关键目标。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/yoru.html" class="btn-details">查看详情</a>
                     </div>
@@ -476,11 +522,13 @@
                 <div class="agent-card" data-category="controller">
                     <picture>
                         <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/astra-1.webp" type="image/webp">
-                        <img src="https://hongjsf.cyou/assets/images/valorant-agents/astra-1.webp" alt="星礈（Astra）" class="agent-img" loading="lazy">
+                        <img src="https://hongjsf.cyou/assets/images/valorant-agents/astra-1.jpg" alt="星礈（Astra）" class="agent-img" loading="lazy">
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">星礈（Astra）</h3>
-                        <span class="agent-role">控场</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleController.svg" alt="控场" class="role-icon"> 控场
+                        </span>
                         <p class="agent-desc">加纳籍特工，宇宙能量操控者，擅长在星体间远程部署重力井、星爆与星幕，从全局尺度掌控战场节奏与区域封锁。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/astra.html" class="btn-details">查看详情</a>
                     </div>
@@ -493,7 +541,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">KAY/O</h3>
-                        <span class="agent-role">先锋</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleInitiator.svg" alt="先锋" class="role-icon"> 先锋
+                        </span>
                         <p class="agent-desc">机器人特工，来自未来战争产物，擅长投掷抑制刀与部署EMP装置压制敌方技能，为团队强行开辟进攻路径。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/kayo.html" class="btn-details">查看详情</a>
                     </div>
@@ -506,7 +556,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">尚勃勒（Chamber）</h3>
-                        <span class="agent-role">哨卫</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleSentinel.svg" alt="哨卫" class="role-icon"> 哨卫
+                        </span>
                         <p class="agent-desc">法国籍特工，武器设计师与优雅狙击手，擅长部署随身炮台与传送锚点，在远距离精准狙杀并灵活调整防守站位。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/chamber.html" class="btn-details">查看详情</a>
                     </div>
@@ -519,7 +571,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">霓虹（Neon）</h3>
-                        <span class="agent-role">决斗(一突)</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleDuelist.svg" alt="决斗" class="role-icon"> 决斗(一突)
+                        </span>
                         <p class="agent-desc">菲律宾籍特工，超能速攻手，擅长积蓄电能进行闪电冲刺与释放高压电流，以极快速度突入战场压制敌人。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/neon.html" class="btn-details">查看详情</a>
                     </div>
@@ -532,7 +586,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">黑梦（Fade）</h3>
-                        <span class="agent-role">先锋</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleInitiator.svg" alt="先锋" class="role-icon"> 先锋
+                        </span>
                         <p class="agent-desc">土耳其籍特工，恐惧猎手，擅长释放梦魇触须与暗影追踪器揭露并束缚敌人，为团队照亮潜行威胁并打开进攻突破口。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/fade.html" class="btn-details">查看详情</a>
                     </div>
@@ -545,7 +601,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">海神（Harbor）</h3>
-                        <span class="agent-role">控场</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleController.svg" alt="控场" class="role-icon"> 控场
+                        </span>
                         <p class="agent-desc">印度籍特工，水之守护者，擅长召唤水盾、潮汐冲击与海啸屏障，灵活控制战场地形并为队友提供强力掩护。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/harbor.html" class="btn-details">查看详情</a>
                     </div>
@@ -558,7 +616,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">盖可（Gekko）</h3>
-                        <span class="agent-role">先锋</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleInitiator.svg" alt="先锋" class="role-icon"> 先锋
+                        </span>
                         <p class="agent-desc">美国籍特工，驯兽师风格的特工，擅长指挥名为“皮蛋”、“嗨宝”和“丢丢”的生物伙伴进行侦察、爆炸与致盲，为团队开辟进攻路线。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/gekko.html" class="btn-details">查看详情</a>
                     </div>
@@ -571,7 +631,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">钢索（Deadlock）</h3>
-                        <span class="agent-role">哨卫</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleSentinel.svg" alt="哨卫" class="role-icon"> 哨卫
+                        </span>
                         <p class="agent-desc">挪威籍特工，安全专家，擅长部署纳米线与重力陷阱封锁路径、禁锢敌人，构建滴水不漏的区域防御体系。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/deadlock.html" class="btn-details">查看详情</a>
                     </div>
@@ -584,7 +646,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">壹决（Iso）</h3>
-                        <span class="agent-role">决斗(二突)</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleDuelist.svg" alt="决斗" class="role-icon"> 决斗(二突)
+                        </span>
                         <p class="agent-desc">中国籍特工，孤狼型战士，擅长制造“棱镜”分身并激活“肃清”护盾，在高压对枪中创造一对一决胜机会。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/iso.html" class="btn-details">查看详情</a>
                     </div>
@@ -593,11 +657,13 @@
                 <div class="agent-card" data-category="controller">
                     <picture>
                         <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/clove-1.webp" type="image/webp">
-                        <img src="https://hongjsf.cyou/assets/images/valorant-agents/clove-1.webp" alt="暮蝶（Clove）" class="agent-img" loading="lazy">
+                        <img src="https://hongjsf.cyou/assets/images/valorant-agents/clove-1.jpg" alt="暮蝶（Clove）" class="agent-img" loading="lazy">
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">暮蝶（Clove）</h3>
-                        <span class="agent-role">控场</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleController.svg" alt="控场" class="role-icon"> 控场
+                        </span>
                         <p class="agent-desc">苏格兰籍特工，擅长使用幻术与精神干扰技能，通过制造幻象和心灵控制扰乱敌方判断，瓦解敌方团队协作与进攻节奏。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/clove.html" class="btn-details">查看详情</a>
                     </div>
@@ -610,7 +676,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">维斯（Vyse）</h3>
-                        <span class="agent-role">哨卫</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleSentinel.svg" alt="哨卫" class="role-icon"> 哨卫
+                        </span>
                         <p class="agent-desc">神秘金属操控者，擅长部署液态金属陷阱封锁路径并缴械敌人，构建难以突破的防御阵地。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/vyse.html" class="btn-details">查看详情</a>
                     </div>
@@ -623,7 +691,9 @@
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">钛狐（Tejo）</h3>
-                        <span class="agent-role">先锋</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleInitiator.svg" alt="先锋" class="role-icon"> 先锋
+                        </span>
                         <p class="agent-desc">哥伦比亚籍特工，资深情报顾问，擅长使用无人机和弹道制导系统精准锁定并轰炸敌人，迫使其放弃阵地。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/tejo.html" class="btn-details">查看详情</a>
                     </div>
@@ -632,11 +702,13 @@
                 <div class="agent-card" data-category="initiator">
                     <picture>
                         <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/waylay-1.webp" type="image/webp">
-                        <img src="https://hongjsf.cyou/assets/images/valorant-agents/waylay-1.webp" alt="幻棱（Waylay）" class="agent-img" loading="lazy">
+                        <img src="https://hongjsf.cyou/assets/images/valorant-agents/waylay-1.jpg" alt="幻棱（Waylay）" class="agent-img" loading="lazy">
                     </picture>
                     <div class="agent-info">
                         <h3 class="agent-name">幻棱（Waylay）</h3>
-                        <span class="agent-role">先锋</span>
+                        <span class="agent-role">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleInitiator.svg" alt="先锋" class="role-icon"> 先锋
+                        </span>
                         <p class="agent-desc">爱尔兰籍特工，擅长部署追踪型“棱镜”装置锁定并追击敌人，为团队提供精准情报并强行打开进攻突破口。</p>
                         <a href="https://hongjsf.cyou/game-zone/pc/valorant/agents/waylay.html" class="btn-details">查看详情</a>
                     </div>
