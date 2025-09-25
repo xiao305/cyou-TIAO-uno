@@ -58,7 +58,7 @@
             background: linear-gradient(rgba(10, 18, 30, 0.85), rgba(10, 18, 30, 0.85)), 
                         url('https://hongjsf.cyou/assets/images/valorant-agents/jett-1.webp');
             background-size: cover;
-            background-position: top center; /* 关键修改：从 center 改为 top center */
+            background-position: top center; /* 关键修复：确保头部可见 */
             height: 40vh;
             display: flex;
             align-items: center;
@@ -188,35 +188,90 @@
             color: #cccccc;
             font-size: 1.05rem;
         }
+        /* 视频容器与加载状态 */
         .skill-video {
             width: 100%;
             max-width: 400px;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
-        .skill-video video {
+        .video-container {
+            position: relative;
             width: 100%;
-            height: auto;
+            aspect-ratio: 16 / 9; /* 固定16:9比例 */
+            background-color: #000;
+        }
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
         }
-        .btn-skill-details {
-            background-color: transparent;
-            color: #e93d5a;
-            border: 1px solid #e93d5a;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 10px;
-        }
-        .btn-skill-details:hover {
-            background-color: #e93d5a;
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 18, 30, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: white;
-            transform: scale(1.05);
-            text-decoration: none;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+        .video-overlay.d-none {
+            display: none;
+        }
+        .loading-content, .error-content {
+            text-align: center;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #e93d5a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .progress-bar {
+            width: 80%;
+            max-width: 200px;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin: 10px auto;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #e93d5a, #ff6b81);
+            transition: width 0.3s ease;
+        }
+        .btn-retry {
+            background-color: #e93d5a;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .btn-retry:hover {
+            background-color: #d42a45;
         }
         /* 深度解析样式 */
         .deep-dive-card {
@@ -415,6 +470,7 @@
         <section class="content-section">
             <h2 class="section-title">技能详解</h2>
             <div class="row">
+                <!-- Q技能 -->
                 <div class="col-md-6">
                     <div class="skill-card">
                         <div class="skill-icon">
@@ -426,13 +482,31 @@
                             <a href="#" class="btn-skill-details">查看详情</a>
                         </div>
                         <div class="skill-video">
-                            <video autoplay loop muted playsinline>
-                                <source src="https://hongjsf.cyou/assets/images/valorant-skills/jett/Q.mp4" type="video/mp4">
-                                您的浏览器不支持视频播放。
-                            </video>
+                            <div class="video-container" data-video-src="https://hongjsf.cyou/assets/images/valorant-skills/jett/Q.mp4">
+                                <video muted playsinline>
+                                    <source src="https://hongjsf.cyou/assets/images/valorant-skills/jett/Q.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-overlay loading">
+                                    <div class="loading-content">
+                                        <div class="spinner"></div>
+                                        <p>视频加载中...</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="video-overlay error d-none">
+                                    <div class="error-content">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <p>视频加载失败</p>
+                                        <button class="btn btn-sm btn-retry">重试</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!-- E技能 -->
                 <div class="col-md-6">
                     <div class="skill-card">
                         <div class="skill-icon">
@@ -444,13 +518,31 @@
                             <a href="#" class="btn-skill-details">查看详情</a>
                         </div>
                         <div class="skill-video">
-                            <video autoplay loop muted playsinline>
-                                <source src="https://hongjsf.cyou/assets/images/valorant-skills/jett/E.mp4" type="video/mp4">
-                                您的浏览器不支持视频播放。
-                            </video>
+                            <div class="video-container" data-video-src="https://hongjsf.cyou/assets/images/valorant-skills/jett/E.mp4">
+                                <video muted playsinline>
+                                    <source src="https://hongjsf.cyou/assets/images/valorant-skills/jett/E.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-overlay loading">
+                                    <div class="loading-content">
+                                        <div class="spinner"></div>
+                                        <p>视频加载中...</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="video-overlay error d-none">
+                                    <div class="error-content">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <p>视频加载失败</p>
+                                        <button class="btn btn-sm btn-retry">重试</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!-- C技能 -->
                 <div class="col-md-6">
                     <div class="skill-card">
                         <div class="skill-icon">
@@ -462,13 +554,31 @@
                             <a href="#" class="btn-skill-details">查看详情</a>
                         </div>
                         <div class="skill-video">
-                            <video autoplay loop muted playsinline>
-                                <source src="https://hongjsf.cyou/assets/images/valorant-skills/jett/C.mp4" type="video/mp4">
-                                您的浏览器不支持视频播放。
-                            </video>
+                            <div class="video-container" data-video-src="https://hongjsf.cyou/assets/images/valorant-skills/jett/C.mp4">
+                                <video muted playsinline>
+                                    <source src="https://hongjsf.cyou/assets/images/valorant-skills/jett/C.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-overlay loading">
+                                    <div class="loading-content">
+                                        <div class="spinner"></div>
+                                        <p>视频加载中...</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="video-overlay error d-none">
+                                    <div class="error-content">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <p>视频加载失败</p>
+                                        <button class="btn btn-sm btn-retry">重试</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!-- X技能 -->
                 <div class="col-md-6">
                     <div class="skill-card">
                         <div class="skill-icon">
@@ -480,10 +590,27 @@
                             <a href="#" class="btn-skill-details">查看详情</a>
                         </div>
                         <div class="skill-video">
-                            <video autoplay loop muted playsinline>
-                                <source src="https://hongjsf.cyou/assets/images/valorant-skills/jett/X.mp4" type="video/mp4">
-                                您的浏览器不支持视频播放。
-                            </video>
+                            <div class="video-container" data-video-src="https://hongjsf.cyou/assets/images/valorant-skills/jett/X.mp4">
+                                <video muted playsinline>
+                                    <source src="https://hongjsf.cyou/assets/images/valorant-skills/jett/X.mp4" type="video/mp4">
+                                </video>
+                                <div class="video-overlay loading">
+                                    <div class="loading-content">
+                                        <div class="spinner"></div>
+                                        <p>视频加载中...</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="video-overlay error d-none">
+                                    <div class="error-content">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <p>视频加载失败</p>
+                                        <button class="btn btn-sm btn-retry">重试</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -567,5 +694,54 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 视频加载状态管理 -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const videoContainers = document.querySelectorAll('.video-container');
+
+        videoContainers.forEach(container => {
+            const video = container.querySelector('video');
+            const loadingOverlay = container.querySelector('.video-overlay.loading');
+            const errorOverlay = container.querySelector('.video-overlay.error');
+            const progressFill = container.querySelector('.progress-fill');
+            const retryButton = container.querySelector('.btn-retry');
+
+            // 开始加载时显示加载层
+            video.addEventListener('loadstart', () => {
+                loadingOverlay.classList.remove('d-none');
+                errorOverlay.classList.add('d-none');
+                progressFill.style.width = '0%';
+            });
+
+            // 监听加载进度
+            video.addEventListener('progress', () => {
+                if (video.buffered.length > 0) {
+                    const percent = (video.buffered.end(0) / video.duration) * 100;
+                    progressFill.style.width = `${Math.min(percent, 90)}%`;
+                }
+            });
+
+            // 当视频可以播放时，隐藏加载层
+            video.addEventListener('canplay', () => {
+                loadingOverlay.classList.add('d-none');
+                video.play();
+            });
+
+            // 加载失败时，显示错误层
+            video.addEventListener('error', () => {
+                loadingOverlay.classList.add('d-none');
+                errorOverlay.classList.remove('d-none');
+            });
+
+            // 重试按钮逻辑
+            if (retryButton) {
+                retryButton.addEventListener('click', () => {
+                    errorOverlay.classList.add('d-none');
+                    video.load();
+                });
+            }
+        });
+    });
+    </script>
 </body>
 </html>
