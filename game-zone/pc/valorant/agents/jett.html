@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>捷风（Jett） | 特工指南 | 无畏契约专区 | 绝活联盟</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0a121e;
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        .container-custom {
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-custom {
+            background-color: rgba(10, 18, 30, 0.95);
+            border-bottom: 2px solid #e93d5a;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #e93d5a !important;
+        }
+        .nav-link {
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #e93d5a !important;
+        }
+        .breadcrumb {
+            background-color: transparent;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+        .breadcrumb-item a {
+            color: #e93d5a;
+            text-decoration: none;
+        }
+        .breadcrumb-item.active {
+            color: #cccccc;
+        }
+        .hero-section {
+            background: linear-gradient(rgba(10, 18, 30, 0.85), rgba(10, 18, 30, 0.85)), 
+                        url('https://hongjsf.cyou/assets/images/valorant-agents/jett-1.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 0;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            max-width: 800px;
+            padding: 20px;
+        }
+        .hero-title {
+            font-size: 3.2rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            font-weight: 700;
+        }
+        .agent-meta {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .agent-role {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e93d5a;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .role-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        .section-title {
+            text-align: center;
+            margin: 40px 0 30px;
+            color: #e93d5a;
+            font-size: 2.2rem;
+            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e93d5a;
+        }
+        .content-section {
+            padding: 40px 0;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        .skill-card {
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e93d5a;
+        }
+        .skill-name {
+            font-size: 1.4rem;
+            color: #e93d5a;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .skill-desc {
+            color: #cccccc;
+            font-size: 1.05rem;
+        }
+        .agent-desc-long {
+            color: #cccccc;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .tactics-list {
+            padding-left: 20px;
+            color: #cccccc;
+        }
+        .tactics-list li {
+            margin-bottom: 10px;
+        }
+        .footer-custom {
+            text-align: center;
+            margin-top: 60px;
+            padding: 25px;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            border: 2px solid rgba(233, 57, 89, 0.3);
+        }
+        .footer-title-custom {
+            color: #e93d5a;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .copyright-custom {
+            color: #cccccc;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.3rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container container-custom">
+        <!-- 导航栏 -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="https://hongjsf.cyou/index.html"><i class="fas fa-shield-alt"></i> 绝活联盟</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/index.html">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/game-zone/index.html">游戏分区</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/game-zone/pc/valorant/index.html">无畏契约</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/game-zone/pc/valorant/agents">特工指南</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">捷风（Jett）</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 面包屑导航 -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou">首页</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone">游戏分区</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/pc">端游分区</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/pc/valorant">无畏契约</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/pc/valorant/agents">特工指南</a></li>
+                <li class="breadcrumb-item active">捷风（Jett）</li>
+            </ol>
+        </nav>
+
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">捷风（Jett）</h1>
+                <div class="agent-meta">
+                    <span class="agent-role">
+                        <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleDuelist.svg" alt="决斗" class="role-icon"> 决斗 (一突)
+                    </span>
+                </div>
+                <p class="hero-subtitle">韩国籍特工，拥有高机动性和敏捷性，擅长快速切入战场和迅速撤离。</p>
+            </div>
+        </section>
+
+        <!-- 背景故事 -->
+        <section class="content-section">
+            <h2 class="section-title">背景故事</h2>
+            <p class="agent-desc-long">
+                捷风（Jett）是韩国出生的决斗者，以无与伦比的速度和精准的枪法闻名于世。她如疾风般穿梭于战场，利用自身的高机动性扰乱敌方阵型，为团队创造突破口。她的战斗风格极具侵略性，是团队中当之无愧的“先锋尖刀”。
+            </p>
+        </section>
+
+        <!-- 技能介绍 -->
+        <section class="content-section">
+            <h2 class="section-title">技能详解</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="skill-card">
+                        <h3 class="skill-name">Q - 顺风（Updraft）</h3>
+                        <p class="skill-desc">捷风向上跃升，获得短暂的空中优势，可用于快速登高或躲避攻击。</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="skill-card">
+                        <h3 class="skill-name">E - 飙风（Tailwind）</h3>
+                        <p class="skill-desc">捷风向前冲刺一段距离，可穿越狭窄通道或快速接近敌人。</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="skill-card">
+                        <h3 class="skill-name">C - 烟幕（Cloud Burst）</h3>
+                        <p class="skill-desc">投掷一颗烟雾弹，爆炸后形成遮挡视线的烟幕，用于掩护进攻或撤退。</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="skill-card">
+                        <h3 class="skill-name">X - 疾风乱舞（Blade Storm）</h3>
+                        <p class="skill-desc">终极技能。捷风获得数把可投掷的飞刀，击杀敌人后可重置飞刀数量，实现连续收割。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 战术建议 -->
+        <section class="content-section">
+            <h2 class="section-title">战术建议</h2>
+            <ul class="tactics-list">
+                <li><strong>开局占点</strong>：利用 Q 和 E 快速抢占地图关键高点（如 Bind B 点二楼、Ascent 中路高台）。</li>
+                <li><strong>信息获取</strong>：作为一突，主动前压获取信息，但避免无谓牺牲。</li>
+                <li><strong>烟幕配合</strong>：C 技能烟幕可与队友闪光或技能联动，制造完美进攻窗口。</li>
+                <li><strong>大招时机</strong>：X 技能适合在残局 1v1 或敌人聚集时使用，确保至少击杀一人以重置飞刀。</li>
+                <li><strong>避免孤军深入</strong>：虽然机动性强，但血量较低，切忌无支援情况下强行 1v多。</li>
+            </ul>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer-custom">
+            <h3 class="footer-title-custom">绝活联盟审核组 荣誉出品</h3>
+            <p class="copyright-custom">版权所有 © 2025 绝活联盟 | 最终解释权归绝活联盟所有</p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
