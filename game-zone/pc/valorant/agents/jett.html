@@ -127,6 +127,29 @@
             padding: 20px;
             margin-bottom: 20px;
             border-left: 4px solid #e93d5a;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .skill-icon {
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+            background-color: #1a242e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .skill-icon img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+        .skill-info {
+            flex-grow: 1;
         }
         .skill-name {
             font-size: 1.4rem;
@@ -137,6 +160,36 @@
         .skill-desc {
             color: #cccccc;
             font-size: 1.05rem;
+        }
+        .skill-video {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .skill-video video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .btn-skill-details {
+            background-color: transparent;
+            color: #e93d5a;
+            border: 1px solid #e93d5a;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .btn-skill-details:hover {
+            background-color: #e93d5a;
+            color: white;
+            transform: scale(1.05);
+            text-decoration: none;
         }
         .agent-desc-long {
             color: #cccccc;
@@ -173,6 +226,21 @@
             }
             .section-title {
                 font-size: 1.8rem;
+            }
+            .skill-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .skill-icon {
+                width: 60px;
+                height: 60px;
+            }
+            .skill-icon img {
+                width: 40px;
+                height: 40px;
+            }
+            .skill-video {
+                max-width: 100%;
             }
         }
     </style>
@@ -247,26 +315,74 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="skill-card">
-                        <h3 class="skill-name">Q - 顺风（Updraft）</h3>
-                        <p class="skill-desc">捷风向上跃升，获得短暂的空中优势，可用于快速登高或躲避攻击。</p>
+                        <div class="skill-icon">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-skils/jett/Q.webp" alt="Q - 顺风" />
+                        </div>
+                        <div class="skill-info">
+                            <h3 class="skill-name">Q - 顺风（Updraft）</h3>
+                            <p class="skill-desc">捷风向上跃升，获得短暂的空中优势，可用于快速登高或躲避攻击。</p>
+                            <a href="#" class="btn-skill-details">查看详情</a>
+                        </div>
+                        <div class="skill-video">
+                            <video autoplay loop muted playsinline>
+                                <source src="https://hongjsf.cyou/assets/images/valorant-skils/jett/Q.mp4" type="video/mp4">
+                                您的浏览器不支持视频播放。
+                            </video>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="skill-card">
-                        <h3 class="skill-name">E - 飙风（Tailwind）</h3>
-                        <p class="skill-desc">捷风向前冲刺一段距离，可穿越狭窄通道或快速接近敌人。</p>
+                        <div class="skill-icon">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-skils/jett/E.webp" alt="E - 飙风" />
+                        </div>
+                        <div class="skill-info">
+                            <h3 class="skill-name">E - 飙风（Tailwind）</h3>
+                            <p class="skill-desc">捷风向前冲刺一段距离，可穿越狭窄通道或快速接近敌人。</p>
+                            <a href="#" class="btn-skill-details">查看详情</a>
+                        </div>
+                        <div class="skill-video">
+                            <video autoplay loop muted playsinline>
+                                <source src="https://hongjsf.cyou/assets/images/valorant-skils/jett/E.mp4" type="video/mp4">
+                                您的浏览器不支持视频播放。
+                            </video>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="skill-card">
-                        <h3 class="skill-name">C - 烟幕（Cloud Burst）</h3>
-                        <p class="skill-desc">投掷一颗烟雾弹，爆炸后形成遮挡视线的烟幕，用于掩护进攻或撤退。</p>
+                        <div class="skill-icon">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-skils/jett/C.webp" alt="C - 烟幕" />
+                        </div>
+                        <div class="skill-info">
+                            <h3 class="skill-name">C - 烟幕（Cloud Burst）</h3>
+                            <p class="skill-desc">投掷一颗烟雾弹，爆炸后形成遮挡视线的烟幕，用于掩护进攻或撤退。</p>
+                            <a href="#" class="btn-skill-details">查看详情</a>
+                        </div>
+                        <div class="skill-video">
+                            <video autoplay loop muted playsinline>
+                                <source src="https://hongjsf.cyou/assets/images/valorant-skils/jett/C.mp4" type="video/mp4">
+                                您的浏览器不支持视频播放。
+                            </video>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="skill-card">
-                        <h3 class="skill-name">X - 疾风乱舞（Blade Storm）</h3>
-                        <p class="skill-desc">终极技能。捷风获得数把可投掷的飞刀，击杀敌人后可重置飞刀数量，实现连续收割。</p>
+                        <div class="skill-icon">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-skils/jett/X.webp" alt="X - 疾风乱舞" />
+                        </div>
+                        <div class="skill-info">
+                            <h3 class="skill-name">X - 疾风乱舞（Blade Storm）</h3>
+                            <p class="skill-desc">终极技能。捷风获得数把可投掷的飞刀，击杀敌人后可重置飞刀数量，实现连续收割。</p>
+                            <a href="#" class="btn-skill-details">查看详情</a>
+                        </div>
+                        <div class="skill-video">
+                            <video autoplay loop muted playsinline>
+                                <source src="https://hongjsf.cyou/assets/images/valorant-skils/jett/X.mp4" type="video/mp4">
+                                您的浏览器不支持视频播放。
+                            </video>
+                        </div>
                     </div>
                 </div>
             </div>
