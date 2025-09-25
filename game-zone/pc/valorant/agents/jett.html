@@ -58,7 +58,7 @@
             background: linear-gradient(rgba(10, 18, 30, 0.85), rgba(10, 18, 30, 0.85)), 
                         url('https://hongjsf.cyou/assets/images/valorant-agents/jett-1.webp');
             background-size: cover;
-            background-position: center;
+            background-position: top center; /* 关键修改：从 center 改为 top center */
             height: 40vh;
             display: flex;
             align-items: center;
@@ -121,6 +121,33 @@
             border-radius: 10px;
             margin-bottom: 2rem;
         }
+        /* 英雄档案样式 */
+        .profile-card {
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+        .profile-item {
+            flex: 1 1 200px;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .profile-label {
+            font-weight: 600;
+            color: #e93d5a;
+            min-width: 80px;
+        }
+        .profile-value {
+            color: #cccccc;
+        }
+        /* 技能卡片样式 */
         .skill-card {
             background-color: rgba(20, 30, 48, 0.9);
             border-radius: 10px;
@@ -191,6 +218,48 @@
             transform: scale(1.05);
             text-decoration: none;
         }
+        /* 深度解析样式 */
+        .deep-dive-card {
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .deep-dive-title {
+            font-size: 1.2rem;
+            color: #e93d5a;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .deep-dive-content {
+            color: #cccccc;
+            font-size: 1.05rem;
+        }
+        /* 进阶技巧样式 */
+        .advanced-tips-list {
+            padding-left: 20px;
+            color: #cccccc;
+        }
+        .advanced-tips-list li {
+            margin-bottom: 10px;
+        }
+        /* 角色语音样式 */
+        .voice-card {
+            background-color: rgba(20, 30, 48, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .voice-quote {
+            font-style: italic;
+            color: #e93d5a;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .voice-context {
+            color: #cccccc;
+            font-size: 0.9rem;
+        }
         .agent-desc-long {
             color: #cccccc;
             font-size: 1.1rem;
@@ -241,6 +310,12 @@
             }
             .skill-video {
                 max-width: 100%;
+            }
+            .profile-item {
+                flex: 1 1 100%;
+            }
+            .profile-label {
+                min-width: 100px;
             }
         }
     </style>
@@ -307,6 +382,33 @@
             <p class="agent-desc-long">
                 捷风（Jett）是韩国出生的决斗者，以无与伦比的速度和精准的枪法闻名于世。她如疾风般穿梭于战场，利用自身的高机动性扰乱敌方阵型，为团队创造突破口。她的战斗风格极具侵略性，是团队中当之无愧的“先锋尖刀”。
             </p>
+        </section>
+
+        <!-- 英雄档案 -->
+        <section class="content-section">
+            <h2 class="section-title">英雄档案</h2>
+            <div class="profile-card">
+                <div class="profile-item">
+                    <span class="profile-label">国籍：</span>
+                    <span class="profile-value">韩国</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">定位：</span>
+                    <span class="profile-value">决斗 (一突)</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">难度：</span>
+                    <span class="profile-value">中等</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">武器偏好：</span>
+                    <span class="profile-value">短剑、冲锋枪、步枪</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">核心玩法：</span>
+                    <span class="profile-value">单点突破、信息获取、残局收割</span>
+                </div>
+            </div>
         </section>
 
         <!-- 技能介绍 -->
@@ -388,6 +490,39 @@
             </div>
         </section>
 
+        <!-- 技能深度解析 -->
+        <section class="content-section">
+            <h2 class="section-title">技能深度解析</h2>
+            <div class="deep-dive-card">
+                <h3 class="deep-dive-title">Q - 顺风（Updraft）</h3>
+                <div class="deep-dive-content">
+                    <p><strong>核心用途：</strong> 除了基础的跳高，Q 技能最大的价值在于其“二段跳”的特性。通过在空中再次按 Q 键，可以实现超远距离的水平位移，这是捷风最核心的机动性来源。</p>
+                    <p><strong>高级技巧：</strong> 在斜坡或墙边使用 Q，可以实现“贴墙滑行”，从而到达常人无法企及的点位，如 Bind B 点二楼的边缘。</p>
+                </div>
+            </div>
+            <div class="deep-dive-card">
+                <h3 class="deep-dive-title">E - 飙风（Tailwind）</h3>
+                <div class="deep-dive-content">
+                    <p><strong>核心用途：</strong> E 技能是捷风的“保命技”。当被敌人包围时，一个 E 可以瞬间脱离险境，为队友争取时间。</p>
+                    <p><strong>高级技巧：</strong> 在使用 E 的同时开枪，可以实现“冲刺射击”，虽然精度会下降，但在近距离遭遇战中非常有效。</p>
+                </div>
+            </div>
+            <div class="deep-dive-card">
+                <h3 class="deep-dive-title">C - 烟幕（Cloud Burst）</h3>
+                <div class="deep-dive-content">
+                    <p><strong>核心用途：</strong> C 技能不仅仅是烟雾弹，它还是一个“战术工具”。它可以用来封锁敌人的视野，为队友创造进攻机会，或者用来迷惑敌人，制造假动作。</p>
+                    <p><strong>高级技巧：</strong> 将烟幕投掷到自己脚下，然后使用 E 技能冲出烟幕，可以实现“烟幕闪现”，让敌人措手不及。</p>
+                </div>
+            </div>
+            <div class="deep-dive-card">
+                <h3 class="deep-dive-title">X - 疾风乱舞（Blade Storm）</h3>
+                <div class="deep-dive-content">
+                    <p><strong>核心用途：</strong> 大招是捷风的“终结技”。在残局或敌人聚集时使用，可以实现连续收割，奠定胜局。</p>
+                    <p><strong>高级技巧：</strong> 不要吝啬大招，尤其是在你已经拿到 2 杀的情况下，大招的“重置”机制让你可以继续收割。</p>
+                </div>
+            </div>
+        </section>
+
         <!-- 战术建议 -->
         <section class="content-section">
             <h2 class="section-title">战术建议</h2>
@@ -398,6 +533,29 @@
                 <li><strong>大招时机</strong>：X 技能适合在残局 1v1 或敌人聚集时使用，确保至少击杀一人以重置飞刀。</li>
                 <li><strong>避免孤军深入</strong>：虽然机动性强，但血量较低，切忌无支援情况下强行 1v多。</li>
             </ul>
+        </section>
+
+        <!-- 进阶技巧 -->
+        <section class="content-section">
+            <h2 class="section-title">进阶技巧</h2>
+            <ul class="advanced-tips-list">
+                <li><strong>连招组合</strong>：Q + E 是捷风最基础的连招，可以在短时间内完成长距离位移。熟练掌握这个连招，可以让你在战场上如鱼得水。</li>
+                <li><strong>地图点位</strong>：在 Ascent 地图上，你可以利用 Q 技能跳到 A 点二楼的边缘，从上方偷袭敌人。</li>
+                <li><strong>心理博弈</strong>：利用你的高机动性，不断骚扰敌人，打乱他们的节奏。</li>
+            </ul>
+        </section>
+
+        <!-- 角色语音 -->
+        <section class="content-section">
+            <h2 class="section-title">角色语音</h2>
+            <div class="voice-card">
+                <p class="voice-quote">“风，是我的盟友。”</p>
+                <p class="voice-context">—— 捷风在使用 Q 技能时的台词</p>
+            </div>
+            <div class="voice-card">
+                <p class="voice-quote">“你们的枪法太慢了。”</p>
+                <p class="voice-context">—— 捷风在击杀敌人后说的台词</p>
+            </div>
         </section>
 
         <!-- 页脚 -->
