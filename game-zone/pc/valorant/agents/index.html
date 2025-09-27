@@ -153,7 +153,6 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             border: 2px solid #e93d5a;
         }
-        
         /* 图片容器 - 固定16:9比例 */
         .agent-img-container {
             position: relative;
@@ -171,7 +170,6 @@
             object-fit: cover;
             transition: opacity 0.3s ease;
         }
-        
         /* 图片加载指示器 */
         .image-loader {
             position: absolute;
@@ -205,7 +203,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
         .agent-info {
             padding: 20px;
             position: relative;
@@ -221,14 +218,15 @@
             margin-bottom: 10px;
         }
         .agent-role {
-            display: inline-block;
+            display: inline-flex; /* Changed from inline-block */
+            align-items: center; /* Align icon and text vertically */
             background-color: #e93d5a;
             color: white;
             padding: 5px 10px;
             border-radius: 20px;
             font-size: 0.9rem;
             margin-bottom: 15px;
-            width: auto; /* 确保只包裹内容 */
+            /* Removed width: auto; as inline-flex naturally wraps content */
         }
         .agent-desc {
             color: #cccccc;
@@ -289,7 +287,6 @@
                 min-height: 450px; /* 移动设备上适当减少最小高度 */
             }
         }
-
         /* 新增：角色定位图标样式 */
         .role-icon {
             width: 20px;
@@ -297,7 +294,6 @@
             vertical-align: middle;
             margin-right: 5px;
         }
-        
         /* 进度条样式 */
         .progress-container {
             width: 80%;
@@ -705,8 +701,8 @@
                             </div>
                         </div>
                         <picture>
-                            <source srcset="https://hongjsf.cyou/assets/images/LOGO-1.webp" type="image/webp">
-                            <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="夜露（Yoru）" class="agent-img" loading="lazy">
+                            <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="夜露（Yoru）" class="agent-img" loading="lazy">
                         </picture>
                     </div>
                     <div class="agent-info">
@@ -753,8 +749,8 @@
                             </div>
                         </div>
                         <picture>
-                            <source srcset="https://hongjsf.cyou/assets/images/LOGO-1.webp" type="image/webp">
-                            <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="KAY/O" class="agent-img" loading="lazy">
+                            <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="KAY/O" class="agent-img" loading="lazy">
                         </picture>
                     </div>
                     <div class="agent-info">
@@ -777,8 +773,8 @@
                             </div>
                         </div>
                         <picture>
-                            <source srcset="https://hongjsf.cyou/assets/images/LOGO-1.webp" type="image/webp">
-                            <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="尚勃勒（Chamber）" class="agent-img" loading="lazy">
+                            <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="尚勃勒（Chamber）" class="agent-img" loading="lazy">
                         </picture>
                     </div>
                     <div class="agent-info">
@@ -801,8 +797,8 @@
                             </div>
                         </div>
                         <picture>
-                            <source srcset="https://hongjsf.cyou/assets/images/LOGO-1.webp" type="image/webp">
-                            <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="霓虹（Neon）" class="agent-img" loading="lazy">
+                            <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="霓虹（Neon）" class="agent-img" loading="lazy">
                         </picture>
                     </div>
                     <div class="agent-info">
@@ -825,8 +821,8 @@
                             </div>
                         </div>
                         <picture>
-                            <source srcset="https://hongjsf.cyou/assets/images/LOGO-1.webp" type="image/webp">
-                            <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="黑梦（Fade）" class="agent-img" loading="lazy">
+                            <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="黑梦（Fade）" class="agent-img" loading="lazy">
                         </picture>
                     </div>
                     <div class="agent-info">
@@ -969,8 +965,8 @@
                             </div>
                         </div>
                         <picture>
-                            <source srcset="https://hongjsf.cyou/assets/images/LOGO-1.webp" type="image/webp">
-                            <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="维斯（Vyse）" class="agent-img" loading="lazy">
+                            <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="维斯（Vyse）" class="agent-img" loading="lazy">
                         </picture>
                     </div>
                     <div class="agent-info">
@@ -993,8 +989,8 @@
                             </div>
                         </div>
                         <picture>
-                            <source srcset="https://hongjsf.cyou/assets/images/LOGO-1.webp" type="image/webp">
-                            <img src="https://hongjsf.cyou/assets/images/LOGO-1.jpg" alt="钛狐（Tejo）" class="agent-img" loading="lazy">
+                            <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
+                            <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="钛狐（Tejo）" class="agent-img" loading="lazy">
                         </picture>
                     </div>
                     <div class="agent-info">
@@ -1045,7 +1041,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             const filterButtons = document.querySelectorAll('.filter-btn');
             const agentCards = document.querySelectorAll('.agent-card');
-            
             // 筛选功能
             filterButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -1063,22 +1058,16 @@
                     });
                 });
             });
-            
             // 图片加载进度功能
             const agentImages = document.querySelectorAll('.agent-img');
             agentImages.forEach(img => {
                 const loader = img.parentElement.querySelector('.image-loader');
                 const loaderText = loader.querySelector('.loader-text');
                 const progressBar = loader.querySelector('.progress-bar');
-                
-                // 检查图片是否已经加载完成
-                if (img.complete) {
-                    loader.style.display = 'none';
-                    return;
-                }
-                
-                // 监听加载事件
-                img.addEventListener('load', function() {
+
+                // 先隐藏加载器（防止重复执行）
+                const hideLoader = () => {
+                    if (loader.style.display === 'none') return;
                     loaderText.textContent = '加载完成';
                     progressBar.style.width = '100%';
                     setTimeout(() => {
@@ -1086,25 +1075,32 @@
                         setTimeout(() => {
                             loader.style.display = 'none';
                         }, 300);
-                    }, 500);
-                });
-                
+                    }, 300);
+                };
+
+                // 如果图片已经加载完成（包括缓存）
+                if (img.complete && img.naturalHeight !== 0) {
+                    hideLoader();
+                    return;
+                }
+
+                // 监听加载事件
+                img.addEventListener('load', hideLoader);
+
                 img.addEventListener('error', function() {
                     loaderText.textContent = '加载失败';
                     progressBar.style.backgroundColor = '#ff4444';
                 });
-                
-                // 模拟加载进度（实际项目中应该使用真实进度）
+
+                // 模拟加载进度
                 let progress = 0;
                 const progressInterval = setInterval(() => {
-                    if (img.complete) {
+                    if (img.complete && img.naturalHeight !== 0) {
                         clearInterval(progressInterval);
                         return;
                     }
-                    
-                    progress += Math.random() * 10;
-                    if (progress > 90) progress = 90; // 避免达到100%直到实际加载完成
-                    
+                    progress += Math.random() * 8 + 2;
+                    if (progress > 90) progress = 90;
                     loaderText.textContent = `加载中 ${Math.round(progress)}%`;
                     progressBar.style.width = `${progress}%`;
                 }, 200);
