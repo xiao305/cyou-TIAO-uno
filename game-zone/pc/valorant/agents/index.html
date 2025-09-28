@@ -170,39 +170,7 @@
             object-fit: cover;
             transition: opacity 0.3s ease;
         }
-        /* 图片加载指示器 */
-        .image-loader {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(15, 25, 40, 0.8);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #e93d5a;
-            z-index: 2;
-            transition: opacity 0.3s ease;
-        }
-        .loader-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(233, 61, 90, 0.3);
-            border-top: 4px solid #e93d5a;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 10px;
-        }
-        .loader-text {
-            font-size: 14px;
-            font-weight: bold;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* 角色定位样式 - 已修复宽度问题 */
         .agent-info {
             padding: 20px;
             position: relative;
@@ -295,21 +263,6 @@
             vertical-align: middle;
             margin-right: 5px;
         }
-        /* 进度条样式 */
-        .progress-container {
-            width: 80%;
-            height: 6px;
-            background-color: rgba(233, 61, 90, 0.3);
-            border-radius: 3px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            background-color: #e93d5a;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
     </style>
 </head>
 <body>
@@ -382,13 +335,6 @@
                 <!-- 铁臂（Breach） -->
                 <div class="agent-card" data-category="initiator">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/breach-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/breach-1.jpg" alt="铁臂（Breach）" class="agent-img" loading="lazy">
@@ -406,13 +352,6 @@
                 <!-- 捷风（Jett） -->
                 <div class="agent-card" data-category="duelist">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/jett-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/jett-1.jpg" alt="捷风（Jett）" class="agent-img" loading="lazy">
@@ -430,13 +369,6 @@
                 <!-- 雷兹（Raze） -->
                 <div class="agent-card" data-category="duelist">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/raze-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/raze-1.jpg" alt="雷兹（Raze）" class="agent-img" loading="lazy">
@@ -454,13 +386,6 @@
                 <!-- 幽影（Omen） -->
                 <div class="agent-card" data-category="controller">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/omen-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/omen-1.jpg" alt="幽影（Omen）" class="agent-img" loading="lazy">
@@ -478,13 +403,6 @@
                 <!-- 炼狱（Brimstone） -->
                 <div class="agent-card" data-category="controller">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/brimstone-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/brimstone-1.jpg" alt="炼狱（Brimstone）" class="agent-img" loading="lazy">
@@ -502,13 +420,6 @@
                 <!-- 不死鸟（Phoenix） -->
                 <div class="agent-card" data-category="duelist">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/phoenix-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/phoenix-1.jpg" alt="不死鸟（Phoenix）" class="agent-img" loading="lazy">
@@ -526,13 +437,6 @@
                 <!-- 贤者（Sage） -->
                 <div class="agent-card" data-category="sentinel">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/sage-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/sage-1.jpg" alt="贤者（Sage）" class="agent-img" loading="lazy">
@@ -550,13 +454,6 @@
                 <!-- 猎枭（Sova） -->
                 <div class="agent-card" data-category="sentinel">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/sova-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/sova-1.jpg" alt="猎枭（Sova）" class="agent-img" loading="lazy">
@@ -574,13 +471,6 @@
                 <!-- 蝰蛇（Viper） -->
                 <div class="agent-card" data-category="controller">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/viper-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/viper-1.jpg" alt="蝰蛇（Viper）" class="agent-img" loading="lazy">
@@ -598,13 +488,6 @@
                 <!-- 零（Cypher） -->
                 <div class="agent-card" data-category="sentinel">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/cypher-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/cypher-1.jpg" alt="零（Cypher）" class="agent-img" loading="lazy">
@@ -622,13 +505,6 @@
                 <!-- 芮娜（Reyna） -->
                 <div class="agent-card" data-category="duelist">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/reyna-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/reyna-1.jpg" alt="芮娜（Reyna）" class="agent-img" loading="lazy">
@@ -646,13 +522,6 @@
                 <!-- 奇乐（Killjoy） -->
                 <div class="agent-card" data-category="sentinel">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/killjoy-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/killjoy-1.jpg" alt="奇乐（Killjoy）" class="agent-img" loading="lazy">
@@ -670,13 +539,6 @@
                 <!-- 斯凯（Skye） -->
                 <div class="agent-card" data-category="initiator">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/skye-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/skye-1.jpg" alt="斯凯（Skye）" class="agent-img" loading="lazy">
@@ -694,13 +556,6 @@
                 <!-- 夜露（Yoru） -->
                 <div class="agent-card" data-category="duelist">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="夜露（Yoru）" class="agent-img" loading="lazy">
@@ -718,13 +573,6 @@
                 <!-- 星礈（Astra） -->
                 <div class="agent-card" data-category="controller">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/astra-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/astra-1.jpg" alt="星礈（Astra）" class="agent-img" loading="lazy">
@@ -742,13 +590,6 @@
                 <!-- KAY/O -->
                 <div class="agent-card" data-category="initiator">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="KAY/O" class="agent-img" loading="lazy">
@@ -766,13 +607,6 @@
                 <!-- 尚勃勒（Chamber） -->
                 <div class="agent-card" data-category="sentinel">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="尚勃勒（Chamber）" class="agent-img" loading="lazy">
@@ -790,13 +624,6 @@
                 <!-- 霓虹（Neon） -->
                 <div class="agent-card" data-category="duelist">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="霓虹（Neon）" class="agent-img" loading="lazy">
@@ -814,13 +641,6 @@
                 <!-- 黑梦（Fade） -->
                 <div class="agent-card" data-category="initiator">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="黑梦（Fade）" class="agent-img" loading="lazy">
@@ -838,13 +658,6 @@
                 <!-- 海神（Harbor） -->
                 <div class="agent-card" data-category="controller">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/harbor-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/harbor-1.jpg" alt="海神（Harbor）" class="agent-img" loading="lazy">
@@ -862,13 +675,6 @@
                 <!-- 盖可（Gekko） -->
                 <div class="agent-card" data-category="initiator">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/gekko-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/gekko-1.jpg" alt="盖可（Gekko）" class="agent-img" loading="lazy">
@@ -886,13 +692,6 @@
                 <!-- 钢索（Deadlock） -->
                 <div class="agent-card" data-category="sentinel">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/deadlock-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/deadlock-1.jpg" alt="钢索（Deadlock）" class="agent-img" loading="lazy">
@@ -910,13 +709,6 @@
                 <!-- 壹决（Iso） -->
                 <div class="agent-card" data-category="duelist">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/iso-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/iso-1.jpg" alt="壹决（Iso）" class="agent-img" loading="lazy">
@@ -934,13 +726,6 @@
                 <!-- 暮蝶（Clove） -->
                 <div class="agent-card" data-category="controller">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/clove-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/clove-1.jpg" alt="暮蝶（Clove）" class="agent-img" loading="lazy">
@@ -958,13 +743,6 @@
                 <!-- 维斯（Vyse） -->
                 <div class="agent-card" data-category="sentinel">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="维斯（Vyse）" class="agent-img" loading="lazy">
@@ -982,13 +760,6 @@
                 <!-- 钛狐（Tejo） -->
                 <div class="agent-card" data-category="initiator">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/VALORANT_V_Red.jpg" alt="钛狐（Tejo）" class="agent-img" loading="lazy">
@@ -1006,13 +777,6 @@
                 <!-- 幻棱（Waylay） -->
                 <div class="agent-card" data-category="duelist">
                     <div class="agent-img-container">
-                        <div class="image-loader">
-                            <div class="loader-spinner"></div>
-                            <div class="loader-text">加载中 0%</div>
-                            <div class="progress-container">
-                                <div class="progress-bar"></div>
-                            </div>
-                        </div>
                         <picture>
                             <source srcset="https://hongjsf.cyou/assets/images/valorant-agents/waylay-1.webp" type="image/webp">
                             <img src="https://hongjsf.cyou/assets/images/valorant-agents/waylay-1.jpg" alt="幻棱（Waylay）" class="agent-img" loading="lazy">
@@ -1058,53 +822,6 @@
                         }
                     });
                 });
-            });
-            // 图片加载进度功能
-            const agentImages = document.querySelectorAll('.agent-img');
-            agentImages.forEach(img => {
-                const loader = img.parentElement.querySelector('.image-loader');
-                const loaderText = loader.querySelector('.loader-text');
-                const progressBar = loader.querySelector('.progress-bar');
-
-                // 创建一个函数来处理加载完成后的状态
-                const handleImageLoad = () => {
-                    if (loader.style.display === 'none') return; // 防止重复执行
-                    loaderText.textContent = '加载完成';
-                    progressBar.style.width = '100%';
-                    setTimeout(() => {
-                        loader.style.opacity = '0';
-                        setTimeout(() => {
-                            loader.style.display = 'none';
-                        }, 300);
-                    }, 300);
-                };
-
-                // 如果图片已经加载完成（包括缓存）
-                if (img.complete && img.naturalHeight !== 0) {
-                    handleImageLoad();
-                    return;
-                }
-
-                // 监听加载事件
-                img.addEventListener('load', handleImageLoad);
-
-                img.addEventListener('error', function() {
-                    loaderText.textContent = '加载失败';
-                    progressBar.style.backgroundColor = '#ff4444';
-                });
-
-                // 模拟加载进度
-                let progress = 0;
-                const progressInterval = setInterval(() => {
-                    if (img.complete && img.naturalHeight !== 0) {
-                        clearInterval(progressInterval);
-                        return;
-                    }
-                    progress += Math.random() * 8 + 2;
-                    if (progress > 90) progress = 90;
-                    loaderText.textContent = `加载中 ${Math.round(progress)}%`;
-                    progressBar.style.width = `${progress}%`;
-                }, 200);
             });
         });
     </script>
