@@ -458,6 +458,79 @@
             color: var(--primary-color);
             margin-bottom: 5px;
         }
+        /* 实战场景分析样式 */
+        .scenario-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .scenario-card {
+            flex: 1 1 300px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .scenario-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+        .scenario-content {
+            color: var(--text-light);
+        }
+        .scenario-content p {
+            margin-bottom: 10px;
+        }
+        /* 地图技巧样式 */
+        .map-tips-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .map-tips-card {
+            flex: 1 1 300px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .map-tips-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+        .map-tips-content {
+            color: var(--text-light);
+        }
+        .map-tips-content p {
+            margin-bottom: 10px;
+        }
+        /* 常见问题样式 */
+        .faq-section {
+            margin-bottom: 20px;
+        }
+        .faq-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .faq-question {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .faq-answer {
+            color: var(--text-light);
+        }
         .footer-custom {
             text-align: center;
             margin-top: 60px;
@@ -560,6 +633,22 @@
             }
             
             .matchup-card {
+                flex: 1 1 100%;
+            }
+            
+            .scenario-section {
+                flex-direction: column;
+            }
+            
+            .scenario-card {
+                flex: 1 1 100%;
+            }
+            
+            .map-tips-section {
+                flex-direction: column;
+            }
+            
+            .map-tips-card {
                 flex: 1 1 100%;
             }
             
@@ -1053,7 +1142,84 @@
             </div>
         </section>
 
-        <!-- 游戏版权声明 - 已美化 -->
+        <!-- 实战场景分析 -->
+        <section class="content-section">
+            <h2 class="section-title">实战场景分析</h2>
+            <div class="scenario-section">
+                <div class="scenario-card">
+                    <h3 class="scenario-title">进攻方场景</h3>
+                    <div class="scenario-content">
+                        <p><strong>快速突破A点</strong>：在进攻A点时，铁臂可以利用Q技能穿透墙壁致盲防守A点的敌人，然后配合队友快速突入。在队友进入点内后，使用E技能眩晕剩余的防守者。</p>
+                        <p><strong>中路控制</strong>：铁臂在中路可以利用C技能清理敌方可能藏身的位置，迫使敌人暴露在队友的火力下。</p>
+                        <p><strong>残局处理</strong>：在1v1或2v2的残局中，铁臂可以利用技能组合控制关键区域，为队友创造击杀机会。</p>
+                    </div>
+                </div>
+                <div class="scenario-card">
+                    <h3 class="scenario-title">防守方场景</h3>
+                    <div class="scenario-content">
+                        <p><strong>点内防守</strong>：在防守B点时，铁臂可以利用E技能延缓敌人的进攻节奏，为队友争取回防时间。</p>
+                        <p><strong>反清战术</strong>：铁臂可以利用大招反清已经被敌人占领的区域，打乱敌方阵型。</p>
+                        <p><strong>信息获取</strong>：铁臂可以通过技能试探敌方位置，获取关键信息，为团队提供战术决策依据。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 地图特定技巧 -->
+        <section class="content-section">
+            <h2 class="section-title">地图特定技巧</h2>
+            <div class="map-tips-section">
+                <div class="map-tips-card">
+                    <h3 class="map-tips-title">Bind（绑定）</h3>
+                    <div class="map-tips-content">
+                        <p><strong>A点进攻</strong>：从A点长通道进攻时，铁臂可以利用Q技能穿透墙壁致盲A点防守的敌人，为队友创造突破机会。</p>
+                        <p><strong>传送门利用</strong>：铁臂可以利用传送门快速转移位置，从意想不到的角度使用技能控制敌人。</p>
+                        <p><strong>B点防守</strong>：在B点防守时，铁臂可以利用E技能延缓敌人的进攻节奏，为队友争取回防时间。</p>
+                    </div>
+                </div>
+                <div class="map-tips-card">
+                    <h3 class="map-tips-title">Haven（天堂）</h3>
+                    <div class="map-tips-content">
+                        <p><strong>中路控制</strong>：铁臂可以利用C技能清理中路可能藏身的位置，迫使敌人暴露在队友的火力下。</p>
+                        <p><strong>A点进攻</strong>：从A点进攻时，铁臂可以利用Q技能致盲A点防守的敌人，然后配合队友快速突入。</p>
+                        <p><strong>C点防守</strong>：在C点防守时，铁臂可以利用E技能延缓敌人的进攻节奏，为队友争取回防时间。</p>
+                    </div>
+                </div>
+                <div class="map-tips-card">
+                    <h3 class="map-tips-title">Split（分裂）</h3>
+                    <div class="map-tips-content">
+                        <p><strong>中路控制</strong>：铁臂可以利用C技能清理中路可能藏身的位置，迫使敌人暴露在队友的火力下。</p>
+                        <p><strong>A点进攻</strong>：从A点进攻时，铁臂可以利用Q技能致盲A点防守的敌人，然后配合队友快速突入。</p>
+                        <p><strong>B点防守</strong>：在B点防守时，铁臂可以利用E技能延缓敌人的进攻节奏，为队友争取回防时间。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常见问题解答 -->
+        <section class="content-section">
+            <h2 class="section-title">常见问题解答</h2>
+            <div class="faq-section">
+                <div class="faq-card">
+                    <h4 class="faq-question">Q: 铁臂最适合搭配哪些特工？</h4>
+                    <p class="faq-answer">A: 铁臂最适合与能够快速跟进的特工配合，如捷风(Jett)、雷兹(Raze)和索瓦(Sova)。捷风的高机动性可以配合铁臂的控制技能快速突破防线；雷兹的范围伤害可以增强铁臂的突破能力；索瓦的侦察信息可以帮助铁臂精准定位敌人位置。</p>
+                </div>
+                <div class="faq-card">
+                    <h4 class="faq-question">Q: 铁臂的大招应该什么时候使用？</h4>
+                    <p class="faq-answer">A: 铁臂的大招最适合在敌人聚集或防守点突破时使用。在进攻时，可以利用大招控制多个敌人，为队友创造进攻机会；在防守时，可以利用大招反清已经被敌人占领的区域，打乱敌方阵型。</p>
+                </div>
+                <div class="faq-card">
+                    <h4 class="faq-question">Q: 铁臂的技能可以穿透哪些墙壁？</h4>
+                    <p class="faq-answer">A: 铁臂的所有技能都可以穿透墙壁，但穿透距离有限。Q技能可以穿透墙壁致盲敌人；E技能可以穿透墙壁眩晕敌人；C技能可以穿透墙壁并在目标位置引发爆炸；X技能可以穿透墙壁并击飞、眩晕路径上的所有敌人。</p>
+                </div>
+                <div class="faq-card">
+                    <h4 class="faq-question">Q: 铁臂在残局中应该怎么打？</h4>
+                    <p class="faq-answer">A: 在残局中，铁臂应该利用技能控制关键区域，为队友创造击杀机会。在1v1或2v2的残局中，铁臂可以利用技能组合控制关键区域，为队友创造击杀机会。同时，铁臂应该注意自己的位置，避免被敌人轻易击杀。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 游戏版权声明 -->
         <div class="game-copyright">
             <p class="copyright-title">版权声明</p>
             <p>本页面中的游戏特工图片、角色图标及相关素材版权归 Riot Games 所有</p>
