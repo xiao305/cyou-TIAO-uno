@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雷兹（Raze） | 特工指南 | 无畏契约专区 | 绝活联盟</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e93d5a;
+            --bg-dark: #0a121e;
+            --card-bg: rgba(20, 30, 48, 0.9);
+            --text-light: #cccccc;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        .container-custom {
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-custom {
+            background-color: rgba(10, 18, 30, 0.95);
+            border-bottom: 2px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: var(--primary-color) !important;
+        }
+        .nav-link {
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+        .breadcrumb {
+            background-color: transparent;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+        .breadcrumb-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        .breadcrumb-item.active {
+            color: var(--text-light);
+        }
+        .hero-section {
+            background: linear-gradient(rgba(10, 18, 30, 0.85), rgba(10, 18, 30, 0.85)), 
+                        url('https://hongjsf.cyou/assets/images/valorant-agents/raze-1.webp');
+            background-size: cover;
+            background-position: top center;
+            height: 40vh;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 0;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            max-width: 800px;
+            padding: 20px;
+        }
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            font-weight: 700;
+        }
+        .agent-meta {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .agent-role {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .role-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        .section-title {
+            text-align: center;
+            margin: 40px 0 30px;
+            color: var(--primary-color);
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
+            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .content-section {
+            padding: 40px 20px;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        /* 英雄档案样式 */
+        .profile-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+        .profile-item {
+            flex: 1 1 200px;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .profile-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            min-width: 80px;
+        }
+        .profile-value {
+            color: var(--text-light);
+        }
+        /* 技能卡片样式 - 优化 */
+        .skills-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        .skill-col {
+            padding: 10px;
+            display: flex;
+            flex: 1 1 50%;
+            min-width: 300px;
+        }
+        .skill-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .skill-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+        .skill-icon {
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+            background-color: #1a242e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .skill-icon img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+        .skill-info {
+            flex-grow: 1;
+        }
+        .skill-name {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .skill-desc {
+            color: var(--text-light);
+            font-size: 1.05rem;
+        }
+        /* 视频容器与加载状态 - 优化 */
+        .skill-video {
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            margin-top: auto; /* 确保视频在底部 */
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #000;
+        }
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 18, 30, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+        .video-overlay.d-none {
+            display: none;
+        }
+        .play-button {
+            font-size: 3rem;
+            color: var(--primary-color);
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .play-button:hover {
+            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .loading-content, .error-content, .stalled-content {
+            text-align: center;
+            width: 100%;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .progress-bar {
+            width: 80%;
+            max-width: 200px;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin: 10px auto;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--primary-color), #ff6b81);
+            transition: width 0.3s ease;
+        }
+        .btn-retry {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-retry:hover {
+            background-color: #d42a45;
+        }
+        .slow-loading-prompt {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        /* 视频卡顿提示按钮 */
+        .stall-indicator {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+        .stall-indicator.show {
+            opacity: 1;
+        }
+        /* 深度解析样式 */
+        .deep-dive-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .deep-dive-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .deep-dive-content {
+            color: var(--text-light);
+            font-size: 1.05rem;
+        }
+        /* 进阶技巧样式 */
+        .advanced-tips-list {
+            padding-left: 20px;
+            color: var(--text-light);
+        }
+        .advanced-tips-list li {
+            margin-bottom: 10px;
+        }
+        /* 角色语音样式 */
+        .voice-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .voice-quote {
+            font-style: italic;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .voice-context {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        .agent-desc-long {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .tactics-list {
+            padding-left: 20px;
+            color: var(--text-light);
+        }
+        .tactics-list li {
+            margin-bottom: 10px;
+        }
+        /* 新增内容样式 */
+        .matchup-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .matchup-card {
+            flex: 1 1 300px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .matchup-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+        .matchup-list {
+            padding-left: 20px;
+            color: var(--text-light);
+        }
+        .matchup-list li {
+            margin-bottom: 10px;
+        }
+        .agent-comparison {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .comparison-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .comparison-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .comparison-item {
+            flex: 1 1 200px;
+        }
+        .comparison-agent {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        /* 实战场景分析样式 */
+        .scenario-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .scenario-card {
+            flex: 1 1 300px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .scenario-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+        .scenario-content {
+            color: var(--text-light);
+        }
+        .scenario-content p {
+            margin-bottom: 10px;
+        }
+        /* 地图技巧样式 */
+        .map-tips-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .map-tips-card {
+            flex: 1 1 300px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .map-tips-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+        .map-tips-content {
+            color: var(--text-light);
+        }
+        .map-tips-content p {
+            margin-bottom: 10px;
+        }
+        /* 常见问题样式 */
+        .faq-section {
+            margin-bottom: 20px;
+        }
+        .faq-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .faq-question {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .faq-answer {
+            color: var(--text-light);
+        }
+        .footer-custom {
+            text-align: center;
+            margin-top: 60px;
+            padding: 25px;
+            background-color: rgba(15, 25, 40, 0.8);
+            border-radius: 10px;
+            border: 2px solid rgba(233, 57, 89, 0.3);
+        }
+        .footer-title-custom {
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .copyright-custom {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        /* 游戏版权声明样式 - 已美化 */
+        .game-copyright {
+            text-align: center;
+            margin: 40px 0 20px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(20, 30, 48, 0.95) 0%, rgba(15, 25, 40, 0.9) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(233, 61, 90, 0.4);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        .game-copyright p {
+            margin: 12px 0;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        .game-copyright .copyright-title {
+            color: #e93d5a;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        /* 响应式设计优化 */
+        @media (max-width: 1200px) {
+            .skill-col {
+                flex: 1 1 50%;
+            }
+        }
+        @media (max-width: 768px) {
+            .container-custom {
+                padding: 10px;
+            }
+            .hero-section {
+                height: 30vh;
+                min-height: 250px;
+            }
+            .content-section {
+                padding: 30px 15px;
+            }
+            .skill-col {
+                flex: 1 1 100%;
+                min-width: 100%;
+            }
+            .skill-top {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 15px;
+            }
+            .skill-icon {
+                width: 60px;
+                height: 60px;
+            }
+            .skill-icon img {
+                width: 40px;
+                height: 40px;
+            }
+            .profile-item {
+                flex: 1 1 100%;
+            }
+            .profile-label {
+                min-width: 100px;
+            }
+            .matchup-section {
+                flex-direction: column;
+            }
+            .matchup-card {
+                flex: 1 1 100%;
+            }
+            .scenario-section {
+                flex-direction: column;
+            }
+            .scenario-card {
+                flex: 1 1 100%;
+            }
+            .map-tips-section {
+                flex-direction: column;
+            }
+            .map-tips-card {
+                flex: 1 1 100%;
+            }
+            .comparison-content {
+                flex-direction: column;
+            }
+            .comparison-item {
+                flex: 1 1 100%;
+            }
+            .stall-indicator {
+                bottom: 5px;
+                right: 5px;
+                font-size: 0.7rem;
+                padding: 4px 8px;
+            }
+            .game-copyright {
+                padding: 20px 15px;
+                margin: 30px 0 15px;
+            }
+            .game-copyright .copyright-title {
+                font-size: 1.1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero-section {
+                height: 25vh;
+                min-height: 200px;
+            }
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+            .skill-card {
+                padding: 15px;
+            }
+            .skill-name {
+                font-size: 1.2rem;
+            }
+            .skill-desc {
+                font-size: 0.95rem;
+            }
+            .content-section {
+                padding: 20px 10px;
+            }
+            .game-copyright {
+                padding: 15px 10px;
+            }
+            .game-copyright p {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container container-custom">
+        <!-- 导航栏 -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="https://hongjsf.cyou/index.html"><i class="fas fa-shield-alt"></i> 绝活联盟</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/index.html">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/game-zone/index.html">游戏分区</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/game-zone/pc/valorant/index.html">无畏契约</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/game-zone/pc/valorant/agents">特工指南</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hongjsf.cyou/about.html">关于我们</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- 面包屑导航 -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou">首页</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone">游戏分区</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/pc">端游分区</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/pc/valorant">无畏契约</a></li>
+                <li class="breadcrumb-item"><a href="https://hongjsf.cyou/game-zone/pc/valorant/agents">特工指南</a></li>
+                <li class="breadcrumb-item active">雷兹（Raze）</li>
+            </ol>
+        </nav>
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">雷兹（Raze）</h1>
+                <div class="agent-meta">
+                    <span class="agent-role">
+                        <img src="https://hongjsf.cyou/assets/images/valorant-roles/roleDuelist.svg" alt="决斗" class="role-icon"> 决斗(一突)
+                    </span>
+                </div>
+                <p class="hero-subtitle">巴西籍特工，爆破专家，擅长使用爆炸物清理区域和造成大量伤害。</p>
+            </div>
+        </section>
+        <!-- 背景故事 -->
+        <section class="content-section">
+            <h2 class="section-title">背景故事</h2>
+            <p class="agent-desc-long">
+                雷兹（Raze）是一位来自巴西的决斗者特工，以其火爆的性格和强大的爆炸物闻名。她从亚马逊平原“轰轰烈烈”地走出，作战风格简单粗暴、爆发力十足。作为一名爆破专家，她精通各种爆炸装置，能够利用它们快速清理区域、制造混乱并消灭敌人。在加入VALORANT协议之前，她是一位才华横溢的工程师，将她的技术天赋转化为了战场上的致命武器。
+            </p>
+        </section>
+        <!-- 英雄档案 -->
+        <section class="content-section">
+            <h2 class="section-title">英雄档案</h2>
+            <div class="profile-card">
+                <div class="profile-item">
+                    <span class="profile-label">国籍：</span>
+                    <span class="profile-value">巴西</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">定位：</span>
+                    <span class="profile-value">决斗(一突)</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">难度：</span>
+                    <span class="profile-value">中等</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">武器偏好：</span>
+                    <span class="profile-value">冲锋枪、霰弹枪</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">核心玩法：</span>
+                    <span class="profile-value">高爆发伤害、区域压制、快速清点</span>
+                </div>
+            </div>
+        </section>
+        <!-- 技能介绍 -->
+        <section class="content-section">
+            <h2 class="section-title">技能详解</h2>
+            <div class="skills-row">
+                <!-- Q技能 -->
+                <div class="col-md-6 skill-col">
+                    <div class="skill-card">
+                        <div class="skill-top">
+                            <div class="skill-icon">
+                                <img src="https://hongjsf.cyou/assets/images/valorant-skills/raze/Q.webp" alt="Q - 惊喜翻腾" />
+                            </div>
+                            <div class="skill-info">
+                                <h3 class="skill-name">Q - 惊喜翻腾（Blast Pack）</h3>
+                                <p class="skill-desc">投掷一个可粘在物体表面的炸药包。完成部署后，【再次按技能键】该技能即可将其引爆，对目标造成伤害和击飞。雷兹不会受到此技能波及而受伤，但她若被炸到高空，则会受到落地伤害。</p>
+                            </div>
+                        </div>
+                        <div class="skill-video">
+                            <div class="video-container" data-video-src="https://hongjsf.cyou/assets/images/valorant-skills/raze/Q.mp4">
+                                <video controls controlslist="nodownload" muted playsinline>
+                                    <source src="https://hongjsf.cyou/assets/images/valorant-skills/raze/Q.mp4" type="video/mp4">
+                                </video>
+                                <div class="stall-indicator">视频卡顿？点击重试</div>
+                                <div class="video-overlay play-overlay d-none">
+                                    <div class="play-button">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                </div>
+                                <div class="video-overlay loading">
+                                    <div class="loading-content">
+                                        <div class="spinner"></div>
+                                        <p>视频加载中...</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                        <p class="slow-loading-prompt">视频加载较慢？</p>
+                                        <button class="btn-retry">尝试重新加载</button>
+                                    </div>
+                                </div>
+                                <div class="video-overlay error d-none">
+                                    <div class="error-content">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <p>视频加载失败</p>
+                                        <button class="btn-retry">重试</button>
+                                    </div>
+                                </div>
+                                <div class="video-overlay stalled d-none">
+                                    <div class="stalled-content">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <p>视频播放卡顿</p>
+                                        <button class="btn-retry">重新加载</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- E技能 -->
+                <div class="col-md-6 skill-col">
+                    <div class="skill-card">
+                        <div class="skill-top">
+                            <div class="skill-icon">
+                                <img src="https://hongjsf.cyou/assets/images/valorant-skills/raze/E.webp" alt="E - 彩雷飞溅" />
+                            </div>
+                            <div class="skill-info">
+                                <h3 class="skill-name">E - 彩雷飞溅（Paint Shells）</h3>
+                                <p class="skill-desc">装备集束手雷。按【射击】投掷手雷，手雷爆炸后会生成子榴弹，每颗对范围内所有人造成伤害。按【辅助射击】可轻抛。每击败两名敌人，可重置【彩雷飞溅】的充能。</p>
+                            </div>
+                        </div>
+                        <div class="skill-video">
+                            <div class="video-container" data-video-src="https://hongjsf.cyou/assets/images/valorant-skills/raze/E.mp4">
+                                <video controls controlslist="nodownload" muted playsinline>
+                                    <source src="https://hongjsf.cyou/assets/images/valorant-skills/raze/E.mp4" type="video/mp4">
+                                </video>
+                                <div class="stall-indicator">视频卡顿？点击重试</div>
+                                <div class="video-overlay play-overlay d-none">
+                                    <div class="play-button">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                </div>
+                                <div class="video-overlay loading">
+                                    <div class="loading-content">
+                                        <div class="spinner"></div>
+                                        <p>视频加载中...</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                        <p class="slow-loading-prompt">视频加载较慢？</p>
+                                        <button class="btn-retry">尝试重新加载</button>
+                                    </div>
+                                </div>
+                                <div class="video-overlay error d-none">
+                                    <div class="error-content">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <p>视频加载失败</p>
+                                        <button class="btn-retry">重试</button>
+                                    </div>
+                                </div>
+                                <div class="video-overlay stalled d-none">
+                                    <div class="stalled-content">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <p>视频播放卡顿</p>
+                                        <button class="btn-retry">重新加载</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- C技能 -->
+                <div class="col-md-6 skill-col">
+                    <div class="skill-card">
+                        <div class="skill-top">
+                            <div class="skill-icon">
+                                <img src="https://hongjsf.cyou/assets/images/valorant-skills/raze/C.webp" alt="C - 花车巡游" />
+                            </div>
+                            <div class="skill-info">
+                                <h3 class="skill-name">C - 花车巡游（Boom Bot）</h3>
+                                <p class="skill-desc">装备爆弹机器人。按【射击】即可部署机器人，它在地上沿直线行进，并会在碰到墙体后弹开。爆弹机器人会锁定任何在其锥形范围内的敌人并追逐他们，一旦追上便会引爆并造成严重伤害。</p>
+                            </div>
+                        </div>
+                        <div class="skill-video">
+                            <div class="video-container" data-video-src="https://hongjsf.cyou/assets/images/valorant-skills/raze/C.mp4">
+                                <video controls controlslist="nodownload" muted playsinline>
+                                    <source src="https://hongjsf.cyou/assets/images/valorant-skills/raze/C.mp4" type="video/mp4">
+                                </video>
+                                <div class="stall-indicator">视频卡顿？点击重试</div>
+                                <div class="video-overlay play-overlay d-none">
+                                    <div class="play-button">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                </div>
+                                <div class="video-overlay loading">
+                                    <div class="loading-content">
+                                        <div class="spinner"></div>
+                                        <p>视频加载中...</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                        <p class="slow-loading-prompt">视频加载较慢？</p>
+                                        <button class="btn-retry">尝试重新加载</button>
+                                    </div>
+                                </div>
+                                <div class="video-overlay error d-none">
+                                    <div class="error-content">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <p>视频加载失败</p>
+                                        <button class="btn-retry">重试</button>
+                                    </div>
+                                </div>
+                                <div class="video-overlay stalled d-none">
+                                    <div class="stalled-content">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <p>视频播放卡顿</p>
+                                        <button class="btn-retry">重新加载</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- X技能 -->
+                <div class="col-md-6 skill-col">
+                    <div class="skill-card">
+                        <div class="skill-top">
+                            <div class="skill-icon">
+                                <img src="https://hongjsf.cyou/assets/images/valorant-skills/raze/X.webp" alt="X - 晚安焰火" />
+                            </div>
+                            <div class="skill-info">
+                                <h3 class="skill-name">X - 晚安焰火（Showstopper）</h3>
+                                <p class="skill-desc">终极技能。装备火箭发射器。按【射击】即可发射一枚在与任何物体接触时造成大范围伤害的火箭。</p>
+                            </div>
+                        </div>
+                        <div class="skill-video">
+                            <div class="video-container" data-video-src="https://hongjsf.cyou/assets/images/valorant-skills/raze/X.mp4">
+                                <video controls controlslist="nodownload" muted playsinline>
+                                    <source src="https://hongjsf.cyou/assets/images/valorant-skills/raze/X.mp4" type="video/mp4">
+                                </video>
+                                <div class="stall-indicator">视频卡顿？点击重试</div>
+                                <div class="video-overlay play-overlay d-none">
+                                    <div class="play-button">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                </div>
+                                <div class="video-overlay loading">
+                                    <div class="loading-content">
+                                        <div class="spinner"></div>
+                                        <p>视频加载中...</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                        <p class="slow-loading-prompt">视频加载较慢？</p>
+                                        <button class="btn-retry">尝试重新加载</button>
+                                    </div>
+                                </div>
+                                <div class="video-overlay error d-none">
+                                    <div class="error-content">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <p>视频加载失败</p>
+                                        <button class="btn-retry">重试</button>
+                                    </div>
+                                </div>
+                                <div class="video-overlay stalled d-none">
+                                    <div class="stalled-content">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <p>视频播放卡顿</p>
+                                        <button class="btn-retry">重新加载</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- 技能深度解析 -->
+        <section class="content-section">
+            <h2 class="section-title">技能深度解析</h2>
+            <div class="deep-dive-card">
+                <h3 class="deep-dive-title">Q - 惊喜翻腾（Blast Pack）</h3>
+                <div class="deep-dive-content">
+                    <p><strong>核心用途：</strong> 惊喜翻腾是雷兹的标志性技能，主要用于机动性和伤害。它可以将雷兹自己击飞到高处或难以到达的位置，也可以用来将敌人击飞或造成伤害。</p>
+                    <p><strong>高级技巧：</strong> 掌握惊喜翻腾的跳跃时机和角度是玩好雷兹的关键。可以利用它快速抢占地图关键点位，或者在残局中出其不意地攻击敌人。</p>
+                    <p><strong>战术配合：</strong> 与队友沟通好跳跃路线，可以实现快速转点或偷袭。在防守时，可以用它将试图进点的敌人击退。</p>
+                </div>
+            </div>
+            <div class="deep-dive-card">
+                <h3 class="deep-dive-title">E - 彩雷飞溅（Paint Shells）</h3>
+                <div class="deep-dive-content">
+                    <p><strong>核心用途：</strong> 彩雷飞溅是雷兹的主要范围伤害技能。它能对一片区域造成高额伤害，非常适合用来清点或压制敌人。</p>
+                    <p><strong>高级技巧：</strong> 预判敌人的走位，将彩雷飞溅扔到他们可能聚集的地方。在狭窄空间内使用效果极佳。</p>
+                    <p><strong>战术配合：</strong> 在队友使用闪光或控制技能后，立即跟上彩雷飞溅可以确保击杀。也可以用来补枪，对被队友打残的敌人造成致命一击。</p>
+                </div>
+            </div>
+            <div class="deep-dive-card">
+                <h3 class="deep-dive-title">C - 花车巡游（Boom Bot）</h3>
+                <div class="deep-dive-content">
+                    <p><strong>核心用途：</strong> 花车巡游是雷兹的侦察和骚扰技能。它可以自动追踪敌人并造成伤害，非常适合用来清理角落、试探敌人位置或封锁通道。</p>
+                    <p><strong>高级技巧：</strong> 可以将花车巡游扔到敌人可能藏身的箱子后面或拐角处。在进攻前释放花车巡游可以迫使敌人移动或暴露位置。</p>
+                    <p><strong>战术配合：</strong> 在队友使用烟雾弹掩护下释放花车巡游，可以安全地获取信息。也可以与自己的惊喜翻腾配合，形成连环爆炸。</p>
+                </div>
+            </div>
+            <div class="deep-dive-card">
+                <h3 class="deep-dive-title">X - 晚安焰火（Showstopper）</h3>
+                <div class="deep-dive-content">
+                    <p><strong>核心用途：</strong> 大招是雷兹最强大的单体爆发技能。它几乎可以秒杀任何被直接命中的敌人，是打开局面的终极武器。</p>
+                    <p><strong>高级技巧：</strong> 由于火箭飞行速度较慢，需要预判敌人的移动。可以利用墙体反弹来攻击视野外的敌人。</p>
+                    <p><strong>战术配合：</strong> 在队友提供信息或控制住敌人后使用，可以最大化大招的收益。也可以用来威慑敌人，迫使他们不敢轻易露头。</p>
+                </div>
+            </div>
+        </section>
+        <!-- 战术建议 -->
+        <section class="content-section">
+            <h2 class="section-title">战术建议</h2>
+            <ul class="tactics-list">
+                <li><strong>主动进攻</strong>：作为一突决斗者，雷兹需要主动寻找战斗机会，利用爆炸物压制敌人。</li>
+                <li><strong>经济管理</strong>：雷兹的技能消耗较高，需要合理规划经济，确保在关键回合有足够的技能可用。</li>
+                <li><strong>信息获取</strong>：善用花车巡游获取信息，避免盲目冲锋。在没有信息的情况下，爆炸物的命中率会大大降低。</li>
+                <li><strong>大招时机</strong>：大招虽然威力巨大，但需要7个点数。不要为了攒大招而放弃使用其他技能，灵活运用小技能同样能打开局面。</li>
+                <li><strong>位置选择</strong>：利用惊喜翻腾占据有利地形，从高处或侧面攻击敌人，可以大大增加生存率和击杀效率。</li>
+                <li><strong>避免孤军深入</strong>：虽然爆发高，但身板脆。在没有队友支援的情况下，避免用技能强行1v多。</li>
+            </ul>
+        </section>
+        <!-- 进阶技巧 -->
+        <section class="content-section">
+            <h2 class="section-title">进阶技巧</h2>
+            <ul class="advanced-tips-list">
+                <li><strong>惊喜翻腾跳跃</strong>：熟练掌握各种惊喜翻腾跳跃点位，可以让你快速到达地图的任何角落，打敌人一个措手不及。</li>
+                <li><strong>心理博弈</strong>：利用花车巡游的声音和爆炸声制造压力，迫使敌人做出错误的判断。</li>
+                <li><strong>技能连招</strong>：Q + E 是雷兹的经典连招，先用惊喜翻腾将敌人击飞，再用彩雷飞溅进行收割。</li>
+                <li><strong>假动作</strong>：假装要使用惊喜翻腾跳跃，引诱敌人开枪或使用技能，然后取消跳跃进行反击。</li>
+                <li><strong>穿墙伤害</strong>：彩雷飞溅和大招的爆炸可以对墙体后的敌人造成伤害，利用这一点可以攻击躲藏的敌人。</li>
+            </ul>
+        </section>
+        <!-- 英雄克制与配合 -->
+        <section class="content-section">
+            <h2 class="section-title">英雄克制与配合</h2>
+            <div class="matchup-section">
+                <div class="matchup-card">
+                    <h3 class="matchup-title">优势对局</h3>
+                    <ul class="matchup-list">
+                        <li><strong>Sage（贤者）</strong>：雷兹的高爆发伤害可以快速击杀贤者，不给她使用治疗或冰墙的机会。</li>
+                        <li><strong>Cypher（保安）</strong>：雷兹的范围伤害技能可以轻松清理Cypher的陷阱和摄像头，破坏其防守体系。</li>
+                        <li><strong>Killjoy（奇乐）</strong>：雷兹可以快速摧毁Killjoy的炮台和纳米蜂群，减少团队压力。</li>
+                    </ul>
+                </div>
+                <div class="matchup-card">
+                    <h3 class="matchup-title">劣势对局</h3>
+                    <ul class="matchup-list">
+                        <li><strong>Omen（幽影）</strong>：幽影的烟雾弹可以有效阻挡雷兹的视线和爆炸物，使其难以发挥。</li>
+                        <li><strong>Viper（蝰蛇）</strong>：蝰蛇的毒雾墙可以分割战场，限制雷兹的机动性，并持续造成伤害。</li>
+                        <li><strong>Chamber（尚勃勒）</strong>：尚勃勒的远程狙击和陷阱可以克制雷兹的冲锋打法。</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="agent-comparison">
+                <h3 class="comparison-title">最佳搭档</h3>
+                <div class="comparison-content">
+                    <div class="comparison-item">
+                        <div class="comparison-agent">Breach（铁臂）</div>
+                        <p>铁臂的控制技能可以为雷兹创造完美的进攻窗口，让她能安全地进入点内输出。</p>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-agent">Sova（索瓦）</div>
+                        <p>索瓦的侦察箭可以为雷兹提供关键信息，让她能精准地投掷爆炸物。</p>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-agent">Brimstone（炼狱）</div>
+                        <p>炼狱的空袭和烟雾弹可以与雷兹的爆炸物形成强大的区域压制组合。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- 角色语音 -->
+        <section class="content-section">
+            <h2 class="section-title">角色语音</h2>
+            <div class="voice-card">
+                <p class="voice-quote">“让我们把他们炸飞！”</p>
+                <p class="voice-context">—— 雷兹在使用大招时的台词</p>
+            </div>
+            <div class="voice-card">
+                <p class="voice-quote">“搞定一个！”</p>
+                <p class="voice-context">—— 雷兹在击杀敌人后说的台词</p>
+            </div>
+            <div class="voice-card">
+                <p class="voice-quote">“让我们制造点混乱吧！”</p>
+                <p class="voice-context">—— 雷兹在购买技能时的台词</p>
+            </div>
+        </section>
+        <!-- 实战场景分析 -->
+        <section class="content-section">
+            <h2 class="section-title">实战场景分析</h2>
+            <div class="scenario-section">
+                <div class="scenario-card">
+                    <h3 class="scenario-title">进攻方场景</h3>
+                    <div class="scenario-content">
+                        <p><strong>快速突破A点</strong>：在进攻A点时，雷兹可以利用惊喜翻腾快速跳上高台，用彩雷飞溅清理点内的敌人。同时，释放花车巡游骚扰B点，迫使敌人分散防守。</p>
+                        <p><strong>中路压制</strong>：雷兹可以利用彩雷飞溅和花车巡游压制中路，为队友创造转点或进点的机会。</p>
+                        <p><strong>残局处理</strong>：在1v1残局中，雷兹可以利用惊喜翻腾的机动性与敌人周旋，并寻找机会用彩雷飞溅或大招完成击杀。</p>
+                    </div>
+                </div>
+                <div class="scenario-card">
+                    <h3 class="scenario-title">防守方场景</h3>
+                    <div class="scenario-content">
+                        <p><strong>点内防守</strong>：在防守B点时，雷兹可以利用花车巡游和彩雷飞溅封锁入口，阻止敌人轻易进点。</p>
+                        <p><strong>反清战术</strong>：当敌人占领点位后，雷兹可以利用惊喜翻腾从意想不到的角度跳入，用大招或彩雷飞溅进行反清。</p>
+                        <p><strong>信息获取</strong>：雷兹可以通过释放花车巡游试探敌方位置，获取关键信息，为团队提供战术决策依据。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- 地图特定技巧 -->
+        <section class="content-section">
+            <h2 class="section-title">地图特定技巧</h2>
+            <div class="map-tips-section">
+                <div class="map-tips-card">
+                    <h3 class="map-tips-title">Bind（绑定）</h3>
+                    <div class="map-tips-content">
+                        <p><strong>A点进攻</strong>：雷兹可以利用惊喜翻腾从A点长通道直接跳上平台，快速清理点内防守者。</p>
+                        <p><strong>传送门利用</strong>：可以利用传送门快速转移，从B点传送回A点进行偷袭。</p>
+                        <p><strong>B点防守</strong>：在B点防守时，可以将花车巡游扔进传送门，骚扰A点的敌人。</p>
+                    </div>
+                </div>
+                <div class="map-tips-card">
+                    <h3 class="map-tips-title">Split（分裂）</h3>
+                    <div class="map-tips-content">
+                        <p><strong>垂直作战</strong>：Split地图垂直结构多，非常适合雷兹使用惊喜翻腾进行跳跃和偷袭。</p>
+                        <p><strong>A点进攻</strong>：可以从A点电梯处用惊喜翻腾跳上高台，用彩雷飞溅压制点内。</p>
+                        <p><strong>B点防守</strong>：在B点防守时，可以利用彩雷飞溅清理从B长廊进攻的敌人。</p>
+                    </div>
+                </div>
+                <div class="map-tips-card">
+                    <h3 class="map-tips-title">Ascent（日落之城）</h3>
+                    <div class="map-tips-content">
+                        <p><strong>中路控制</strong>：雷兹可以利用彩雷飞溅和花车巡游控制中路，阻止敌人轻松转点。</p>
+                        <p><strong>A点进攻</strong>：可以从A点花园用惊喜翻腾跳上箱子，快速进入点内。</p>
+                        <p><strong>B点防守</strong>：在B点防守时，可以将花车巡游扔进B点小门，清理试图偷点的敌人。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- 常见问题解答 -->
+        <section class="content-section">
+            <h2 class="section-title">常见问题解答</h2>
+            <div class="faq-section">
+                <div class="faq-card">
+                    <h4 class="faq-question">Q: 雷兹最适合搭配哪些特工？</h4>
+                    <p class="faq-answer">A: 雷兹最适合与能够提供信息或控制的特工配合，如索瓦(Sova)、铁臂(Breach)和炼狱(Brimstone)。索瓦的侦察箭可以帮雷兹精准定位敌人；铁臂的控制技能可以为雷兹创造安全的输出环境；炼狱的烟雾和空袭可以与雷兹的爆炸物形成强大的区域压制。</p>
+                </div>
+                <div class="faq-card">
+                    <h4 class="faq-question">Q: 雷兹的大招应该什么时候使用？</h4>
+                    <p class="faq-answer">A: 雷兹的大招最适合在确认敌人位置或敌人聚集时使用。在进攻时，可以用来强行清点；在防守时，可以用来反清已经被占领的区域。由于大招飞行速度慢，需要一定的预判。</p>
+                </div>
+                <div class="faq-card">
+                    <h4 class="faq-question">Q: 雷兹的惊喜翻腾有哪些高级用法？</h4>
+                    <p class="faq-answer">A: 惊喜翻腾不仅可以用来伤害敌人，更是雷兹的核心机动技能。熟练掌握各种“惊喜翻腾跳跃”可以让你快速到达地图的制高点或隐藏角落，实现偷袭或快速转点。同时，也可以利用它将敌人击飞，打断其技能或射击。</p>
+                </div>
+                <div class="faq-card">
+                    <h4 class="faq-question">Q: 雷兹在经济局应该怎么打？</h4>
+                    <p class="faq-answer">A: 雷兹在经济局（Eco局）通常只购买花车巡游（C技能），因为它的成本较低且能提供侦察和骚扰作用。避免在经济局购买昂贵的彩雷飞溅（E技能）或大招，应将经济留给关键的强起局或全装局。</p>
+                </div>
+            </div>
+        </section>
+        <!-- 游戏版权声明 -->
+        <div class="game-copyright">
+            <p class="copyright-title">版权声明</p>
+            <p>本页面中的游戏特工图片、角色图标及相关素材版权归 Riot Games 所有</p>
+            <p>《VALORANT》和《无畏契约》是 Riot Games, Inc. 的注册商标</p>
+            <p>本网站为社区创作内容，非官方网站，仅用于学习和交流目的</p>
+        </div>
+        <!-- 页脚 -->
+        <footer class="footer-custom">
+            <h3 class="footer-title-custom">绝活联盟审核组 荣誉出品</h3>
+            <p class="copyright-custom">版权所有 © 2025 绝活联盟 | 最终解释权归绝活联盟所有</p>
+        </footer>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 视频加载状态管理与保护 -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const videoContainers = document.querySelectorAll('.video-container');
+        // 禁用整个页面的右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        // 禁用键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            // 禁用 Ctrl+S 和 Ctrl+U
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'u')) {
+                e.preventDefault();
+            }
+            // 禁用 F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
+        // 防止视频拖拽
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName === 'VIDEO') {
+                e.preventDefault();
+            }
+        });
+        videoContainers.forEach(container => {
+            const video = container.querySelector('video');
+            const loadingOverlay = container.querySelector('.video-overlay.loading');
+            const errorOverlay = container.querySelector('.video-overlay.error');
+            const playOverlay = container.querySelector('.video-overlay.play-overlay');
+            const stalledOverlay = container.querySelector('.video-overlay.stalled');
+            const progressFill = container.querySelector('.progress-fill');
+            const retryButtons = container.querySelectorAll('.btn-retry');
+            const stallIndicator = container.querySelector('.stall-indicator');
+            let loadTimeout = null;
+            let lastProgressUpdate = 0;
+            let stallTimeout = null;
+            let lastPlayTime = 0;
+            let stallCount = 0;
+            // 开始加载时显示加载层
+            video.addEventListener('loadstart', () => {
+                loadingOverlay.classList.remove('d-none');
+                errorOverlay.classList.add('d-none');
+                playOverlay.classList.add('d-none');
+                stalledOverlay.classList.add('d-none');
+                progressFill.style.width = '0%';
+                // 设置加载超时检测（15秒）
+                loadTimeout = setTimeout(() => {
+                    if (!video.readyState || video.readyState < 3) {
+                        loadingOverlay.querySelector('.slow-loading-prompt').textContent = '视频加载时间较长，请尝试重新加载';
+                    }
+                }, 15000);
+            });
+            // 监听真实的加载进度
+            video.addEventListener('progress', (e) => {
+                if (video.buffered.length > 0 && video.duration) {
+                    const bufferedEnd = video.buffered.end(0);
+                    const percent = (bufferedEnd / video.duration) * 100;
+                    // 避免频繁更新UI，只在进度有明显变化时更新
+                    const currentTime = Date.now();
+                    if (currentTime - lastProgressUpdate > 200 || Math.abs(percent - parseFloat(progressFill.style.width)) > 5) {
+                        progressFill.style.width = `${Math.min(percent, 95)}%`;
+                        lastProgressUpdate = currentTime;
+                    }
+                }
+            });
+            // 当视频可以播放时，隐藏加载层
+            video.addEventListener('canplay', () => {
+                clearTimeout(loadTimeout);
+                progressFill.style.width = '100%';
+                // 短暂延迟后隐藏加载层，让用户看到100%进度
+                setTimeout(() => {
+                    loadingOverlay.classList.add('d-none');
+                    video.play().catch(e => {
+                        console.log('自动播放被阻止:', e);
+                        // 如果自动播放被阻止，显示播放按钮
+                        playOverlay.classList.remove('d-none');
+                    });
+                }, 500);
+            });
+            // 视频播放结束，显示播放按钮
+            video.addEventListener('ended', () => {
+                playOverlay.classList.remove('d-none');
+                stallIndicator.classList.remove('show');
+            });
+            // 点击播放按钮重新播放视频
+            playOverlay.addEventListener('click', () => {
+                video.currentTime = 0;
+                video.play().then(() => {
+                    playOverlay.classList.add('d-none');
+                }).catch(e => {
+                    console.log('播放失败:', e);
+                });
+            });
+            // 加载失败时，显示错误层
+            video.addEventListener('error', () => {
+                clearTimeout(loadTimeout);
+                loadingOverlay.classList.add('d-none');
+                errorOverlay.classList.remove('d-none');
+            });
+            // 重试按钮逻辑
+            retryButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clearTimeout(loadTimeout);
+                    errorOverlay.classList.add('d-none');
+                    stalledOverlay.classList.add('d-none');
+                    loadingOverlay.classList.remove('d-none');
+                    progressFill.style.width = '0%';
+                    // 重置提示文本
+                    loadingOverlay.querySelector('.slow-loading-prompt').textContent = '视频加载较慢？';
+                    // 重新加载视频
+                    video.load();
+                });
+            });
+            // 视频卡顿检测
+            video.addEventListener('playing', () => {
+                lastPlayTime = video.currentTime;
+                stallCount = 0;
+                clearTimeout(stallTimeout);
+                stallIndicator.classList.remove('show');
+                stalledOverlay.classList.add('d-none');
+            });
+            video.addEventListener('timeupdate', () => {
+                // 检测视频是否卡顿
+                const currentTime = video.currentTime;
+                const timeDiff = currentTime - lastPlayTime;
+                // 如果时间前进很慢或没有前进，可能是卡顿
+                if (timeDiff < 0.1 && video.currentTime > 0) {
+                    stallCount++;
+                    // 如果连续多次检测到卡顿，显示提示
+                    if (stallCount > 3 && !stallTimeout) {
+                        stallTimeout = setTimeout(() => {
+                            stallIndicator.classList.add('show');
+                            stalledOverlay.classList.remove('d-none');
+                        }, 1000);
+                    }
+                } else {
+                    stallCount = 0;
+                    clearTimeout(stallTimeout);
+                    stallTimeout = null;
+                    stallIndicator.classList.remove('show');
+                    stalledOverlay.classList.add('d-none');
+                }
+                lastPlayTime = currentTime;
+            });
+            // 点击卡顿指示器重新加载视频
+            stallIndicator.addEventListener('click', () => {
+                video.currentTime = 0;
+                video.load();
+                stallIndicator.classList.remove('show');
+            });
+            // 视频等待数据时显示卡顿提示
+            video.addEventListener('waiting', () => {
+                stallIndicator.classList.add('show');
+            });
+            video.addEventListener('canplay', () => {
+                stallIndicator.classList.remove('show');
+            });
+        });
+    });
+    </script>
+</body>
+</html>
